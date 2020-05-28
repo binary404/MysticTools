@@ -14,11 +14,15 @@ public class ModItems {
     @ObjectHolder("mystictools:loot_sword")
     public static Item loot_sword;
 
+    @ObjectHolder("mystictools:case")
+    public static Item loot_case;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
 
         RegistryHelper.register(r, new ItemLootSword(), "loot_sword");
+        RegistryHelper.register(r, new ItemCase(), "loot_case");
     }
 
 }

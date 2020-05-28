@@ -1,6 +1,9 @@
 package binary404.mystictools.common.loot;
 
+import binary404.mystictools.common.loot.effects.BasicEffect;
+import binary404.mystictools.common.loot.effects.IEffect;
 import com.google.common.collect.Multimap;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
@@ -8,9 +11,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
 
 public class LootItemHelper {
 
@@ -21,6 +22,14 @@ public class LootItemHelper {
 
     public static String getLootName(ItemStack stack, String current) {
         String displayName = current;
+
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        String name = LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_NAME);
+
+        displayName = name;
+
+        if (rarity != null)
+            displayName = rarity.getColor() + displayName;
 
         return displayName;
     }
@@ -91,4 +100,43 @@ public class LootItemHelper {
         modifiers.removeAll(attribute.getName());
         modifiers.put(attribute.getName(), new AttributeModifier(uuid, modifierKey, value + attributeValue, AttributeModifier.Operation.ADDITION));
     }
+
+    public static void handleBasicEffectsAfterHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (target.getHealth() <= 0.0) {
+            int kills = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_KILLS);
+            kills++;
+            if (kills >= LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL))
+                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_LEVEL, LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL) * 2);
+            LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_KILLS, kills);
+        }
+
+        List<BasicEffect> effects = BasicEffect.getEffectList(stack);
+
+        if (effects.size() > 0) {
+            for (BasicEffect effect : effects) {
+                effect.onHit(BasicEffect.getDurationFromStack(stack, effect.getId()), BasicEffect.getAmplifierFromStack(stack, effect.getId()), target, attacker);
+            }
+        }
+    }
+
+    public static BasicEffect getRandomExcluding(Random rand, LootSet.LootSetType type, List<BasicEffect> exclude) {
+        BasicEffect effect = null;
+
+        List<BasicEffect> list = new ArrayList<>();
+        for (BasicEffect e : BasicEffect.REGISTRY.values()) {
+            if (e.applyToItemType(type)) {
+                list.add(e);
+            }
+        }
+
+        list.removeAll(exclude);
+
+        System.out.println(list);
+
+        if (list.size() > 0)
+            effect = list.get(rand.nextInt(list.size()));
+
+        return effect;
+    }
+
 }

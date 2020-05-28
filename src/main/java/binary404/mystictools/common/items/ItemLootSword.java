@@ -3,7 +3,10 @@ package binary404.mystictools.common.items;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.BasicEffect;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -11,10 +14,12 @@ import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import org.antlr.v4.runtime.misc.MultiMap;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemLootSword extends SwordItem implements ILootItem {
 
@@ -52,6 +57,8 @@ public class ItemLootSword extends SwordItem implements ILootItem {
     public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         boolean hit = super.hitEntity(stack, target, attacker);
 
+        LootItemHelper.handleBasicEffectsAfterHit(stack, target, attacker);
+
         return hit;
     }
 
@@ -61,5 +68,19 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         Multimap<String, AttributeModifier> multiMap = super.getAttributeModifiers(slot, stack);
 
         return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Weapon modifier");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        int attackDamage = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE);
+
+        if (Screen.hasShiftDown()) {
+            tooltip.add(new StringTextComponent(TextFormatting.WHITE + ItemStack.DECIMALFORMAT.format(attackDamage)));
+
+            List<BasicEffect> basicEffects = BasicEffect.getEffectList(stack);
+            for (BasicEffect effect : basicEffects) {
+                tooltip.add(new StringTextComponent(TextFormatting.RESET + "- " + effect.getType().getColor() + effect.getId()));
+            }
+        }
     }
 }
