@@ -69,7 +69,6 @@ public class ItemCase extends Item {
             lootTag.putInt(LootTags.LOOT_TAG_UPGRADES, lootRarity.getUpgrades(random));
 
             int modifierCount = lootRarity.getModifierCount(random);
-            System.out.println(modifierCount);
 
             boolean unbreakable = false;
 
@@ -81,15 +80,12 @@ public class ItemCase extends Item {
                 ListNBT effectList = new ListNBT();
 
                 for (int m = 0; m < modifierCount; m++) {
-                    System.out.println("Iterating");
                     BasicEffect effect = LootItemHelper.getRandomExcluding(random, type, appliedEffects);
 
                     if (effect != null) {
-                        System.out.println("Effect is not null");
                         effectList.add(effect.getNbt(random));
                         appliedEffects.add(effect);
                     }else {
-                        System.out.println("Effect is NULL!");
                     }
                 }
                 if (lootRarity != LootRarity.COMMON)

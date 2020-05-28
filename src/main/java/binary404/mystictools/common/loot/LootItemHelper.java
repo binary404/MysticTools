@@ -131,8 +131,6 @@ public class LootItemHelper {
 
         list.removeAll(exclude);
 
-        System.out.println(list);
-
         if (list.size() > 0)
             effect = list.get(rand.nextInt(list.size()));
 
