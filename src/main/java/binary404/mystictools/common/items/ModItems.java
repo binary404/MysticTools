@@ -1,6 +1,8 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.common.core.RegistryHelper;
+import binary404.mystictools.common.loot.ItemTypeRegistry;
+import binary404.mystictools.common.loot.LootSet;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,6 +16,12 @@ public class ModItems {
     @ObjectHolder("mystictools:loot_sword")
     public static Item loot_sword;
 
+    @ObjectHolder("mystictools:loot_axe")
+    public static Item loot_axe;
+
+    @ObjectHolder("mystictools:loot_pickaxe")
+    public static Item loot_pickaxe;
+
     @ObjectHolder("mystictools:case")
     public static Item loot_case;
 
@@ -22,6 +30,8 @@ public class ModItems {
         IForgeRegistry<Item> r = event.getRegistry();
 
         RegistryHelper.register(r, new ItemLootSword(), "loot_sword");
+        RegistryHelper.register(r, new ItemLootAxe(), "loot_axe");
+        RegistryHelper.register(r, new ItemLootPickaxe(), "loot_pickaxe");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
     }
 

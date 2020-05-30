@@ -13,17 +13,19 @@ import net.minecraft.util.text.TextFormatting;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class BasicEffect implements IEffect {
-    public static final Map<String, BasicEffect> REGISTRY = new HashMap<>();
+public class PotionEffect implements IEffect {
+    public static final Map<String, PotionEffect> REGISTRY = new HashMap<>();
 
 
-    public static final BasicEffect WITHERING = create("wither", BasicType.TARGET, Effects.WITHER).setItemTypes(LootSet.LootSetType.SWORD);
-    public static final BasicEffect SLOWNESS = create("slowness", BasicType.TARGET, Effects.SLOWNESS).setItemTypes(LootSet.LootSetType.SWORD);
+    public static final PotionEffect WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD);
+    public static final PotionEffect SLOWNESS = create("slowness", PotionType.TARGET, Effects.SLOWNESS).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD);
 
-    public static final BasicEffect REGENERATION = create("regeneration", BasicType.USER, Effects.REGENERATION).setItemTypes(LootSet.LootSetType.SWORD);
-    public static final BasicEffect SPEED = create("speed", BasicType.USER, Effects.SPEED).setItemTypes(LootSet.LootSetType.SWORD);
+    public static final PotionEffect REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.TOOL);
+    public static final PotionEffect SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.TOOL);
+    public static final PotionEffect HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.TOOL);
+    public static final PotionEffect SATURATION = create("saturation", PotionType.USER, Effects.SATURATION).setAmplifier(1, 3).setItemTypes(LootSet.LootSetType.TOOL);
 
-    private final BasicType effectType;
+    private final PotionType effectType;
 
     private String id;
     private Effect effect;
@@ -35,11 +37,11 @@ public class BasicEffect implements IEffect {
     private int amplifierMin = 0;
     private int amplifierMax = 0;
 
-    private BasicEffect(BasicType type) {
+    private PotionEffect(PotionType type) {
         this.effectType = type;
     }
 
-    public BasicType getType() {
+    public PotionType getType() {
         return this.effectType;
     }
 
@@ -47,7 +49,7 @@ public class BasicEffect implements IEffect {
         return applyToItems.contains(type);
     }
 
-    protected BasicEffect setItemTypes(LootSet.LootSetType... itemTypes) {
+    protected PotionEffect setItemTypes(LootSet.LootSetType... itemTypes) {
         for (LootSet.LootSetType type : itemTypes) {
             applyToItems.add(type);
         }
@@ -56,8 +58,8 @@ public class BasicEffect implements IEffect {
     }
 
     @Nullable
-    public static BasicEffect getById(String id) {
-        BasicEffect effect = REGISTRY.get(id);
+    public static PotionEffect getById(String id) {
+        PotionEffect effect = REGISTRY.get(id);
 
         return effect;
     }
@@ -79,7 +81,7 @@ public class BasicEffect implements IEffect {
     public static int getDurationFromStack(ItemStack stack, String effectId) {
         int duration = 0;
 
-        ListNBT effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        ListNBT effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_POTIONLIST);
 
         int count = effectTagList.size();
 
@@ -110,27 +112,23 @@ public class BasicEffect implements IEffect {
         return amplifier;
     }
 
-    public static List<BasicEffect> getEffectList(ItemStack stack) {
-        List<BasicEffect> list = new ArrayList<BasicEffect>();
+    public static List<PotionEffect> getPotionlist(ItemStack stack) {
+        List<PotionEffect> list = new ArrayList<PotionEffect>();
 
-        ListNBT effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        ListNBT effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_POTIONLIST);
 
         int count = effectTagList.size();
 
         for (int i = 0; i < count; ++i) {
             CompoundNBT e = effectTagList.getCompound(i);
-            list.add(BasicEffect.getById(e.getString("id")));
+            list.add(PotionEffect.getById(e.getString("id")));
         }
 
         return list;
     }
 
-    protected static BasicEffect create(String id, BasicType type) {
-        return create(id, type, null);
-    }
-
-    protected static BasicEffect create(String id, BasicType type, Effect effect) {
-        BasicEffect weaponEffect = new BasicEffect(type);
+    protected static PotionEffect create(String id, PotionType type, Effect effect) {
+        PotionEffect weaponEffect = new PotionEffect(type);
 
         weaponEffect.id = id;
         weaponEffect.effect = effect;
@@ -141,13 +139,13 @@ public class BasicEffect implements IEffect {
         return weaponEffect;
     }
 
-    protected BasicEffect setDuration(int min, int max) {
+    protected PotionEffect setDuration(int min, int max) {
         this.durationMin = min * 100;
         this.durationMax = max * 100;
         return this;
     }
 
-    protected BasicEffect setAmplifier(int min, int max) {
+    protected PotionEffect setAmplifier(int min, int max) {
         this.amplifierMin = min;
         this.amplifierMax = max;
         return this;
@@ -182,22 +180,34 @@ public class BasicEffect implements IEffect {
 
     public void onHit(int duration, int amplifier, LivingEntity target, LivingEntity attacker) {
         EffectInstance instance = this.getPotionEffect(duration, amplifier);
-
+        System.out.println("On HIT" + instance.toString());
         if (instance != null) {
-            if (this.getType() == BasicType.USER)
+            if (this.getType() == PotionType.USER)
                 attacker.addPotionEffect(instance);
             else
                 target.addPotionEffect(instance);
         }
     }
 
-    public enum BasicType {
+    public String getAmplifierString(ItemStack stack, String effectId) {
+        return getAmplifierString(stack, effectId, 0);
+    }
+
+    public String getAmplifierString(ItemStack stack, String effectId, int add) {
+        return TextFormatting.BOLD + "" + (getAmplifierFromStack(stack, effectId) + add) + "" + TextFormatting.RESET + "" + ((this.getType() == PotionType.USER) ? TextFormatting.GOLD : TextFormatting.RED) + "";
+    }
+
+    public String getDurationString(ItemStack stack, String effectId) {
+        return TextFormatting.BOLD + "" + (getDurationFromStack(stack, effectId) / 100) + "" + TextFormatting.RESET + "" + TextFormatting.GREEN + "";
+    }
+
+    public enum PotionType {
         USER(TextFormatting.GOLD),
         TARGET(TextFormatting.RED);
 
         private TextFormatting color;
 
-        private BasicType(TextFormatting color) {
+        private PotionType(TextFormatting color) {
             this.color = color;
         }
 
@@ -205,7 +215,7 @@ public class BasicEffect implements IEffect {
             return this.color;
         }
 
-        public boolean equals(BasicType type) {
+        public boolean equals(PotionType type) {
             return type == this;
         }
     }

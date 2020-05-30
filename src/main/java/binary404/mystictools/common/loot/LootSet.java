@@ -31,10 +31,54 @@ public class LootSet {
             "Arondite, Last Stand of the World"
     };
 
+    public static final String[] TOOL_NAMES = {
+            "The Pawpaw"
+            , "The Single Wing"
+            , "The Godzilla"
+            , "The Picker"
+            , "The Little Green"
+            , "The Big Buddy"
+            , "The Guzzler"
+            , "The Wiggle Stick"
+            , "The Kicker"
+            , "The Ground Crusher"
+            , "The Speed Miner 3000"
+            , "The Kicker"
+            , "The Sludge"
+            , "The Commander"
+            , "The Flat Nose"
+            , "The Toothpick"
+            , "The Measurer"
+            , "The Belly"
+            , "The Clicker"
+            , "The Parrot"
+            , "The Bigwig"
+            , "The Drag Bag"
+            , "The Chicken Beak"
+            , "The Whiskers"
+            , "The Fury"
+            , "The Pokey"
+            , "The Wedger"
+            , "The Friendly One"
+            , "The Goofy Hook"
+            , "The Gobbler"
+            , "The Dislocator"
+            , "The Winger"
+            , "The Knockout"
+            , "The Pully"
+            , "The Prickle"
+            , "The Killer"
+            , "The Band Aid"
+            , "The Punisher"
+            , "The Spiker"
+            , "The Weeping Bell"
+    };
+
     public static final Map<LootSetType, String[]> LOOT_NAMES = new HashMap<>();
 
     static {
         LOOT_NAMES.put(LootSetType.SWORD, SWORD_NAMES);
+        LOOT_NAMES.put(LootSetType.TOOL, TOOL_NAMES);
     }
 
     protected LootSet(int model) {
@@ -73,7 +117,7 @@ public class LootSet {
 
     public static String getNameForType(LootSetType type, Random rand) {
         if (!LOOT_NAMES.containsKey(type))
-            return "";
+            return "NAME";
 
         String[] names = LOOT_NAMES.get(type);
 
@@ -81,7 +125,8 @@ public class LootSet {
     }
 
     public enum LootSetType {
-        SWORD("sword", 76);
+        SWORD("sword", 76),
+        TOOL("tool", 21);
 
         public final int models;
         private String id;

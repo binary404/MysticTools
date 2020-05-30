@@ -1,6 +1,5 @@
 package binary404.mystictools.common.loot;
 
-import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -20,8 +19,8 @@ public class LootRarity {
             .setToughness(0, 0)
             .setEfficiency(5.0F, 12.0F)
             .setDurability(100, 500)
-            .setModifierCount(0, 1)
-            .setUpgrades(0, 2);
+            .setPotionCount(0, 1)
+            .setEffectCount(0, 1);
 
     public static final LootRarity UNCOMMON =
             get("Uncommon", TextFormatting.GRAY)
@@ -31,8 +30,8 @@ public class LootRarity {
                     .setToughness(1, 3)
                     .setEfficiency(11.0F, 25.0F)
                     .setDurability(350, 1450)
-                    .setModifierCount(1, 3)
-                    .setUpgrades(1, 3);
+                    .setPotionCount(0, 3)
+                    .setEffectCount(0, 2);
 
     public static final LootRarity RARE =
             get("Rare", TextFormatting.YELLOW)
@@ -42,8 +41,8 @@ public class LootRarity {
                     .setToughness(2, 5)
                     .setEfficiency(15.0F, 40.0F)
                     .setDurability(850, 2500)
-                    .setModifierCount(2, 4)
-                    .setUpgrades(1, 3);
+                    .setPotionCount(1, 4)
+                    .setEffectCount(0, 3);
 
     public static final LootRarity EPIC =
             get("Epic", TextFormatting.BLUE)
@@ -53,8 +52,8 @@ public class LootRarity {
                     .setToughness(1, 5)
                     .setEfficiency(20.0F, 42.0F)
                     .setDurability(2000, 4500)
-                    .setModifierCount(3, 5)
-                    .setUpgrades(2, 4);
+                    .setPotionCount(2, 5)
+                    .setEffectCount(1, 3);
 
     public static final LootRarity UNIQUE =
             get("Unique", TextFormatting.DARK_PURPLE)
@@ -64,8 +63,8 @@ public class LootRarity {
                     .setToughness(2, 6)
                     .setEfficiency(20.56F, 56.05F)
                     .setDurability(1000, 4000)
-                    .setModifierCount(3, 6)
-                    .setUpgrades(2, 4);
+                    .setPotionCount(3, 6)
+                    .setEffectCount(1, 3);
 
     private TextFormatting color = TextFormatting.WHITE;
     private int damageMin = 0;
@@ -80,10 +79,10 @@ public class LootRarity {
     private float efficiencyMax = 1.0F;
     private int durabilityMin = 0;
     private int durabilityMax = 0;
-    private int modifiersMin = 0;
-    private int modifiersMax = 1;
-    private int upgradesMin = 1;
-    private int upgradesMax = 10;
+    private int potionMin = 0;
+    private int potionMax = 1;
+    private int effectMin = 0;
+    private int effectMax = 1;
     private String id;
 
     private LootRarity() {
@@ -109,9 +108,15 @@ public class LootRarity {
         return r;
     }
 
-    protected LootRarity setModifierCount(int min, int max) {
-        this.modifiersMin = min;
-        this.modifiersMax = max;
+    protected LootRarity setPotionCount(int min, int max) {
+        this.potionMin = min;
+        this.potionMax = max;
+        return this;
+    }
+
+    protected LootRarity setEffectCount(int min, int max) {
+        this.effectMin = min;
+        this.effectMax = max;
         return this;
     }
 
@@ -151,18 +156,13 @@ public class LootRarity {
         return this;
     }
 
-    protected LootRarity setUpgrades(int min, int max) {
-        this.upgradesMin = min;
-        this.upgradesMax = max;
-        return this;
-    }
+    public int getPotionCount(Random rand) {
+        int modifierCount = this.potionMin;
 
-    public int getModifierCount(Random rand) {
-        int modifierCount = this.modifiersMin;
+        if (modifierCount < this.potionMax)
+            modifierCount += rand.nextInt(this.potionMax - modifierCount + 1);
 
-        if (modifierCount < this.modifiersMax)
-            modifierCount += rand.nextInt(this.modifiersMax - modifierCount + 1);
-
+        System.out.println(modifierCount);
         return modifierCount;
     }
 
@@ -216,14 +216,6 @@ public class LootRarity {
         efficiency += (this.efficiencyMax - efficiency) * rand.nextFloat();
 
         return efficiency;
-    }
-
-    public int getUpgrades(Random rand) {
-        int upgrades = this.upgradesMin;
-
-        upgrades += rand.nextInt(this.upgradesMax - upgrades + 1);
-
-        return upgrades;
     }
 
     protected static LootRarity get(String id, TextFormatting color) {

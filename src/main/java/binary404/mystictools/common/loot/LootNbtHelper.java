@@ -18,8 +18,7 @@ public class LootNbtHelper {
         return value;
     }
 
-    public static void setLootIntValue(ItemStack stack, String key, int value)
-    {
+    public static void setLootIntValue(ItemStack stack, String key, int value) {
         if (!stack.hasTag())
             stack.setTag(new CompoundNBT());
 
@@ -40,14 +39,11 @@ public class LootNbtHelper {
         return value;
     }
 
-    public static ListNBT getLootTagList(ItemStack stack, String key)
-    {
+    public static ListNBT getLootTagList(ItemStack stack, String key) {
         ListNBT list = new ListNBT();
 
-        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG))
-        {
-            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key))
-            {
+        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
+            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
                 list = stack.getTag().getCompound(LootTags.LOOT_TAG).getList(key, 10);
             }
         }
@@ -55,8 +51,19 @@ public class LootNbtHelper {
         return list;
     }
 
-    public static void setLootTagList(ItemStack stack, String key, ListNBT value)
-    {
+    public static CompoundNBT getLootCompound(ItemStack stack, String key) {
+        CompoundNBT compound = new CompoundNBT();
+
+        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
+            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
+                compound = stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(key);
+            }
+        }
+
+        return compound;
+    }
+
+    public static void setLootTagList(ItemStack stack, String key, ListNBT value) {
         if (!stack.hasTag())
             stack.setTag(new CompoundNBT());
 
@@ -66,14 +73,11 @@ public class LootNbtHelper {
         stack.getTag().getCompound(LootTags.LOOT_TAG).put(key, value);
     }
 
-    public static String getLootStringValue(ItemStack stack, String key)
-    {
+    public static String getLootStringValue(ItemStack stack, String key) {
         String value = "";
 
-        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG))
-        {
-            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key))
-            {
+        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
+            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
                 value = stack.getTag().getCompound(LootTags.LOOT_TAG).getString(key);
             }
         }
@@ -81,8 +85,7 @@ public class LootNbtHelper {
         return value;
     }
 
-    public static void setLootStringValue(ItemStack stack, String key, String value)
-    {
+    public static void setLootStringValue(ItemStack stack, String key, String value) {
         if (!stack.hasTag())
             stack.setTag(new CompoundNBT());
 

@@ -1,8 +1,7 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.common.loot.*;
-import binary404.mystictools.common.loot.effects.BasicEffect;
-import binary404.mystictools.common.loot.effects.IEffect;
+import binary404.mystictools.common.loot.effects.PotionEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +26,8 @@ public class ItemCase extends Item {
 
         ItemStack stack = playerIn.getHeldItem(handIn);
 
-
         for (int i = 0; i < 1; ++i) {
             int rarity = random.nextInt(100) + 1;
-            System.out.println(rarity);
             LootRarity lootRarity;
             if (rarity <= 55)
                 lootRarity = LootRarity.COMMON;
@@ -47,9 +43,12 @@ public class ItemCase extends Item {
                 lootRarity = LootRarity.COMMON;
 
             //Random Tool TODO
-            ItemStack loot = new ItemStack(ModItems.loot_sword);
+            ItemStack loot = LootItemHelper.getRandomLoot(random, lootRarity);
 
-            LootSet.LootSetType type = LootSet.LootSetType.SWORD;
+            LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
+
+            if (type == null)
+                type = LootSet.LootSetType.SWORD;
 
             CompoundNBT tag = new CompoundNBT();
             tag.putInt("HideFlags", 2);
@@ -66,9 +65,10 @@ public class ItemCase extends Item {
             lootTag.putFloat(LootTags.LOOT_TAG_SPEED, lootRarity.getSpeed(random));
             lootTag.putFloat(LootTags.LOOT_TAG_EFFICIENCY, lootRarity.getEfficiency(random));
             lootTag.putInt(LootTags.LOOT_TAG_DURABILITY, lootRarity.getDurability(random));
-            lootTag.putInt(LootTags.LOOT_TAG_UPGRADES, lootRarity.getUpgrades(random));
+            lootTag.putInt(LootTags.LOOT_TAG_LEVEL, 10);
+            lootTag.putInt(LootTags.LOOT_TAG_UPGRADE, 0);
 
-            int modifierCount = lootRarity.getModifierCount(random);
+            int modifierCount = lootRarity.getPotionCount(random);
 
             boolean unbreakable = false;
 
@@ -76,22 +76,22 @@ public class ItemCase extends Item {
                 unbreakable = true;
 
             if (modifierCount > 0) {
-                List<BasicEffect> appliedEffects = new ArrayList<>();
+                List<PotionEffect> appliedEffects = new ArrayList<>();
                 ListNBT effectList = new ListNBT();
 
                 for (int m = 0; m < modifierCount; m++) {
-                    BasicEffect effect = LootItemHelper.getRandomExcluding(random, type, appliedEffects);
+                    PotionEffect effect = LootItemHelper.getRandomPotionExcluding(random, type, appliedEffects);
 
                     if (effect != null) {
                         effectList.add(effect.getNbt(random));
                         appliedEffects.add(effect);
-                    }else {
+                    } else {
                     }
                 }
                 if (lootRarity != LootRarity.COMMON)
                     if (random.nextInt(100) > 90)
                         unbreakable = true;
-                lootTag.put(LootTags.LOOT_TAG_EFFECTLIST, effectList);
+                lootTag.put(LootTags.LOOT_TAG_POTIONLIST, effectList);
             }
 
             tag.put(LootTags.LOOT_TAG, lootTag);

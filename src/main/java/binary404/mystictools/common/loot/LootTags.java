@@ -14,9 +14,12 @@ public class LootTags {
     public static final String LOOT_TAG_EFFICIENCY = "efficiency";
     public static final String LOOT_TAG_DURABILITY = "durability";
 
-    public static final String LOOT_TAG_KILLS = "kills";
+    public static final String LOOT_TAG_XP = "xp";
     public static final String LOOT_TAG_LEVEL = "level";
+    public static final String LOOT_TAG_UPGRADE = "upgrade";
 
+    public static final String LOOT_TAG_POTIONLIST = "potionList";
+    public static final String LOOT_TAG_UNIQUE = "unique";
     public static final String LOOT_TAG_EFFECTLIST = "effectList";
 
     public static final String LOOT_TAG_DRAWSPEED = "drawspeed";
@@ -28,7 +31,5 @@ public class LootTags {
 
     public static final String LOOT_TAG_EFFECT_ACTIVE = "effect_active";
     public static final String LOOT_TAG_EFFECT_LEVEL = "effect_level";
-
-    public static final String LOOT_TAG_UPGRADES = "upgrades";
 
 }
