@@ -4,6 +4,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,6 +15,8 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -41,6 +44,16 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
                 return model;
             }
         });
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+        ItemStack stack = p_77659_2_.getHeldItem(p_77659_3_);
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if(rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).rightClick(p_77659_2_, stack);
+        }
+        return super.onItemRightClick(p_77659_1_, p_77659_2_, p_77659_3_);
     }
 
     @Override

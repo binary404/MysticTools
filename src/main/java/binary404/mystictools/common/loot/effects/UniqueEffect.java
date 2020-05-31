@@ -3,7 +3,8 @@ package binary404.mystictools.common.loot.effects;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
-import binary404.mystictools.common.world.cabability.IUniqueSave;
+import binary404.mystictools.common.loot.effects.unique.XRay;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -15,6 +16,8 @@ import java.util.Map;
 public class UniqueEffect {
 
     public static final Map<String, UniqueEffect> REGISTRY = new HashMap<>();
+
+    public static final UniqueEffect xray = create("xray", new XRay()).setItemTypes(LootSet.LootSetType.TOOL);
 
     private String id;
     private IUniqueEffect effect;
@@ -59,6 +62,10 @@ public class UniqueEffect {
     public static UniqueEffect getUniqueEffect(ItemStack stack) {
         CompoundNBT tag = LootNbtHelper.getLootCompound(stack, LootTags.LOOT_TAG_UNIQUE);
         return UniqueEffect.getById(tag.getString("id"));
+    }
+
+    public void rightClick(LivingEntity entity, ItemStack stack) {
+        this.effect.rightClick(entity, stack);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

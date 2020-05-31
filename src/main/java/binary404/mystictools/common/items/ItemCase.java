@@ -2,6 +2,7 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.loot.effects.PotionEffect;
+import binary404.mystictools.common.loot.effects.UniqueEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,6 +94,9 @@ public class ItemCase extends Item {
                         unbreakable = true;
                 lootTag.put(LootTags.LOOT_TAG_POTIONLIST, effectList);
             }
+
+            if (lootRarity == LootRarity.UNIQUE)
+                lootTag.put(LootTags.LOOT_TAG_UNIQUE, UniqueEffect.getById("xray").getNbt());
 
             tag.put(LootTags.LOOT_TAG, lootTag);
 

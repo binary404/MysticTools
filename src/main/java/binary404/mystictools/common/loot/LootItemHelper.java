@@ -3,6 +3,7 @@ package binary404.mystictools.common.loot;
 import binary404.mystictools.common.core.RandomCollection;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.PotionEffect;
+import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -150,6 +151,22 @@ public class LootItemHelper {
         }
 
         list.removeAll(exclude);
+
+        if (list.size() > 0)
+            effect = list.get(rand.nextInt(list.size()));
+
+        return effect;
+    }
+
+    public static UniqueEffect getRandomUnique(Random rand, LootSet.LootSetType type) {
+        UniqueEffect effect = null;
+
+        List<UniqueEffect> list = new ArrayList<>();
+        for (UniqueEffect e : UniqueEffect.REGISTRY.values()) {
+            if (e.applyToItemType(type)) {
+                list.add(e);
+            }
+        }
 
         if (list.size() > 0)
             effect = list.get(rand.nextInt(list.size()));
