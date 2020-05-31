@@ -162,7 +162,6 @@ public class LootRarity {
         if (modifierCount < this.potionMax)
             modifierCount += rand.nextInt(this.potionMax - modifierCount + 1);
 
-        System.out.println(modifierCount);
         return modifierCount;
     }
 

@@ -1,9 +1,11 @@
 package binary404.mystictools.common.items;
 
+import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -65,6 +67,11 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
         LootItemHelper.handlePotionEffects(stack, target, attacker);
         LootItemHelper.handleHit(stack, target);
+
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if(rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack);
+        }
 
         return hit;
     }

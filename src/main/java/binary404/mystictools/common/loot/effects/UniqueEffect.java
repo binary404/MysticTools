@@ -3,6 +3,7 @@ package binary404.mystictools.common.loot.effects;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.unique.Vortex;
 import binary404.mystictools.common.loot.effects.unique.XRay;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,7 @@ public class UniqueEffect {
     public static final Map<String, UniqueEffect> REGISTRY = new HashMap<>();
 
     public static final UniqueEffect xray = create("xray", new XRay()).setItemTypes(LootSet.LootSetType.TOOL);
+    public static final UniqueEffect vortex = create("vortex", new Vortex()).setItemTypes(LootSet.LootSetType.SWORD);
 
     private String id;
     private IUniqueEffect effect;
@@ -66,6 +68,10 @@ public class UniqueEffect {
 
     public void rightClick(LivingEntity entity, ItemStack stack) {
         this.effect.rightClick(entity, stack);
+    }
+
+    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
+        this.effect.hit(target, attacker, stack);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

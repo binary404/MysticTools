@@ -180,7 +180,6 @@ public class PotionEffect implements IEffect {
 
     public void onHit(int duration, int amplifier, LivingEntity target, LivingEntity attacker) {
         EffectInstance instance = this.getPotionEffect(duration, amplifier);
-        System.out.println("On HIT" + instance.toString());
         if (instance != null) {
             if (this.getType() == PotionType.USER)
                 attacker.addPotionEffect(instance);
