@@ -22,7 +22,7 @@ public class ModItems {
     @ObjectHolder("mystictools:loot_pickaxe")
     public static Item loot_pickaxe;
 
-    @ObjectHolder("mystictools:case")
+    @ObjectHolder("mystictools:loot_case")
     public static Item loot_case;
 
     @SubscribeEvent
