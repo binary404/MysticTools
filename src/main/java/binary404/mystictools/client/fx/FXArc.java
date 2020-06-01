@@ -1,7 +1,6 @@
 package binary404.mystictools.client.fx;
 
-import binary404.mystictools.common.core.Utils;
-import com.mojang.blaze3d.platform.GlStateManager;
+import binary404.mystictools.common.core.util.Utils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.particle.IParticleRenderType;
@@ -9,12 +8,9 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 

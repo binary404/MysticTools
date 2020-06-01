@@ -3,11 +3,15 @@ package binary404.mystictools.common.loot.effects;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
-import binary404.mystictools.common.loot.effects.unique.Vortex;
-import binary404.mystictools.common.loot.effects.unique.XRay;
+import binary404.mystictools.common.loot.effects.unique.*;
+import binary404.mystictools.common.world.UniqueSave;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +22,14 @@ public class UniqueEffect {
 
     public static final Map<String, UniqueEffect> REGISTRY = new HashMap<>();
 
-    public static final UniqueEffect xray = create("xray", new XRay()).setItemTypes(LootSet.LootSetType.TOOL);
+    public static final UniqueEffect xray = create("xray", new XRay()).setItemTypes(LootSet.LootSetType.PICKAXE);
+    public static final UniqueEffect emerald = create("emeralds", new Emerald()).setItemTypes(LootSet.LootSetType.PICKAXE);
+
     public static final UniqueEffect vortex = create("vortex", new Vortex()).setItemTypes(LootSet.LootSetType.SWORD);
+    public static final UniqueEffect brainwash = create("brainwash", new Brainwash()).setItemTypes(LootSet.LootSetType.SWORD);
+
+    public static final UniqueEffect treeChopper = create("treeChopper", new TreeChopper()).setItemTypes(LootSet.LootSetType.AXE);
+    public static final UniqueEffect growthAura = create("growthAura", new GrowthAura()).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
 
     private String id;
     private IUniqueEffect effect;
@@ -72,6 +82,14 @@ public class UniqueEffect {
 
     public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
         this.effect.hit(target, attacker, stack);
+    }
+
+    public void breakBlock(BlockPos pos, World world, PlayerEntity player, ItemStack stack) {
+        this.effect.breakBlock(pos, world, player, stack);
+    }
+
+    public void tick(Entity entity, ItemStack stack) {
+        this.effect.tick(entity, stack);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

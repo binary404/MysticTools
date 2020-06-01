@@ -1,12 +1,16 @@
 package binary404.mystictools.common.loot.effects;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public interface IUniqueEffect {
 
-    default void tick(LivingEntity entity, ItemStack stack) {
+    default void tick(Entity entity, ItemStack stack) {
 
     }
 
@@ -18,12 +22,7 @@ public interface IUniqueEffect {
 
     }
 
-    default CompoundNBT write(CompoundNBT nbt, LivingEntity entity) {
-        return nbt;
-    }
-
-    default void read(CompoundNBT nbt, LivingEntity entity) {
+    default void breakBlock(BlockPos pos, World world, PlayerEntity player, ItemStack stack) {
 
     }
-
 }
