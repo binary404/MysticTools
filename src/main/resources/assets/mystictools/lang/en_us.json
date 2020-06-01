@@ -1,0 +1,20 @@
+{
+  "item.mystictools.loot_case": "Loot Case",
+  "item.mystictools.loot_axe": "Loot Axe",
+  "item.mystictools.loot_pickaxe": "Loot Pickaxe",
+  "item.mystictools.loot_sword": "Loot Sword",
+  "item.mystictools.loot_shovel": "Loot Shovel",
+
+  "weaponeffect.regeneration.description": "Regeneration",
+  "weaponeffect.speed.description": "Speed",
+  "weaponeffect.saturation.description": "Saturation",
+  "weaponeffect.haste.description": "Haste",
+  "weaponeffect.slowness.description": "Slowness",
+  "weaponeffect.wither.description": "Wither",
+
+  "growthAura.description": "Growth Aura",
+  "brainwash.description": "Brainwash",
+  "xray.description": "Xray",
+  "vortex.description": "Vortex",
+  "treeChopper.description": "Tree Chopper"
+}

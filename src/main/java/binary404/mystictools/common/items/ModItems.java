@@ -22,6 +22,9 @@ public class ModItems {
     @ObjectHolder("mystictools:loot_pickaxe")
     public static Item loot_pickaxe;
 
+    @ObjectHolder("mystictools:loot_shovel")
+    public static Item loot_shovel;
+
     @ObjectHolder("mystictools:loot_case")
     public static Item loot_case;
 
@@ -31,6 +34,7 @@ public class ModItems {
 
         RegistryHelper.register(r, new ItemLootSword(), "loot_sword");
         RegistryHelper.register(r, new ItemLootAxe(), "loot_axe");
+        RegistryHelper.register(r, new ItemLootShovel(), "loot_shovel");
         RegistryHelper.register(r, new ItemLootPickaxe(), "loot_pickaxe");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
     }

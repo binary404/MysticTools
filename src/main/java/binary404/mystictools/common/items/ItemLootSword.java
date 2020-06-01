@@ -9,10 +9,14 @@ import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -69,11 +73,31 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         LootItemHelper.handleHit(stack, target);
 
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
-        if(rarity == LootRarity.UNIQUE) {
+        if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack);
         }
 
         return hit;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if (rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
+        }
+        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if (rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
+        }
+
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
     @Override

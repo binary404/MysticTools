@@ -78,7 +78,9 @@ public class LootSet {
 
     static {
         LOOT_NAMES.put(LootSetType.SWORD, SWORD_NAMES);
-        LOOT_NAMES.put(LootSetType.TOOL, TOOL_NAMES);
+        LOOT_NAMES.put(LootSetType.AXE, TOOL_NAMES);
+        LOOT_NAMES.put(LootSetType.PICKAXE, TOOL_NAMES);
+        LOOT_NAMES.put(LootSetType.SHOVEL, TOOL_NAMES);
     }
 
     protected LootSet(int model) {
@@ -126,7 +128,9 @@ public class LootSet {
 
     public enum LootSetType {
         SWORD("sword", 76),
-        TOOL("tool", 21);
+        PICKAXE("pickaxe", 21),
+        AXE("axe", 21),
+        SHOVEL("shovel", 21);
 
         public final int models;
         private String id;

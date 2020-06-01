@@ -1,0 +1,98 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "mystictools:items/sword/1"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"model": 1
+			},
+			"model": "mystictools:item/shovel/1"
+		},
+		{
+			"predicate": {
+				"model": 2
+			},
+			"model": "mystictools:item/shovel/2"
+		},
+		{
+			"predicate": {
+				"model": 3
+			},
+			"model": "mystictools:item/shovel/3"
+		},
+		{
+			"predicate": {
+				"model": 4
+			},
+			"model": "mystictools:item/shovel/4"
+		},
+		{
+			"predicate": {
+				"model": 5
+			},
+			"model": "mystictools:item/shovel/5"
+		},
+		{
+			"predicate": {
+				"model": 6
+			},
+			"model": "mystictools:item/shovel/6"
+		},
+		{
+			"predicate": {
+				"model": 7
+			},
+			"model": "mystictools:item/shovel/7"
+		},
+		{
+			"predicate": {
+				"model": 8
+			},
+			"model": "mystictools:item/shovel/8"
+		},
+		{
+			"predicate": {
+				"model": 9
+			},
+			"model": "mystictools:item/shovel/9"
+		},
+		{
+			"predicate": {
+				"model": 10
+			},
+			"model": "mystictools:item/shovel/10"
+		},
+		{
+			"predicate": {
+				"model": 11
+			},
+			"model": "mystictools:item/shovel/11"
+		},
+		{
+			"predicate": {
+				"model": 12
+			},
+			"model": "mystictools:item/shovel/12"
+		},
+		{
+			"predicate": {
+				"model": 13
+			},
+			"model": "mystictools:item/shovel/13"
+		},
+		{
+			"predicate": {
+				"model": 14
+			},
+			"model": "mystictools:item/shovel/14"
+		},
+		{
+			"predicate": {
+				"model": 15
+			},
+			"model": "mystictools:item/shovel/15"
+		}
+	]
+}

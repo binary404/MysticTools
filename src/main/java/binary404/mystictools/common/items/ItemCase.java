@@ -2,12 +2,9 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.*;
-import binary404.mystictools.common.loot.effects.PotionEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -26,6 +23,8 @@ public class ItemCase extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if(worldIn.isRemote)
+            return super.onItemRightClick(worldIn, playerIn, handIn);
         ServerWorld serverWorld = ServerLifecycleHooks.getCurrentServer().getWorld(worldIn.dimension.getType());
         ItemStack stack = playerIn.getHeldItem(handIn);
 
@@ -43,13 +42,16 @@ public class ItemCase extends Item {
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
-        if (lootRarity == LootRarity.UNIQUE) {
-            ItemStack loot = UniqueHandler.getRandomUniqueItem(serverWorld);
-            playerIn.dropItem(loot, false, true);
+        System.out.println(lootRarity);
 
+        ItemStack loot;
+        if (lootRarity.getId().equals("Unique")) {
+            loot = UniqueHandler.getRandomUniqueItem(serverWorld);
+            playerIn.dropItem(loot, false, true);
             stack.shrink(1);
+            return super.onItemRightClick(worldIn, playerIn, handIn);
         } else {
-            ItemStack loot = LootItemHelper.getRandomLoot(random, lootRarity);
+            loot = LootItemHelper.getRandomLoot(random, lootRarity);
 
             LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 
@@ -57,12 +59,9 @@ public class ItemCase extends Item {
                 type = LootSet.LootSetType.SWORD;
 
             loot = LootItemHelper.generateLoot(lootRarity, type, loot);
-
             playerIn.dropItem(loot, false, true);
-
             stack.shrink(1);
+            return super.onItemRightClick(worldIn, playerIn, handIn);
         }
-
-        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

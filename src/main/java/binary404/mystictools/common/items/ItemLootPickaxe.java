@@ -50,7 +50,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     public ActionResult<ItemStack> onItemRightClick(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
         ItemStack stack = p_77659_2_.getHeldItem(p_77659_3_);
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
-        if(rarity == LootRarity.UNIQUE) {
+        if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).rightClick(p_77659_2_, stack);
         }
         return super.onItemRightClick(p_77659_1_, p_77659_2_, p_77659_3_);
@@ -75,6 +75,10 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(itemstack, LootTags.LOOT_TAG_RARITY));
+        if (rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(itemstack).breakBlock(pos, player.world, player, itemstack);
+        }
         return false;
     }
 
@@ -82,6 +86,11 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (entityIn instanceof LivingEntity && isSelected)
             LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) entityIn);
+
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if (rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
+        }
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 

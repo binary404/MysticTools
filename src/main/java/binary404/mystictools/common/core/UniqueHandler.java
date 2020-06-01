@@ -22,13 +22,11 @@ public class UniqueHandler {
 
     public static void generateUniqueItems(ServerWorld world) {
         UniqueSave.forWorld(world).uniques.clear();
-        for (int i = 0; i <= 5; i++) {
+        for (int i = 0; i < 5; i++) {
             ItemStack stack = LootItemHelper.getRandomLoot(new Random(), LootRarity.UNIQUE);
             UniqueEffect effect = LootItemHelper.getRandomUnique(new Random(), LootItemHelper.getItemType(stack.getItem()));
             if (stack.getItem().getRegistryName() == null)
                 stack = new ItemStack(ModItems.loot_pickaxe);
-            if (effect == null)
-                effect = UniqueEffect.xray;
             UniqueSave.UniqueInfo info = new UniqueSave.UniqueInfo(stack.getItem(), effect, false);
             UniqueSave.forWorld(world).uniques.add(info);
         }
@@ -39,8 +37,11 @@ public class UniqueHandler {
         UniqueSave save = UniqueSave.forWorld(world);
         int randomInt = new Random().nextInt(save.uniques.size());
         UniqueSave.UniqueInfo info = save.uniques.get(randomInt);
-        if (info.found)
+        if (info.found) {
+            save.uniques.set(randomInt, info);
+            save.markDirty();
             return LootItemHelper.generateLoot(LootRarity.EPIC, LootItemHelper.getItemType(info.item), new ItemStack(info.item));
+        }
         LootSet.LootSetType type = LootItemHelper.getItemType(info.item);
         ItemStack loot = LootItemHelper.generateLoot(LootRarity.UNIQUE, type, new ItemStack(info.item));
 
@@ -48,6 +49,7 @@ public class UniqueHandler {
         info.found = true;
         save.uniques.set(randomInt, info);
         save.markDirty();
+        System.out.println(save.uniques);
         return loot;
     }
 

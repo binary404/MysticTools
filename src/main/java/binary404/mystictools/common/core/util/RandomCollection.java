@@ -1,4 +1,4 @@
-package binary404.mystictools.common.core;
+package binary404.mystictools.common.core.util;
 
 import java.util.NavigableMap;
 import java.util.Random;

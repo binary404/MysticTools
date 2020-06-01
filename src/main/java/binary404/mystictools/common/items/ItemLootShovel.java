@@ -30,17 +30,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class ItemLootAxe extends AxeItem implements ILootItem {
+public class ItemLootShovel extends ShovelItem implements ILootItem {
 
-    public ItemLootAxe() {
-        super(ItemTier.DIAMOND, 5.0F, -3.0F, new Item.Properties());
+    public ItemLootShovel() {
+        super(ItemTier.DIAMOND, 1.5F, -3.0F, new Item.Properties());
 
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-                float model = 0F;
+                float model = 1.0F;
 
-                model = LootNbtHelper.getLootIntValue(p_call_1_, LootTags.LOOT_TAG_MODEL);
+                model = (float) LootNbtHelper.getLootIntValue(p_call_1_, LootTags.LOOT_TAG_MODEL);
 
                 return model;
             }
@@ -109,7 +109,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     @Override
     public Set<ToolType> getToolTypes(ItemStack stack) {
-        return Sets.newHashSet(ToolType.AXE);
+        return Sets.newHashSet(ToolType.SHOVEL);
     }
 
     @Override
@@ -123,9 +123,10 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + "Axe"));
+        tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + "Shovel"));
 
         float efficiency = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY);
         tooltip.add(new StringTextComponent(TextFormatting.GRAY + "" + ItemStack.DECIMALFORMAT.format(efficiency) + " Mining Speed"));
     }
+
 }

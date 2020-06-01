@@ -6,6 +6,7 @@ import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
@@ -27,14 +28,18 @@ public class MysticTools {
         instance = this;
         proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
         proxy.registerHandlers();
+        proxy.attachEventHandlers(MinecraftForge.EVENT_BUS);
+        proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
+        proxy.init();
         DeferredWorkQueue.runLater(() -> {
             ItemTypeRegistry.register(ModItems.loot_sword, LootSet.LootSetType.SWORD);
-            ItemTypeRegistry.register(ModItems.loot_axe, LootSet.LootSetType.TOOL);
-            ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.TOOL);
+            ItemTypeRegistry.register(ModItems.loot_axe, LootSet.LootSetType.AXE);
+            ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.PICKAXE);
+            ItemTypeRegistry.register(ModItems.loot_shovel, LootSet.LootSetType.SHOVEL);
         });
     }
 

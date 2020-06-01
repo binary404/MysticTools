@@ -1,0 +1,6 @@
+{
+	"parent": "mystictools:item/tool_pickaxe",
+	"textures": {
+		"layer0": "mystictools:items/pickaxe/16"
+	}
+}

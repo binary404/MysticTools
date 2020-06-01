@@ -1,6 +1,6 @@
 package binary404.mystictools.common.loot;
 
-import binary404.mystictools.common.core.RandomCollection;
+import binary404.mystictools.common.core.util.RandomCollection;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
@@ -36,9 +36,10 @@ public class LootItemHelper {
     public static ItemStack getRandomLoot(Random rand, LootRarity rarity) {
         RandomCollection<Item> col = new RandomCollection<Item>(rand);
 
-        col.add(3, ModItems.loot_sword);
+        col.add(2, ModItems.loot_sword);
         col.add(1, ModItems.loot_axe);
         col.add(1, ModItems.loot_pickaxe);
+        col.add(1, ModItems.loot_shovel);
 
         ItemStack stack = new ItemStack(col.next());
 
@@ -211,6 +212,12 @@ public class LootItemHelper {
         }
 
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+
+        if (rarity == LootRarity.UNIQUE) {
+            String effect = I18n.format(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
+
+            tooltip.add(new StringTextComponent("+ " + TextFormatting.ITALIC + "" + TextFormatting.DARK_PURPLE + "" + effect));
+        }
 
         if (rarity != null)
             tooltip.add(new StringTextComponent("Rarity: " + rarity.getColor() + rarity.getId()));
