@@ -6,8 +6,9 @@ import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +24,13 @@ public class MysticTools {
     public static IProxy proxy;
 
     public static final Logger LOGGER = LogManager.getLogger("mystictools");
+
+    public static ItemGroup tab = new ItemGroup("mystictools") {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(ModItems.loot_case);
+        }
+    };
 
     public MysticTools() {
         instance = this;
@@ -40,6 +48,7 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_axe, LootSet.LootSetType.AXE);
             ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.PICKAXE);
             ItemTypeRegistry.register(ModItems.loot_shovel, LootSet.LootSetType.SHOVEL);
+            ItemTypeRegistry.register(ModItems.loot_bow, LootSet.LootSetType.BOW);
         });
     }
 

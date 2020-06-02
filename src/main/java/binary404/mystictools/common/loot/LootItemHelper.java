@@ -36,10 +36,11 @@ public class LootItemHelper {
     public static ItemStack getRandomLoot(Random rand, LootRarity rarity) {
         RandomCollection<Item> col = new RandomCollection<Item>(rand);
 
-        col.add(2, ModItems.loot_sword);
-        col.add(1, ModItems.loot_axe);
-        col.add(1, ModItems.loot_pickaxe);
-        col.add(1, ModItems.loot_shovel);
+        col.add(3, ModItems.loot_sword);
+        col.add(2, ModItems.loot_axe);
+        col.add(2, ModItems.loot_pickaxe);
+        col.add(2, ModItems.loot_shovel);
+        col.add(1, ModItems.loot_bow);
 
         ItemStack stack = new ItemStack(col.next());
 
@@ -254,6 +255,9 @@ public class LootItemHelper {
         lootTag.putInt(LootTags.LOOT_TAG_DURABILITY, lootRarity.getDurability(random));
         lootTag.putInt(LootTags.LOOT_TAG_LEVEL, 10);
         lootTag.putInt(LootTags.LOOT_TAG_UPGRADE, 0);
+
+        lootTag.putFloat(LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
+        lootTag.putFloat(LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
 
         int modifierCount = lootRarity.getPotionCount(random);
 

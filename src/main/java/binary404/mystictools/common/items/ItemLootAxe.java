@@ -1,5 +1,6 @@
 package binary404.mystictools.common.items;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
@@ -33,7 +34,7 @@ import java.util.Set;
 public class ItemLootAxe extends AxeItem implements ILootItem {
 
     public ItemLootAxe() {
-        super(ItemTier.DIAMOND, 5.0F, -3.0F, new Item.Properties());
+        super(ItemTier.DIAMOND, 5.0F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override

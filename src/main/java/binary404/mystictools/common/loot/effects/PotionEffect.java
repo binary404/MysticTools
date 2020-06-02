@@ -16,13 +16,18 @@ import java.util.*;
 public class PotionEffect implements IEffect {
     public static final Map<String, PotionEffect> REGISTRY = new HashMap<>();
 
-    public static final PotionEffect WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD);
-    public static final PotionEffect SLOWNESS = create("slowness", PotionType.TARGET, Effects.SLOWNESS).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD);
+    public static final PotionEffect WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+    public static final PotionEffect SLOWNESS = create("slowness", PotionType.TARGET, Effects.SLOWNESS).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+    public static final PotionEffect POISON = create("poison", PotionType.TARGET, Effects.POISON).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+    public static final PotionEffect WEAKNESS = create("weakness", PotionType.TARGET, Effects.WEAKNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+    public static final PotionEffect BLINDNESS = create("blindness", PotionType.TARGET, Effects.BLINDNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
 
     public static final PotionEffect REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
     public static final PotionEffect SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
     public static final PotionEffect HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL);
     public static final PotionEffect SATURATION = create("saturation", PotionType.USER, Effects.SATURATION).setAmplifier(1, 3).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+    public static final PotionEffect RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
+    public static final PotionEffect FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
 
     private final PotionType effectType;
 

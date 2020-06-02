@@ -1,0 +1,6 @@
+{
+	"parent": "mystictools:item/weaponbow",
+	"textures": {
+		"layer0": "mystictools:items/bow/3"
+	}
+}

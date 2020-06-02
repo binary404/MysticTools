@@ -1,5 +1,6 @@
 package binary404.mystictools.common.items;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
@@ -29,7 +30,7 @@ import java.util.List;
 public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
-        super(ItemTier.DIAMOND, 3, -2.4F, new Item.Properties());
+        super(ItemTier.DIAMOND, 3, -2.4F, new Item.Properties().group(MysticTools.tab));
 
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override

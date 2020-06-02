@@ -25,4 +25,8 @@ public interface IUniqueEffect {
     default void breakBlock(BlockPos pos, World world, PlayerEntity player, ItemStack stack) {
 
     }
+
+    default void arrowImpact(Entity entity) {
+
+    }
 }

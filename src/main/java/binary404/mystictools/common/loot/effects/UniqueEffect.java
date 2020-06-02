@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -24,6 +25,8 @@ public class UniqueEffect {
 
     public static final UniqueEffect xray = create("xray", new XRay()).setItemTypes(LootSet.LootSetType.PICKAXE);
     public static final UniqueEffect emerald = create("emeralds", new Emerald()).setItemTypes(LootSet.LootSetType.PICKAXE);
+
+    public static final UniqueEffect explode = create("explode", new ExplodingArrow()).setItemTypes(LootSet.LootSetType.BOW);
 
     public static final UniqueEffect vortex = create("vortex", new Vortex()).setItemTypes(LootSet.LootSetType.SWORD);
     public static final UniqueEffect brainwash = create("brainwash", new Brainwash()).setItemTypes(LootSet.LootSetType.SWORD);
@@ -90,6 +93,10 @@ public class UniqueEffect {
 
     public void tick(Entity entity, ItemStack stack) {
         this.effect.tick(entity, stack);
+    }
+
+    public void arrowImpact(Entity entity) {
+        this.effect.arrowImpact(entity);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

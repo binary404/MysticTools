@@ -11,10 +11,17 @@
   "weaponeffect.haste.description": "Haste",
   "weaponeffect.slowness.description": "Slowness",
   "weaponeffect.wither.description": "Wither",
+  "weaponeffect.poison.description": "Poison",
+  "weaponeffect.weakness.description": "Weakness",
+  "weaponeffect.fire_resistance.description": "Fire Resistance",
+  "weaponeffect.resistance.description": "Resistance",
+  "weaponeffect.blindness.description": "Blindness",
 
   "growthAura.description": "Growth Aura",
   "brainwash.description": "Brainwash",
   "xray.description": "Xray",
   "vortex.description": "Vortex",
-  "treeChopper.description": "Tree Chopper"
+  "treeChopper.description": "Tree Chopper",
+
+  "itemGroup.mystictools": "Mystic Tools"
 }

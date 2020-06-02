@@ -28,6 +28,9 @@ public class ModItems {
     @ObjectHolder("mystictools:loot_case")
     public static Item loot_case;
 
+    @ObjectHolder("mystictools:weaponbow")
+    public static Item loot_bow;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -36,6 +39,7 @@ public class ModItems {
         RegistryHelper.register(r, new ItemLootAxe(), "loot_axe");
         RegistryHelper.register(r, new ItemLootShovel(), "loot_shovel");
         RegistryHelper.register(r, new ItemLootPickaxe(), "loot_pickaxe");
+        RegistryHelper.register(r, new ItemLootBow(), "weaponbow");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
     }
 

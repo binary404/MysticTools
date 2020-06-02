@@ -30,19 +30,18 @@ public class ItemCase extends Item {
 
         int rarity = random.nextInt(100) + 1;
         LootRarity lootRarity;
-        if (rarity <= 55)
-            lootRarity = LootRarity.UNIQUE;
-        else if (rarity > 55 && rarity <= 80)
+        if (rarity <= 50)
+            lootRarity = LootRarity.COMMON;
+        else if (rarity > 50 && rarity <= 76)
             lootRarity = LootRarity.UNCOMMON;
-        else if (rarity > 80 && rarity <= 95)
+        else if (rarity > 76 && rarity <= 90)
             lootRarity = LootRarity.RARE;
-        else if (rarity > 95 && rarity <= 99)
+        else if (rarity > 90 && rarity <= 96)
             lootRarity = LootRarity.EPIC;
-        else if (rarity > 99 && random.nextInt(10) <= 6)
+        else if (rarity > 96 && random.nextInt(10) <= 6)
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
-        System.out.println(lootRarity);
 
         ItemStack loot;
         if (lootRarity.getId().equals("Unique")) {

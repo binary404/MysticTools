@@ -74,6 +74,21 @@ public class LootSet {
             , "The Weeping Bell"
     };
 
+    public static final String[] BOW_NAMES = {
+            "Long Bow"
+            , "Venom"
+            , "Nat Bow"
+            , "Black Widow"
+            , "Eagle"
+            , "Drawling"
+            , "Zach"
+            , "Slimestrike"
+            , "Thunderforce"
+            , "Ghost"
+            , "Angel"
+            , "Starshot"
+    };
+
     public static final Map<LootSetType, String[]> LOOT_NAMES = new HashMap<>();
 
     static {
@@ -81,6 +96,7 @@ public class LootSet {
         LOOT_NAMES.put(LootSetType.AXE, TOOL_NAMES);
         LOOT_NAMES.put(LootSetType.PICKAXE, TOOL_NAMES);
         LOOT_NAMES.put(LootSetType.SHOVEL, TOOL_NAMES);
+        LOOT_NAMES.put(LootSetType.BOW, BOW_NAMES);
     }
 
     protected LootSet(int model) {
@@ -128,9 +144,10 @@ public class LootSet {
 
     public enum LootSetType {
         SWORD("sword", 76),
-        PICKAXE("pickaxe", 21),
+        PICKAXE("pickaxe", 16),
         AXE("axe", 21),
-        SHOVEL("shovel", 21);
+        SHOVEL("shovel", 15),
+        BOW("bow", 12);
 
         public final int models;
         private String id;
