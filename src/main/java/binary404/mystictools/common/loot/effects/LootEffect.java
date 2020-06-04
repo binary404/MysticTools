@@ -6,6 +6,7 @@ import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAreaMiner;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
+import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
 import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,6 +25,8 @@ public class LootEffect {
     public static final LootEffect MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE);
     public static final LootEffect AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAreaMiner());
     public static final LootEffect AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAutoSmelt());
+    public static final LootEffect VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(new LootEffectVoid());
+
 
     private String id;
     private List<LootSet.LootSetType> applyToItems = new ArrayList<>();

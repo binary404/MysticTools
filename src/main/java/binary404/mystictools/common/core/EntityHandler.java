@@ -58,7 +58,6 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void onHarvest(DropLootEvent event) {
-        System.out.println("EVENT");
         PlayerEntity player = event.getPlayer();
         if (player != null) {
             List<Item> tools = new ArrayList<Item>();

@@ -16,6 +16,10 @@
   "weaponeffect.resistance.description": "Resistance",
   "weaponeffect.blindness.description": "Blinds for %1$s seconds",
   "weaponeffect.leech.description": "Leeches %2$s perc. of damage dealt",
+  "weaponeffect.auto_smelt.description": "Auto Smelt",
+  "weaponeffect.multi.description": "Multi Tool",
+  "weaponeffect.void.description": "Void",
+  "weaponeffect.area_miner.description": "Area Miner",
 
   "growthAura.description": "Growth Aura",
   "brainwash.description": "Brainwash",
