@@ -18,6 +18,32 @@ public class LootNbtHelper {
         return value;
     }
 
+    public static boolean getLootBooleanValue(ItemStack stack, String key)
+    {
+        boolean value = false;
+
+        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG))
+        {
+            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key))
+            {
+                value = stack.getTag().getCompound(LootTags.LOOT_TAG).getBoolean(key);
+            }
+        }
+
+        return value;
+    }
+
+    public static void setLootBooleanValue(ItemStack stack, String key, boolean value)
+    {
+        if (!stack.hasTag())
+            stack.setTag(new CompoundNBT());
+
+        if (!stack.getTag().contains(LootTags.LOOT_TAG))
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+
+        stack.getTag().getCompound(LootTags.LOOT_TAG).putBoolean(key, value);
+    }
+
     public static void setLootIntValue(ItemStack stack, String key, int value) {
         if (!stack.hasTag())
             stack.setTag(new CompoundNBT());

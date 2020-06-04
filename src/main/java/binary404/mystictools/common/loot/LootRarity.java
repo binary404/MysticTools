@@ -20,7 +20,7 @@ public class LootRarity {
             .setEfficiency(5.0F, 12.0F)
             .setDurability(100, 500)
             .setPotionCount(0, 1)
-            .setEffectCount(0, 1);
+            .setEffectCount(0, 0);
 
     public static final LootRarity UNCOMMON =
             get("Uncommon", TextFormatting.GRAY)
@@ -31,7 +31,7 @@ public class LootRarity {
                     .setEfficiency(11.0F, 25.0F)
                     .setDurability(350, 1450)
                     .setPotionCount(0, 3)
-                    .setEffectCount(0, 2);
+                    .setEffectCount(1, 2);
 
     public static final LootRarity RARE =
             get("Rare", TextFormatting.YELLOW)
@@ -42,7 +42,7 @@ public class LootRarity {
                     .setEfficiency(15.0F, 40.0F)
                     .setDurability(850, 2500)
                     .setPotionCount(1, 4)
-                    .setEffectCount(0, 3);
+                    .setEffectCount(2, 4);
 
     public static final LootRarity EPIC =
             get("Epic", TextFormatting.BLUE)
@@ -53,7 +53,7 @@ public class LootRarity {
                     .setEfficiency(20.0F, 42.0F)
                     .setDurability(2000, 4500)
                     .setPotionCount(2, 5)
-                    .setEffectCount(1, 3);
+                    .setEffectCount(2, 4);
 
     public static final LootRarity UNIQUE =
             get("Unique", TextFormatting.DARK_PURPLE)
@@ -64,7 +64,7 @@ public class LootRarity {
                     .setEfficiency(20.56F, 56.05F)
                     .setDurability(1000, 4000)
                     .setPotionCount(3, 6)
-                    .setEffectCount(1, 3);
+                    .setEffectCount(3, 5);
 
     private TextFormatting color = TextFormatting.WHITE;
     private int damageMin = 0;
@@ -161,6 +161,15 @@ public class LootRarity {
 
         if (modifierCount < this.potionMax)
             modifierCount += rand.nextInt(this.potionMax - modifierCount + 1);
+
+        return modifierCount;
+    }
+
+    public int getEffectCount(Random rand) {
+        int modifierCount = this.effectMin;
+
+        if (modifierCount < this.effectMax)
+            modifierCount += rand.nextInt(this.effectMax - modifierCount + 1);
 
         return modifierCount;
     }

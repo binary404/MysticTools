@@ -1,5 +1,7 @@
 package binary404.mystictools.proxy;
 
+import binary404.mystictools.common.core.ClientHandler;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -11,7 +13,9 @@ public class ClientProxy implements IProxy {
     }
 
     private void clientSetup(FMLClientSetupEvent event) {
-
+        DeferredWorkQueue.runLater(() -> {
+            ClientHandler.KeyBindings.init();
+        });
     }
 
 }

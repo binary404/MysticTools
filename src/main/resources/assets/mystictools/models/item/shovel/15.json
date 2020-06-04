@@ -1,5 +1,5 @@
 {
-	"parent": "mystictools:item/tool_shovel",
+	"parent": "mystictools:item/loot_shovel",
 	"textures": {
 		"layer0": "mystictools:items/shovel/15"
 	}

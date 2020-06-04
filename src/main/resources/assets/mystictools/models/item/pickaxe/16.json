@@ -1,5 +1,5 @@
 {
-	"parent": "mystictools:item/tool_pickaxe",
+	"parent": "mystictools:item/loot_pickaxe",
 	"textures": {
 		"layer0": "mystictools:items/pickaxe/16"
 	}

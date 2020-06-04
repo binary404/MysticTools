@@ -3,6 +3,7 @@ package binary404.mystictools;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootSet;
+import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
@@ -43,6 +44,9 @@ public class MysticTools {
 
     private void commonSetup(FMLCommonSetupEvent event) {
         proxy.init();
+
+        NetworkHandler.init();
+
         DeferredWorkQueue.runLater(() -> {
             ItemTypeRegistry.register(ModItems.loot_sword, LootSet.LootSetType.SWORD);
             ItemTypeRegistry.register(ModItems.loot_axe, LootSet.LootSetType.AXE);

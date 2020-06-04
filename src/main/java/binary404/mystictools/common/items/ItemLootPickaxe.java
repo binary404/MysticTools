@@ -5,8 +5,10 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -20,6 +22,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -48,16 +52,6 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
-        ItemStack stack = p_77659_2_.getHeldItem(p_77659_3_);
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
-        if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(stack).rightClick(p_77659_2_, stack);
-        }
-        return super.onItemRightClick(p_77659_1_, p_77659_2_, p_77659_3_);
-    }
-
-    @Override
     public boolean hasEffect(ItemStack stack) {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
@@ -75,12 +69,23 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(itemstack, LootTags.LOOT_TAG_RARITY));
+    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, PlayerEntity player) {
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(itemstack).breakBlock(pos, player.world, player, itemstack);
+            UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.world, player, stack);
         }
-        return false;
+
+        boolean onBreak = super.onBlockStartBreak(stack, pos, player);
+
+        if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
+            RayTraceResult raytrace = LootItemHelper.getBlockOnReach(player.world, player);
+            if (raytrace != null) {
+                int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+                onBreak = LootItemHelper.breakBlocks(stack, level, player.world, pos, ((BlockRayTraceResult) raytrace).getFace(), player);
+            }
+        }
+
+        return onBreak;
     }
 
     @Override
@@ -93,6 +98,17 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
             UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
         }
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        if (rarity == LootRarity.UNIQUE) {
+            UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
+        }
+
+        return LootItemHelper.use(super.onItemRightClick(worldIn, playerIn, handIn), worldIn, playerIn, handIn);
     }
 
     @Override
@@ -110,12 +126,20 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     @Override
     public Set<ToolType> getToolTypes(ItemStack stack) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            return Sets.newHashSet(ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL);
+        }
+
         return super.getToolTypes(stack);
     }
 
     @Override
-    public boolean canHarvestBlock(BlockState blockIn) {
-        return super.canHarvestBlock(blockIn);
+    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            return 3;
+        }
+
+        return super.getHarvestLevel(stack, tool, player, blockState);
     }
 
     @Override

@@ -1,10 +1,14 @@
 package binary404.mystictools.common.loot;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.util.RandomCollection;
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.loot.effects.IEffectAction;
+import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.resources.I18n;
@@ -12,17 +16,28 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.play.server.SChangeBlockPacket;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ToolType;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class LootItemHelper {
@@ -134,6 +149,43 @@ public class LootItemHelper {
         }
     }
 
+    public static ActionResult<ItemStack> use(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getHeldItemMainhand();
+
+        List<LootEffect> effects = LootEffect.getEffectList(stack);
+
+        if (effects != null) {
+            for (LootEffect effect : effects) {
+                if (effect != null) {
+                    IEffectAction action = effect.getAction();
+
+                    if (action != null) {
+                        defaultAction = action.handleUse(defaultAction, world, player, hand);
+                    }
+                }
+            }
+        }
+
+        return defaultAction;
+    }
+
+    public static boolean hasEffect(ItemStack stack, LootEffect effect) {
+        boolean hasEffect = false;
+
+        List<LootEffect> effects = LootEffect.getEffectList(stack);
+
+        effect_check:
+        for (LootEffect e : effects) {
+            if (e == effect) {
+                hasEffect = true;
+                break effect_check;
+            }
+        }
+
+        return hasEffect;
+    }
+
+
     public static void handlePotionEffects(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
 
@@ -211,6 +263,15 @@ public class LootItemHelper {
                                     effect.getAmplifierString(stack, effect.getId()),
                                     effect.getAmplifierString(stack, effect.getId(), 1)})));
         }
+        List<LootEffect> effects1 = LootEffect.getEffectList(stack);
+        for (LootEffect effect : effects1) {
+            tooltip.add(new StringTextComponent(
+                    TextFormatting.RESET + "- " + effect.getType().getColor() + I18n.format("weaponeffect." + effect.getId() + ".description", new Object[]{
+                            effect.getAmplifierString(stack, effect.getId()),
+                            effect.getAmplifierString(stack, effect.getId(), 1)
+                    })
+            ));
+        }
 
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
@@ -233,6 +294,40 @@ public class LootItemHelper {
         int modifiers = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
         if (modifiers > 0)
             tooltip.add(new StringTextComponent(TextFormatting.BOLD + "" + modifiers + " Modifiers"));
+    }
+
+    @Nullable
+    public static LootEffect getRandomEffectExcluding(Random rand, LootSet.LootSetType type, List<LootEffect> exclude) {
+        LootEffect weaponEffect = null;
+
+        boolean hasActive = false;
+        boolean hasUse = false;
+
+        for (LootEffect ex : exclude) {
+            if (ex.getType() == LootEffect.EffectType.ACTIVE)
+                hasActive = true;
+
+            if (ex.getType() == LootEffect.EffectType.USE)
+                hasUse = true;
+        }
+
+        List<LootEffect> list = new ArrayList<LootEffect>();
+
+        for (LootEffect e : LootEffect.REGISTRY.values()) {
+            if (e.applyToItemType(type)) {
+                if (
+                        !(hasActive && e.getType() == LootEffect.EffectType.ACTIVE)
+                                && !(hasUse && e.getType() == LootEffect.EffectType.USE))
+                    list.add(e);
+            }
+        }
+
+        list.removeAll(exclude);
+
+        if (list.size() > 0)
+            weaponEffect = list.get(rand.nextInt(list.size()));
+
+        return weaponEffect;
     }
 
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
@@ -285,6 +380,23 @@ public class LootItemHelper {
             lootTag.put(LootTags.LOOT_TAG_POTIONLIST, effectList);
         }
 
+        modifierCount = lootRarity.getEffectCount(random);
+
+        if (modifierCount > 0) {
+            List<LootEffect> appliedEffects = new ArrayList<>();
+            ListNBT effectList = new ListNBT();
+
+            for (int m = 0; m < modifierCount; ++m) {
+                LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, appliedEffects);
+
+                if (me != null) {
+                    effectList.add(me.getNbt(random));
+                    appliedEffects.add(me);
+                }
+            }
+            lootTag.put(LootTags.LOOT_TAG_EFFECTLIST, effectList);
+        }
+
         tag.put(LootTags.LOOT_TAG, lootTag);
 
         if (unbreakable) {
@@ -299,6 +411,189 @@ public class LootItemHelper {
             LootNbtHelper.setLootStringValue(loot, LootTags.LOOT_TAG_NAME, loot_name);
         }
         return loot;
+    }
+
+    public static RayTraceResult getBlockOnReach(World world, PlayerEntity player) {
+        double distance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+
+        float pitch = player.rotationPitch;
+        float yaw = player.rotationYaw;
+        double x = player.getPosX();
+        double y = player.getPosY() + (double) player.getEyeHeight();
+        double z = player.getPosZ();
+
+        Vec3d vec3 = new Vec3d(x, y, z);
+
+        float f2 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f3 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f4 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f5 = MathHelper.sin(-pitch * 0.017453292F);
+        float f6 = f3 * f4;
+        float f7 = f2 * f4;
+
+        Vec3d vec31 = vec3.add((double) f6 * distance, (double) f5 * distance, (double) f7 * distance);
+
+
+        return world.rayTraceBlocks(new RayTraceContext(vec3, vec31, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
+    }
+
+    public static boolean breakBlocks(ItemStack stack, int level, World world, BlockPos aPos, Direction side, PlayerEntity player) {
+        int xradN = 0;
+        int xradP = 0;
+        int yradN = 0;
+        int yradP = 0;
+        int zradN = 0;
+        int zradP = 0;
+
+        switch (level) {
+            case 1: //2x2
+                xradN = 0;
+                xradP = 1;
+                yradN = 1;
+                yradP = 0;
+                zradN = 0;
+                zradP = 0;
+                break;
+            case 2: //3x3
+                xradN = 1;
+                xradP = 1;
+                yradN = 1;
+                yradP = 1;
+                zradN = 0;
+                zradP = 0;
+                break;
+            case 3: //4x4
+                xradN = 1;
+                xradP = 2;
+                yradN = 1;
+                yradP = 2;
+                zradN = 0;
+                zradP = 0;
+                break;
+            case 4: //5x5
+                xradN = 2;
+                xradP = 2;
+                yradN = 2;
+                yradP = 2;
+                zradN = 0;
+                zradP = 0;
+                break;
+            default:
+                xradN = 0;
+                xradP = 0;
+                yradN = 0;
+                yradP = 0;
+                zradN = 0;
+                zradP = 0;
+                break;
+        }
+
+        if (side.getAxis() == Direction.Axis.Y) {
+            zradN = xradN;
+            zradP = xradP;
+            yradN = 0;
+            yradP = 0;
+        }
+
+        if (side.getAxis() == Direction.Axis.X) {
+            xradN = 0;
+            xradP = 0;
+            zradN = yradN;
+            zradP = yradP;
+        }
+
+        BlockState state = world.getBlockState(aPos);
+        float mainHardness = state.getBlockHardness(world, aPos);
+
+        if (!tryHarvestBlock(world, aPos, false, stack, player)) {
+            return false;
+        }
+
+        if (level == 4 && side.getAxis() != Direction.Axis.Y) {
+            aPos = aPos.up();
+            BlockState theState = world.getBlockState(aPos);
+            if (theState.getBlockHardness(world, aPos) <= mainHardness + 5.0F) {
+                tryHarvestBlock(world, aPos, true, stack, player);
+            }
+        }
+
+        if (level > 0 && mainHardness >= 0.2F) {
+            for (int xPos = aPos.getX() - xradN; xPos <= aPos.getX() + xradP; xPos++) {
+                for (int yPos = aPos.getY() - yradN; yPos <= aPos.getY() + yradP; yPos++) {
+                    for (int zPos = aPos.getZ() - zradN; zPos <= aPos.getZ() + zradP; zPos++) {
+                        if (!(aPos.getX() == xPos && aPos.getY() == yPos && aPos.getZ() == zPos)) {
+                            BlockPos thePos = new BlockPos(xPos, yPos, zPos);
+                            BlockState theState = world.getBlockState(thePos);
+                            if (theState.getBlockHardness(world, thePos) <= mainHardness + 5.0F) {
+                                tryHarvestBlock(world, thePos, true, stack, player);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean tryHarvestBlock(World world, BlockPos pos, boolean isExtra, ItemStack stack, PlayerEntity player) {
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        float hardness = state.getBlockHardness(world, pos);
+
+        boolean canHarvest =
+                (ForgeHooks.canHarvestBlock(state, player, world, pos) || stack.getItem().canHarvestBlock(state))
+                        && (!isExtra || stack.getItem().getDestroySpeed(stack, world.getBlockState(pos)) > 1.0F);
+
+        if (hardness >= 0.0F && (!isExtra || (canHarvest && !block.hasTileEntity(world.getBlockState(pos))))) {
+            return breakExtraBlock(stack, world, player, pos);
+        }
+        return false;
+    }
+
+    public static boolean breakExtraBlock(ItemStack stack, World world, PlayerEntity player, BlockPos pos) {
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+
+        if (player.abilities.isCreativeMode) {
+            if (block.removedByPlayer(state, world, pos, player, false, world.getFluidState(pos))) {
+                block.onPlayerDestroy(world, pos, state);
+            }
+
+            if (!world.isRemote) {
+                ((ServerPlayerEntity) player).connection.sendPacket(new SChangeBlockPacket(world, pos));
+            }
+
+            return true;
+        }
+
+        stack.onBlockDestroyed(world, state, pos, player);
+
+        if (!world.isRemote) {
+            int xp = ForgeHooks.onBlockBreakEvent(world, ((ServerPlayerEntity) player).interactionManager.getGameType(), (ServerPlayerEntity) player, pos);
+            if (xp == -1)
+                return false;
+
+            TileEntity tileEntity = world.getTileEntity(pos);
+
+            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+                block.onPlayerDestroy(world, pos, state);
+                block.harvestBlock(world, player, pos, state, tileEntity, stack);
+                block.dropXpOnBlockBreak(world, pos, xp);
+            }
+
+            ((ServerPlayerEntity) player).connection.sendPacket(new SChangeBlockPacket(world, pos));
+            return true;
+        } else {
+            world.playEvent(2001, pos, Block.getStateId(state));
+
+            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+                block.onPlayerDestroy(world, pos, state);
+            }
+
+            stack.onBlockDestroyed(world, state, pos, player);
+
+            return true;
+        }
     }
 
 }

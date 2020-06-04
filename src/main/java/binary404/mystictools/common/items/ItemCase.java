@@ -1,5 +1,6 @@
 package binary404.mystictools.common.items;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +19,7 @@ import java.util.UUID;
 public class ItemCase extends Item {
 
     public ItemCase() {
-        super(new Properties());
+        super(new Properties().group(MysticTools.tab));
     }
 
     @Override
@@ -32,13 +33,13 @@ public class ItemCase extends Item {
         LootRarity lootRarity;
         if (rarity <= 50)
             lootRarity = LootRarity.COMMON;
-        else if (rarity > 50 && rarity <= 76)
+        else if (rarity > 45 && rarity <= 70)
             lootRarity = LootRarity.UNCOMMON;
-        else if (rarity > 76 && rarity <= 90)
+        else if (rarity > 70 && rarity <= 82)
             lootRarity = LootRarity.RARE;
-        else if (rarity > 90 && rarity <= 96)
+        else if (rarity > 82 && rarity <= 92)
             lootRarity = LootRarity.EPIC;
-        else if (rarity > 96 && random.nextInt(10) <= 6)
+        else if (rarity > 92 && random.nextInt(10) <= 6)
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;

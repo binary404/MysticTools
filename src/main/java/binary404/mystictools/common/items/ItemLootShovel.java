@@ -5,6 +5,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
@@ -21,6 +22,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -71,7 +74,18 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.world, player, stack);
         }
-        return false;
+
+        boolean onBreak = super.onBlockStartBreak(stack, pos, player);
+
+        if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
+            RayTraceResult raytrace = LootItemHelper.getBlockOnReach(player.world, player);
+            if (raytrace != null) {
+                int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+                onBreak = LootItemHelper.breakBlocks(stack, level, player.world, pos, ((BlockRayTraceResult) raytrace).getFace(), player);
+            }
+        }
+
+        return onBreak;
     }
 
     @Override
@@ -92,7 +106,8 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+
+        return LootItemHelper.use(super.onItemRightClick(worldIn, playerIn, handIn), worldIn, playerIn, handIn);
     }
 
     @Override
@@ -110,7 +125,20 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
 
     @Override
     public Set<ToolType> getToolTypes(ItemStack stack) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            return Sets.newHashSet(ToolType.SHOVEL, ToolType.PICKAXE, ToolType.AXE);
+        }
+
         return Sets.newHashSet(ToolType.SHOVEL);
+    }
+
+    @Override
+    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            return 3;
+        }
+
+        return super.getHarvestLevel(stack, tool, player, blockState);
     }
 
     @Override

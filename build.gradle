@@ -5,30 +5,24 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.0.+'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
-}
-
-plugins {
-	id 'org.hidetake.ssh' version '2.10.1'
-	id "com.diffplug.gradle.spotless" version "3.27.2"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-def mc_version = "1.15.2"
-version = '0.1.1'
+version = "0.1.4"
 group = 'binary404.mystictools'
-archivesBaseName = 'mystictools'
+archivesBaseName = "mystictools"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
     mappings channel: 'snapshot', version: '20200510-1.15.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-	 runs {
+    runs {
         client {
             properties 'forge.logging.console.level': 'debug'
             properties 'fml.earlyprogresswindow': 'false'
@@ -52,7 +46,7 @@ minecraft {
             properties 'fml.earlyprogresswindow': 'false'
             workingDirectory project.file('run')
             mods {
-				mystictools {
+                mystictools {
                     source sourceSets.main
                 }
             }
@@ -64,6 +58,13 @@ minecraft {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
 }
@@ -71,28 +72,29 @@ dependencies {
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes([
-            "Specification-Title": "examplemod",
-            "Specification-Vendor": "examplemodsareus",
-            "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+        attributes(
+                [
+                        "Specification-Title"     : "mystictools",
+                        "Specification-Vendor"    : "mystictools",
+                        "Specification-Version"   : "1", // We are version 1 of ourselves
+                        "Implementation-Title"    : project.name,
+                        "Implementation-Version"  : "${version}",
+                        "Implementation-Vendor"   : "mystictools",
+                        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                ])
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar') 
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
+def reobfFile = file("$buildDir/reobfJar/output.jar")
+def reobfArtifact = artifacts.add('default', reobfFile) {
+    type 'jar'
+    builtBy 'reobfJar'
+}
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            artifact reobfArtifact
         }
     }
     repositories {
