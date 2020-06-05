@@ -1,17 +1,27 @@
 package binary404.mystictools.common.core.util;
 
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.handler.codec.EncoderException;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.ObjectUtils;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -69,131 +79,37 @@ public class Utils {
         return optRecipe.map(recipe -> recipe.getCraftingResult(inv).copy());
     }
 
-    public static final String URL_CLASS_LOADER_CLASS = "java.net.URLClassLoader";
+    public static void writeCompoundNBTToBuffer(PacketBuffer bb, CompoundNBT nbt) {
+        if (nbt == null) {
 
-    public static final String BUILTIN_CLASS_LOADER_CLASS = "jdk.internal.loader.BuiltinClassLoader";
-    public static final String URL_CLASS_PATH_CLASS = "jdk.internal.loader.URLClassPath";
+            bb.writeByte(0);
+        } else {
 
-    @SuppressWarnings("unchecked")
-    public static void appendToClassPath(ClassLoader classLoader, URL url) throws Throwable {
-        try {
-            // Java 8
-            Class<?> classLoaderClass = Class.forName(URL_CLASS_LOADER_CLASS);
-            if (classLoaderClass.isInstance(classLoader)) {
-                // java.net.URLClassLoader.addURL
-                Method addURLMethod = classLoaderClass.getDeclaredMethod("addURL", URL.class);
-                addURLMethod.setAccessible(true);
-                addURLMethod.invoke(classLoader, url);
-                return;
+            try {
+
+                CompressedStreamTools.write(nbt, (DataOutput) new ByteBufOutputStream(bb));
+            } catch (IOException ioexception) {
+
+                throw new EncoderException(ioexception);
             }
-        } catch (ClassNotFoundException ex) {
-            // no-op
         }
-
-        try {
-            // Java 9+
-            Class<?> classLoaderClass = Class.forName(BUILTIN_CLASS_LOADER_CLASS);
-            Class<?> classPathClass = Class.forName(URL_CLASS_PATH_CLASS);
-            if (classLoaderClass.isInstance(classLoader)) {
-                Unsafe unsafe = getUnsafe();
-
-                // jdk.internal.loader.BuiltinClassLoader.ucp
-                Field ucpField = classLoaderClass.getDeclaredField("ucp");
-                long ucpFieldOffset = unsafe.objectFieldOffset(ucpField);
-                Object ucpObject = unsafe.getObject(classLoader, ucpFieldOffset);
-
-                // jdk.internal.loader.URLClassPath.path
-                Field pathField = classPathClass.getDeclaredField("path");
-                long pathFieldOffset = unsafe.objectFieldOffset(pathField);
-                ArrayList<URL> path = (ArrayList<URL>) unsafe.getObject(ucpObject, pathFieldOffset);
-
-                // Java 9 & 10 - jdk.internal.loader.URLClassPath.urls
-                // Java 11 - jdk.internal.loader.URLClassPath.unopenedUrls
-                Field urlsField = getField(classPathClass.getDeclaredFields(), "urls", "unopenedUrls");
-                long urlsFieldOffset = unsafe.objectFieldOffset(urlsField);
-                Collection<URL> urls = (Collection<URL>) unsafe.getObject(ucpObject, urlsFieldOffset);
-
-                // noinspection SynchronizationOnLocalVariableOrMethodParameter
-                synchronized (urls) {
-                    if (!path.contains(url)) {
-                        urls.add(url);
-                        path.add(url);
-                    }
-                }
-
-                return;
-            }
-        } catch (ClassNotFoundException ex) {
-            // no-op
-        }
-
-        throw new UnsupportedOperationException("Unsupported ClassLoader");
     }
 
-    public static URL[] getSystemClassPathURLs() throws Throwable {
-        return getSystemClassPathURLs(Utils.class.getClassLoader());
-    }
+    public static CompoundNBT readCompoundNBTFromBuffer(PacketBuffer bb) {
+        int i = bb.readerIndex();
+        byte b0 = bb.readByte();
 
-    /**
-     * https://stackoverflow.com/questions/46519092/how-to-get-all-jars-loaded-by-a-java-application-in-java9
-     * https://github.com/cpw/grossjava9classpathhacks/blob/master/src/main/java/cpw/mods/gross/Java9ClassLoaderUtil.java
-     */
-    @SuppressWarnings("unchecked")
-    public static URL[] getSystemClassPathURLs(ClassLoader classLoader) throws Throwable {
-        Objects.requireNonNull(classLoader, "ClassLoader cannot be null");
+        if (b0 == 0) {
+            return null;
+        }
+
+        bb.readerIndex(i);
         try {
-            // Java 8
-            Class<?> classLoaderClass = Class.forName(URL_CLASS_LOADER_CLASS);
-            if (classLoaderClass.isInstance(classLoader)) {
-                // java.net.URLClassLoader.getURLs
-                Method getURLsMethod = classLoaderClass.getMethod("getURLs");
-                return (URL[]) getURLsMethod.invoke(classLoader);
-            }
-        } catch (ClassNotFoundException ex) {
-            // no-op
+            return CompressedStreamTools.read((DataInput) new ByteBufInputStream(bb), new NBTSizeTracker(2097152L));
+        } catch (IOException iOException) {
+
+            return null;
         }
-
-        try {
-            // Java 9+
-            Class<?> classLoaderClass = Class.forName(BUILTIN_CLASS_LOADER_CLASS);
-            if (classLoaderClass.isInstance(classLoader)) {
-                Unsafe unsafe = getUnsafe();
-
-                // jdk.internal.loader.BuiltinClassLoader.ucp
-                Field ucpField = classLoaderClass.getDeclaredField("ucp");
-                long ucpFieldOffset = unsafe.objectFieldOffset(ucpField);
-                Object ucpObject = unsafe.getObject(classLoader, ucpFieldOffset);
-
-                // jdk.internal.loader.URLClassPath.path
-                Field pathField = ucpField.getType().getDeclaredField("path");
-                long pathFieldOffset = unsafe.objectFieldOffset(pathField);
-                ArrayList<URL> path = (ArrayList<URL>) unsafe.getObject(ucpObject, pathFieldOffset);
-                return path.toArray(new URL[0]);
-            }
-        } catch (ClassNotFoundException ex) {
-            // no-op
-        }
-
-        throw new UnsupportedOperationException("Unsupported ClassLoader");
-    }
-
-    private static Field getField(Field[] fields, String... names) throws NoSuchFieldException {
-        for (Field field : fields) {
-            for (String name : names) {
-                if (field.getName().equals(name)) {
-                    return field;
-                }
-            }
-        }
-
-        throw new NoSuchFieldException(String.join(", ", names));
-    }
-
-    private static Unsafe getUnsafe() throws Throwable {
-        // sun.misc.Unsafe.theUnsafe
-        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-        unsafeField.setAccessible(true);
-        return (Unsafe) unsafeField.get(null);
     }
 
 }

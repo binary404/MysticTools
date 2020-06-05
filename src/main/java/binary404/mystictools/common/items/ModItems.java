@@ -1,5 +1,6 @@
 package binary404.mystictools.common.items;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.RegistryHelper;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootSet;
@@ -31,6 +32,9 @@ public class ModItems {
     @ObjectHolder("mystictools:weaponbow")
     public static Item loot_bow;
 
+    @ObjectHolder("mystictools:shard")
+    public static Item shard;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -41,6 +45,7 @@ public class ModItems {
         RegistryHelper.register(r, new ItemLootPickaxe(), "loot_pickaxe");
         RegistryHelper.register(r, new ItemLootBow(), "weaponbow");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
+        RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "shard");
     }
 
 }

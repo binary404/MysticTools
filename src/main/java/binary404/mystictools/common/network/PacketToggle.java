@@ -51,6 +51,7 @@ public class PacketToggle {
                 }
             });
         }
+        ctx.get().setPacketHandled(true);
     }
 
 }
