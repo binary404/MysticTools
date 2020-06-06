@@ -1,12 +1,10 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.PotionEffect;
-import javafx.geometry.Side;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -79,7 +77,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack itemStack = player.getHeldItem(hand);
 
-        boolean flag = player.findAmmo(player.getHeldItem(hand)) != null;
+        boolean flag = !player.findAmmo(itemStack).isEmpty();
 
         ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemStack, world, player, hand, flag);
         if (ret != null) return ret;
@@ -103,7 +101,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
             time = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, world, entityplayer, time, itemstack != null || flag);
             if (time < 0) return;
 
-            if (itemstack != null || flag) {
+            if (!itemstack.isEmpty() || flag) {
                 if (itemstack == null) {
                     itemstack = new ItemStack(Items.ARROW);
                 }
@@ -174,7 +172,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                         SoundCategory.NEUTRAL,
                         1.0F,
                         1.0F / (entityplayer.world.rand.nextFloat() * 0.4F + 1.2F) * 0.5F);
-                if(!flag1)
+                if (!flag1)
                     itemstack.shrink(1);
 
                 if (itemstack.isEmpty()) {

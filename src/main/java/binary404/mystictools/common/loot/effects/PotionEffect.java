@@ -1,5 +1,6 @@
 package binary404.mystictools.common.loot.effects;
 
+import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
@@ -7,7 +8,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.potion.*;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -16,17 +19,40 @@ import java.util.*;
 public class PotionEffect implements IEffect {
     public static final Map<String, PotionEffect> REGISTRY = new HashMap<>();
 
-    public static final PotionEffect WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
-    public static final PotionEffect SLOWNESS = create("slowness", PotionType.TARGET, Effects.SLOWNESS).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
-    public static final PotionEffect POISON = create("poison", PotionType.TARGET, Effects.POISON).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
-    public static final PotionEffect WEAKNESS = create("weakness", PotionType.TARGET, Effects.WEAKNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
-    public static final PotionEffect BLINDNESS = create("blindness", PotionType.TARGET, Effects.BLINDNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+    public static PotionEffect WITHERING;
+    public static PotionEffect SLOWNESS;
+    public static PotionEffect POISON;
+    public static PotionEffect WEAKNESS;
+    public static PotionEffect BLINDNESS;
 
-    public static final PotionEffect REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
-    public static final PotionEffect SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
-    public static final PotionEffect HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL);
-    public static final PotionEffect RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
-    public static final PotionEffect FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
+    public static PotionEffect REGENERATION;
+    public static PotionEffect SPEED;
+    public static PotionEffect HASTE;
+    public static PotionEffect RESISTANCE;
+    public static PotionEffect FIRE_RESISTANCE;
+
+    public static void init() {
+        if (ConfigHandler.COMMON.enableWither.get())
+            WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+        if (ConfigHandler.COMMON.enableSlowness.get())
+            SLOWNESS = create("slowness", PotionType.TARGET, Effects.SLOWNESS).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+        if (ConfigHandler.COMMON.enablePoison.get())
+            POISON = create("poison", PotionType.TARGET, Effects.POISON).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+        if (ConfigHandler.COMMON.enableWeakness.get())
+            WEAKNESS = create("weakness", PotionType.TARGET, Effects.WEAKNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+        if (ConfigHandler.COMMON.enableBlindness.get())
+            BLINDNESS = create("blindness", PotionType.TARGET, Effects.BLINDNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
+        if (ConfigHandler.COMMON.enableRegeneration.get())
+            REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+        if (ConfigHandler.COMMON.enableSpeed.get())
+            SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+        if (ConfigHandler.COMMON.enableHaste.get())
+            HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL);
+        if (ConfigHandler.COMMON.enableResistance.get())
+            RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
+        if (ConfigHandler.COMMON.enableFireResistance.get())
+            FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD);
+    }
 
     private final PotionType effectType;
 
