@@ -33,6 +33,12 @@ public class UniqueHandler {
         UniqueSave.forWorld(world).markDirty();
     }
 
+    public static void resetUniqueItems(ServerWorld world) {
+        UniqueSave.forWorld(world).uniques.clear();
+        UniqueSave.forWorld(world).markDirty();
+        generateUniqueItems(world);
+    }
+
     public static ItemStack getRandomUniqueItem(ServerWorld world) {
         UniqueSave save = UniqueSave.forWorld(world);
         int randomInt = new Random().nextInt(save.uniques.size());

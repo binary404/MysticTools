@@ -16,7 +16,7 @@ public class GrowthAura implements IUniqueEffect {
 
     @Override
     public void tick(Entity entity, ItemStack stack) {
-        if (entity.ticksExisted % 20 == 0)
+        if (entity.ticksExisted % 200 == 0)
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 0; y++) {
                     for (int z = -1; z <= 1; z++) {
@@ -24,7 +24,8 @@ public class GrowthAura implements IUniqueEffect {
                         BlockPos pos = entity.getPosition().add(x, y, z);
                         if (world.getBlockState(pos).getBlock() instanceof IGrowable && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
                             if (world instanceof ServerWorld && world.rand.nextInt(1) == 0) {
-                                ((IGrowable) world.getBlockState(pos).getBlock()).grow((ServerWorld) world, new Random(), pos, world.getBlockState(pos));
+                                if (((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), false))
+                                    ((IGrowable) world.getBlockState(pos).getBlock()).grow((ServerWorld) world, new Random(), pos, world.getBlockState(pos));
                                 return;
                             }
                         }

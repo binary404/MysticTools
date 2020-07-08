@@ -5,6 +5,8 @@
   "item.mystictools.loot_sword": "Loot Sword",
   "item.mystictools.loot_shovel": "Loot Shovel",
 
+  "block.mystictools.cauldron": "Work In Progress - Do NOT Use(yet)",
+
   "weaponeffect.regeneration.description": "Regeneration",
   "weaponeffect.speed.description": "Speed",
   "weaponeffect.haste.description": "Haste",
@@ -26,6 +28,7 @@
   "xray.description": "Xray",
   "vortex.description": "Vortex",
   "treeChopper.description": "Tree Chopper",
+  "emeralds.description": "Emeralds",
 
   "itemGroup.mystictools": "Mystic Tools"
 }

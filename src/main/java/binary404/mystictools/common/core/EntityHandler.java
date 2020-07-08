@@ -1,10 +1,10 @@
 package binary404.mystictools.common.core;
 
-import binary404.mystictools.common.core.event.DropLootEvent;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import com.tfar.additionalevents.event.DropLootEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

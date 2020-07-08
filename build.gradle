@@ -9,11 +9,15 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.wynprice.cursemaven" version "2.1.0"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.0.1"
+version = "1.0.5"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 
@@ -67,6 +71,8 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
+
+    compile fg.deobf("curse.maven:additional-events:2892330")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

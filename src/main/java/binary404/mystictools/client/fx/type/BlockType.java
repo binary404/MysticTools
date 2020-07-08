@@ -1,10 +1,7 @@
 package binary404.mystictools.client.fx.type;
 
-import binary404.mystictools.client.fx.FXArc;
 import binary404.mystictools.client.fx.FXBlock;
-import binary404.mystictools.client.fx.data.ArcData;
 import binary404.mystictools.client.fx.data.BlockData;
-import jdk.nashorn.internal.ir.Block;
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;

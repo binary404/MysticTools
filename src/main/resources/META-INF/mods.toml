@@ -26,8 +26,8 @@ description='''
     side="BOTH"
 # Here's another dependency
 [[dependencies.mystictools]]
-    modId="minecraft"
+    modId="additionalevents"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.0,)"
     ordering="NONE"
     side="BOTH"
