@@ -1,6 +1,8 @@
 package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -18,6 +20,7 @@ public class Emerald implements IUniqueEffect {
             ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EMERALD, 1));
             item.setPortal(pos);
             world.addEntity(item);
+            NetworkHandler.sendToNearby(world, player, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.1F, 0.96F, 0.1F));
         }
     }
 }

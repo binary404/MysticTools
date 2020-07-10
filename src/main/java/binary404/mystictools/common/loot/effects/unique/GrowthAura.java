@@ -1,6 +1,8 @@
 package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
@@ -16,7 +18,7 @@ public class GrowthAura implements IUniqueEffect {
 
     @Override
     public void tick(Entity entity, ItemStack stack) {
-        if (entity.ticksExisted % 200 == 0)
+        if (entity.ticksExisted % 80 == 0)
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 0; y++) {
                     for (int z = -1; z <= 1; z++) {
@@ -24,9 +26,11 @@ public class GrowthAura implements IUniqueEffect {
                         BlockPos pos = entity.getPosition().add(x, y, z);
                         if (world.getBlockState(pos).getBlock() instanceof IGrowable && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
                             if (world instanceof ServerWorld && world.rand.nextInt(1) == 0) {
-                                if (((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), false))
+                                if (((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), false)) {
                                     ((IGrowable) world.getBlockState(pos).getBlock()).grow((ServerWorld) world, new Random(), pos, world.getBlockState(pos));
-                                return;
+                                    NetworkHandler.sendToNearby(entity.world, entity, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.1F, 0.96F, 0.1F));
+                                    return;
+                                }
                             }
                         }
                     }

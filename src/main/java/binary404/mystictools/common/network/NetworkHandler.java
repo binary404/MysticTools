@@ -19,6 +19,8 @@ public class NetworkHandler {
     public static void init() {
         int id = 0;
         HANDLER.registerMessage(id++, PacketToggle.class, PacketToggle::encode, PacketToggle::decode, PacketToggle::handle);
+        HANDLER.registerMessage(id++, PacketOpenCrateFX.class, PacketOpenCrateFX::encode, PacketOpenCrateFX::decode, PacketOpenCrateFX::handle);
+        HANDLER.registerMessage(id++, PacketSparkle.class, PacketSparkle::encode, PacketSparkle::decode, PacketSparkle::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend) {

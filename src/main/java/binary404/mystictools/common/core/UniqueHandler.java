@@ -55,7 +55,6 @@ public class UniqueHandler {
         info.found = true;
         save.uniques.set(randomInt, info);
         save.markDirty();
-        System.out.println(save.uniques);
         return loot;
     }
 

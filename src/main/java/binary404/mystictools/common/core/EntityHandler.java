@@ -4,6 +4,8 @@ import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketSparkle;
 import com.tfar.additionalevents.event.DropLootEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,6 +52,7 @@ public class EntityHandler {
                         int amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
                         float leech = damageInflicted * ((float) amplifier / 100.0F);
                         player.heal(leech);
+                        NetworkHandler.sendToNearby(player.world, player, new PacketSparkle(event.getEntityLiving().getPosX() + 0.5, event.getEntityLiving().getPosY() + 0.5, event.getEntityLiving().getPosZ() + 0.5, 0.92F, 0.0F, 0.08F));
                     }
                 }
             }
@@ -73,7 +76,7 @@ public class EntityHandler {
                 for (LootEffect effect : effects) {
                     IEffectAction action = effect.getAction();
                     if (action != null) {
-                        action.handleHarvest(player, tool, event.getDrops());
+                        action.handleHarvest(player, tool, event.getDrops(), event.getPos());
                     }
                 }
             }

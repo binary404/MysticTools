@@ -11,6 +11,7 @@ import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.loot.LootEntry;
 
@@ -100,6 +101,7 @@ public class LootEffect {
         CompoundNBT tag = new CompoundNBT();
 
         tag.putString("id", this.getId());
+        tag.putInt("amplifier", this.getAmplifier(rand));
         return tag;
     }
 
@@ -150,12 +152,7 @@ public class LootEffect {
     }
 
     private int getAmplifier(Random rand) {
-        int amplifier = this.amplifierMin;
-
-        if (amplifier < this.amplifierMax)
-            amplifier += rand.nextInt(this.amplifierMax - amplifier + 1);
-
-        return amplifier;
+        return MathHelper.nextInt(rand, this.amplifierMin, this.amplifierMax);
     }
 
     public String getActionStatus(ItemStack stack) {

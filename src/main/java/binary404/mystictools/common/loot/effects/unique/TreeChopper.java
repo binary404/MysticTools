@@ -2,6 +2,8 @@ package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -95,6 +97,7 @@ public class TreeChopper implements IUniqueEffect {
             }
 
             if (particles) {
+                NetworkHandler.sendToNearby(world, player, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.1F, 0.96F, 0.1F));
                 world.playEvent(2001, pos, Block.getStateId(state));
             }
         }

@@ -1,6 +1,8 @@
 package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -32,6 +34,7 @@ public class Brainwash implements IUniqueEffect {
                     }
 
                     target.setRevengeTarget(newTarget);
+                    NetworkHandler.sendToNearby(entity.world, entity, new PacketSparkle(target.getPosX() + 0.5, target.getPosY() + 0.5, target.getPosZ() + 0.5, 0.1F, 0.25F, 0.67F));
 
                 }else {
                     target.setAttackTarget(null);

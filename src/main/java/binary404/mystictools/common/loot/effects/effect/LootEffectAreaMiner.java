@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -29,8 +30,7 @@ public class LootEffectAreaMiner implements IEffectAction {
     }
 
     @Override
-    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops) {
-
+    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
     }
 
     @Override

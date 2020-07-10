@@ -3,6 +3,8 @@ package binary404.mystictools.common.items;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.*;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketOpenCrateFX;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,8 +49,9 @@ public class ItemCase extends Item {
         ItemStack loot;
         if (lootRarity.getId().equals("Unique")) {
             loot = UniqueHandler.getRandomUniqueItem(serverWorld);
-            playerIn.dropItem(loot, false, true);
+            playerIn.dropItem(loot, true, true);
             stack.shrink(1);
+            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
             return super.onItemRightClick(worldIn, playerIn, handIn);
         } else {
             loot = LootItemHelper.getRandomLoot(random, lootRarity);
@@ -61,6 +64,7 @@ public class ItemCase extends Item {
             loot = LootItemHelper.generateLoot(lootRarity, type, loot);
             playerIn.dropItem(loot, false, true);
             stack.shrink(1);
+            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
             return super.onItemRightClick(worldIn, playerIn, handIn);
         }
     }
