@@ -7,12 +7,15 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketOpenCrateFX;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -23,9 +26,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import sun.security.provider.SHA;
 
+import javax.annotation.Nullable;
+
 public class BlockCauldron extends Block {
 
-    private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D);
+    private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 8.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), VoxelShapes.or(makeCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D), makeCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), INSIDE), IBooleanFunction.ONLY_FIRST);
 
     public BlockCauldron(Properties properties) {
@@ -60,8 +65,20 @@ public class BlockCauldron extends Block {
                 } else {
                     stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(5));
                 }
+                NetworkHandler.sendToNearby(worldIn, entityIn, new PacketOpenCrateFX(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ()));
                 itemEntity.setItem(stack);
             }
         }
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new TileEntityCauldron();
     }
 }
