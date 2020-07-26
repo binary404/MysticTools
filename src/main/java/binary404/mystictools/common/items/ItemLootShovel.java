@@ -7,6 +7,7 @@ import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -39,6 +41,7 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
     public ItemLootShovel() {
         super(ItemTier.DIAMOND, 1.5F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
+        /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
@@ -49,6 +52,7 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
                 return model;
             }
         });
+        */
     }
 
     @Override
@@ -76,6 +80,8 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
         }
 
         boolean onBreak = super.onBlockStartBreak(stack, pos, player);
+
+        LootItemHelper.handleBreak(stack, player, pos);
 
         if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
             RayTraceResult raytrace = LootItemHelper.getBlockOnReach(player.world, player);
