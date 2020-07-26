@@ -24,7 +24,7 @@
   "weaponeffect.void.description": "Void",
   "weaponeffect.area_miner.description": "Area Miner",
   "weaponeffect.lightning.description": "Lightning",
-  "weaponeffect.sleep.description": "Sleep",
+  "weaponeffect.sleep.description": "Sleep [Right Click]",
 
   "growthAura.description": "Growth Aura",
   "brainwash.description": "Brainwash",

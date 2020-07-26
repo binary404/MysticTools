@@ -164,6 +164,22 @@ public class LootItemHelper {
         }
     }
 
+    public static void handleBreak(ItemStack stack, PlayerEntity player, BlockPos pos) {
+        if (player.world.rand.nextInt(10) <= 5) {
+            int xp = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
+            xp++;
+            int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL);
+            if (xp >= level) {
+                level *= 1.5;
+                xp = 0;
+                int upgrades = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
+                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_LEVEL, level);
+                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE, (upgrades + 1));
+            }
+            LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_XP, xp);
+        }
+    }
+
     public static ActionResult<ItemStack> use(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItemMainhand();
 
@@ -308,7 +324,7 @@ public class LootItemHelper {
 
         int modifiers = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
         if (modifiers > 0)
-            tooltip.add(new StringTextComponent(TextFormatting.BOLD + "" + modifiers + " Modifiers"));
+            tooltip.add(new StringTextComponent(TextFormatting.BOLD + "" + TextFormatting.GOLD + "" + modifiers + " Modifiers"));
     }
 
     @Nullable

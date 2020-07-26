@@ -81,6 +81,8 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
 
         boolean onBreak = super.onBlockStartBreak(stack, pos, player);
 
+        LootItemHelper.handleBreak(stack, player, pos);
+
         if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
             RayTraceResult raytrace = LootItemHelper.getBlockOnReach(player.world, player);
             if (raytrace != null) {
