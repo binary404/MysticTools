@@ -1,6 +1,7 @@
 package binary404.mystictools.common.core;
 
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
@@ -14,6 +15,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -31,6 +34,16 @@ public class EntityHandler {
             UniqueEffect effect = UniqueEffect.getById(id);
             if (effect != null)
                 effect.arrowImpact(event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void sleepingCheck(SleepingLocationCheckEvent event) {
+        if (event.getEntityLiving().isSleeping() && !event.getEntityLiving().world.isDaytime()) {
+            ItemStack stack = event.getEntityLiving().getHeldItemMainhand();
+            if(LootItemHelper.hasEffect(stack, LootEffect.SLEEP)) {
+                event.setResult(Event.Result.ALLOW);
+            }
         }
     }
 
