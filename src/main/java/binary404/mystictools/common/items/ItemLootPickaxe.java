@@ -40,7 +40,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     public ItemLootPickaxe() {
         super(ItemTier.DIAMOND, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
-        /*
+
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
@@ -51,7 +51,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
                 return model;
             }
         });
-        */
+
     }
 
     @Override

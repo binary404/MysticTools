@@ -41,7 +41,6 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
     public ItemLootShovel() {
         super(ItemTier.DIAMOND, 1.5F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
-        /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
@@ -52,7 +51,6 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
                 return model;
             }
         });
-        */
     }
 
     @Override
