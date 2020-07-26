@@ -12,6 +12,6 @@ public class ServerProxy implements IProxy {
     public void attachEventHandlers(IEventBus eventBus) {
     }
 
-    public void init() { ;
+    public void init() {
     }
 }

@@ -13,8 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -41,7 +41,7 @@ public class TreeChopper implements IUniqueEffect {
             return;
         }
         if (event.phase == TickEvent.Phase.END && event.world.getGameTime() % 5 == 0) {
-            DimensionType dim = event.world.getDimension().getType();
+            DimensionType dim = event.world.func_230315_m_();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
                 swappers.removeIf(next -> next == null || !next.tick());
@@ -60,7 +60,7 @@ public class TreeChopper implements IUniqueEffect {
         if (world.isRemote) {
             return;
         }
-        DimensionType dim = world.getDimension().getType();
+        DimensionType dim = world.func_230315_m_();
         blockSwappers.computeIfAbsent(dim, d -> new HashSet<>()).add(swapper);
     }
 

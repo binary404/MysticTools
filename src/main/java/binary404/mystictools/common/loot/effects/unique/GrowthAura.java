@@ -23,7 +23,7 @@ public class GrowthAura implements IUniqueEffect {
                 for (int y = -1; y <= 0; y++) {
                     for (int z = -1; z <= 1; z++) {
                         World world = entity.world;
-                        BlockPos pos = entity.getPosition().add(x, y, z);
+                        BlockPos pos = entity.func_233580_cy_().add(x, y, z);
                         if (world.getBlockState(pos).getBlock() instanceof IGrowable && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
                             if (world instanceof ServerWorld && world.rand.nextInt(1) == 0) {
                                 if (((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), false)) {

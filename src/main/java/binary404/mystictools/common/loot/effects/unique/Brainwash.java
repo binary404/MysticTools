@@ -3,6 +3,7 @@ package binary404.mystictools.common.loot.effects.unique;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
+import binary404.mystictools.mixin.AccessorGoalSelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -18,14 +19,14 @@ public class Brainwash implements IUniqueEffect {
     @Override
     public void tick(Entity entity, ItemStack stack) {
         if (entity.ticksExisted % 40 == 0) {
-            List<MobEntity> mobs = entity.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.getPosition()).grow(10, 10, 10));
+            List<MobEntity> mobs = entity.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.func_233580_cy_()).grow(10, 10, 10));
             if (!mobs.isEmpty()) {
                 MobEntity target = mobs.get(0);
                 MobEntity newTarget = mobs.get(entity.world.rand.nextInt(mobs.size()));
                 if (newTarget != null) {
                     target.setAttackTarget(null);
 
-                    for (PrioritizedGoal entry : target.targetSelector.goals) {
+                    for (PrioritizedGoal entry : ((AccessorGoalSelector)target.targetSelector).getGoals()) {
                         if (entry.getGoal() instanceof HurtByTargetGoal) {
                             target.targetSelector.removeGoal(entry.getGoal());
                             target.targetSelector.addGoal(-1, entry.getGoal());

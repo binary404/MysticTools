@@ -7,6 +7,7 @@ import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
@@ -14,11 +15,13 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -29,6 +32,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import org.w3c.dom.Attr;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,7 +43,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
     public ItemLootAxe() {
         super(ItemTier.DIAMOND, 5.0F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
-        this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
+        /*this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
                 float model = 0F;
@@ -49,6 +53,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
                 return model;
             }
         });
+         */
     }
 
     @Override
@@ -94,7 +99,11 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
             LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) entityIn);
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
+            try {
+                UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
+            } catch (Exception e) {
+
+            }
         }
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
@@ -111,9 +120,9 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
 
-        Multimap<String, AttributeModifier> multiMap = super.getAttributeModifiers(slot, stack);
+        Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
 
         return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Tool modifier");
     }

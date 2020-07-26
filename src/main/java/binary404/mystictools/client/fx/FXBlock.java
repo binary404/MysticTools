@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
@@ -22,7 +23,7 @@ public class FXBlock extends TexturedParticle {
     boolean depthIgnoring;
     TextureAtlasSprite sprite;
 
-    public FXBlock(World world, double x, double y, double z, boolean depthIgnore, int maxAge, Block block) {
+    public FXBlock(ClientWorld world, double x, double y, double z, boolean depthIgnore, int maxAge, Block block) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.depthIgnoring = depthIgnore;
         this.setMaxAge(maxAge);

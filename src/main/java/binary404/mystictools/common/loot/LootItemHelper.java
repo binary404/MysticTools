@@ -8,14 +8,15 @@ import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
+import com.sun.javafx.geom.Vec3d;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -30,11 +31,15 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.ForgeInternalHandler;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
@@ -89,12 +94,12 @@ public class LootItemHelper {
         return maxDamage;
     }
 
-    public static Multimap<String, AttributeModifier> modifiersForStack(EquipmentSlotType slot, ItemStack stack, Multimap<String, AttributeModifier> initial, String modifierKey) {
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlotType slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
         return modifiersForStack(slot, EquipmentSlotType.MAINHAND, stack, initial, modifierKey);
     }
 
-    public static Multimap<String, AttributeModifier> modifiersForStack(EquipmentSlotType slot, EquipmentSlotType effectiveSlot, ItemStack stack, Multimap<String, AttributeModifier> initial, String modifierKey) {
-        Multimap<String, AttributeModifier> modifiers = initial;
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlotType slot, EquipmentSlotType effectiveSlot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
+        Multimap<Attribute, AttributeModifier> modifiers = initial;
 
         if (slot == effectiveSlot) {
             int attackDamage = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE);
@@ -104,33 +109,33 @@ public class LootItemHelper {
 
             //MysticTools armor TODO
             if (attackDamage > 0 && !(stack.getItem() instanceof ArmorItem))
-                applyAttributeModifier(modifiers, SharedMonsterAttributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
+                applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
 
             if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
-                applyAttributeModifier(modifiers, SharedMonsterAttributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, (double) attackSpeed);
+                applyAttributeModifier(modifiers, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, (double) attackSpeed);
 
             if (armorPoints > 0)
-                applyAttributeModifier(modifiers, SharedMonsterAttributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorPoints);
+                applyAttributeModifier(modifiers, Attributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorPoints);
 
             if (armorToughness > 0)
-                applyAttributeModifier(modifiers, SharedMonsterAttributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
+                applyAttributeModifier(modifiers, Attributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
         }
 
         return modifiers;
     }
 
-    private static void applyAttributeModifier(Multimap<String, AttributeModifier> modifiers, IAttribute attribute, UUID uuid, String modifierKey, double value) {
+    private static void applyAttributeModifier(Multimap<Attribute, AttributeModifier> modifiers, Attribute attribute, UUID uuid, String modifierKey, double value) {
         Collection<AttributeModifier> curModifiers = new ArrayList<AttributeModifier>();
         double attributeValue = 0;
 
         curModifiers.clear();
-        curModifiers.addAll(modifiers.get(attribute.getName()));
+        curModifiers.addAll(modifiers.get(attribute));
 
         for (AttributeModifier m : curModifiers)
             attributeValue += m.getAmount();
 
-        modifiers.removeAll(attribute.getName());
-        modifiers.put(attribute.getName(), new AttributeModifier(uuid, modifierKey, value + attributeValue, AttributeModifier.Operation.ADDITION));
+        modifiers.removeAll(attribute);
+        modifiers.put(attribute, new AttributeModifier(uuid, modifierKey, value + attributeValue, AttributeModifier.Operation.ADDITION));
     }
 
     public static void handleHit(ItemStack stack, LivingEntity target) {
@@ -414,7 +419,7 @@ public class LootItemHelper {
     }
 
     public static RayTraceResult getBlockOnReach(World world, PlayerEntity player) {
-        double distance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+        double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
         float pitch = player.rotationPitch;
         float yaw = player.rotationYaw;
@@ -422,7 +427,7 @@ public class LootItemHelper {
         double y = player.getPosY() + (double) player.getEyeHeight();
         double z = player.getPosZ();
 
-        Vec3d vec3 = new Vec3d(x, y, z);
+        Vector3d vec3 = new Vector3d(x, y, z);
 
         float f2 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f3 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -431,7 +436,7 @@ public class LootItemHelper {
         float f6 = f3 * f4;
         float f7 = f2 * f4;
 
-        Vec3d vec31 = vec3.add((double) f6 * distance, (double) f5 * distance, (double) f7 * distance);
+        Vector3d vec31 = vec3.add((double) f6 * distance, (double) f5 * distance, (double) f7 * distance);
 
 
         return world.rayTraceBlocks(new RayTraceContext(vec3, vec31, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));

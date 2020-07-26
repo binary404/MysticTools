@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -51,19 +52,19 @@ public class BlockCauldron extends Block {
                 ItemStack stack;
                 LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(itemEntity.getItem(), LootTags.LOOT_TAG_RARITY));
                 if (rarity == LootRarity.COMMON) {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(5));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 3, 7));
                 } else if (rarity == LootRarity.UNCOMMON) {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(7));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 6, 10));
                 } else if (rarity == LootRarity.RARE) {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(10));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 9, 13));
                 } else if (rarity == LootRarity.EPIC) {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(15));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 12, 15));
                 } else if (rarity == LootRarity.UNIQUE) {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(20));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 15, 18));
                     if (worldIn instanceof ServerWorld)
                         UniqueHandler.resetUniqueItems((ServerWorld) worldIn);
                 } else {
-                    stack = new ItemStack(ModItems.shard, worldIn.rand.nextInt(5));
+                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 3, 7));
                 }
                 NetworkHandler.sendToNearby(worldIn, entityIn, new PacketOpenCrateFX(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ()));
                 itemEntity.setItem(stack);

@@ -7,11 +7,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class RenderCauldron extends TileEntityRenderer<TileEntityCauldron> {
 
@@ -30,7 +30,7 @@ public class RenderCauldron extends TileEntityRenderer<TileEntityCauldron> {
         ms.rotate(Vector3f.XP.rotationDegrees(90));
         ms.scale(s, s, s);
         TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getBlockModelShapes().getModel(Blocks.WATER.getDefaultState()).getParticleTexture();
-        IVertexBuilder buffer = bufferIn.getBuffer(Atlases.getTranslucentBlockType());
+        IVertexBuilder buffer = bufferIn.getBuffer(Atlases.getTranslucentCullBlockType());
         int red = ((0xa01fcf >> 16) & 0xFF);
         int green = ((0xa01fcf >> 8) & 0xFF);
         int blue = ((0xa01fcf & 0xFF));

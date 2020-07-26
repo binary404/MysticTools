@@ -34,7 +34,7 @@ public class NetworkHandler {
     }
 
     public static void sendToNearby(World world, Entity e, Object toSend) {
-        sendToNearby(world, new BlockPos(e), toSend);
+        sendToNearby(world, new BlockPos(e.getPosX(), e.getPosY(), e.getPosZ()), toSend);
     }
 
     public static void sendTo(ServerPlayerEntity playerMP, Object toSend) {

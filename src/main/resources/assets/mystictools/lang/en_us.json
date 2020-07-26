@@ -4,8 +4,9 @@
   "item.mystictools.loot_pickaxe": "Loot Pickaxe",
   "item.mystictools.loot_sword": "Loot Sword",
   "item.mystictools.loot_shovel": "Loot Shovel",
+  "item.mystictools.shard": "Mystic Shard",
 
-  "block.mystictools.cauldron": "Work In Progress - Do NOT Use(yet)",
+  "block.mystictools.cauldron": "Corrosion Cauldron",
 
   "weaponeffect.regeneration.description": "Regeneration",
   "weaponeffect.speed.description": "Speed",

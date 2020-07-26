@@ -4,6 +4,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.effect.LootEffectActionSleep;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAreaMiner;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
 import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.storage.loot.LootEntry;
 
 import java.util.*;
 
@@ -23,11 +23,11 @@ public class LootEffect {
 
     public static final LootEffect LEECH = create("leech", EffectType.PASSIVE).setAmplifier(1, 100).setItemTypes(LootSet.LootSetType.SWORD);
 
+    public static final LootEffect SLEEP = create("sleep", EffectType.USE).setAction(new LootEffectActionSleep()).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
     public static final LootEffect MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE);
     public static final LootEffect AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAreaMiner());
     public static final LootEffect AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAutoSmelt());
     public static final LootEffect VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(new LootEffectVoid());
-
 
     private String id;
     private List<LootSet.LootSetType> applyToItems = new ArrayList<>();
