@@ -17,7 +17,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.1.0"
+version = "1.15.2-1.1.4"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 
@@ -60,6 +60,10 @@ minecraft {
                     '--output', '"' + file('src/generated/resources/') + '"'
         }
     }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
 }
 
 repositories {
