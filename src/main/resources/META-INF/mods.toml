@@ -1,0 +1,39 @@
+modLoader="javafml" #mandatory
+loaderVersion="[31,)"
+issueTrackerURL="https://github.com/binary404/MysticTools-2.0/issues" #optional
+[[mods]] #mandatory
+modId="mystictools" #mandatory
+version="${file.jarVersion}" #mandatory
+displayName="Mystic Tools" #mandatory
+logoFile="examplemod.png" #optional
+credits="Samy 720 for textures" #optional
+authors="binary404" #optional
+# The description text for the mod (multi line!) (#mandatory)
+description='''
+    A rpg style tool mod for minecraft
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.mystictools]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[31,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"
+# Here's another dependency
+[[dependencies.mystictools]]
+    modId="additionalevents"
+    mandatory=true
+    versionRange="[1.0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.mystictools]]
+    modId="fx_lib"
+    mandatory=true
+    versionRange="[1.4,)"
+    ordering="NONE"
+    side="BOTH"
