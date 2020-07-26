@@ -23,6 +23,8 @@
   "weaponeffect.multi.description": "Multi Tool",
   "weaponeffect.void.description": "Void",
   "weaponeffect.area_miner.description": "Area Miner",
+  "weaponeffect.lightning.description": "Lightning",
+  "weaponeffect.sleep.description": "Sleep",
 
   "growthAura.description": "Growth Aura",
   "brainwash.description": "Brainwash",
