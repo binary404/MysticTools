@@ -74,7 +74,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         boolean hit = super.hitEntity(stack, target, attacker);
 
         LootItemHelper.handlePotionEffects(stack, target, attacker);
-        LootItemHelper.handleHit(stack, target);
+        LootItemHelper.handleHit(stack, target, attacker);
 
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {

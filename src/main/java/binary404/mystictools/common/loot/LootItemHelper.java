@@ -138,8 +138,18 @@ public class LootItemHelper {
         modifiers.put(attribute, new AttributeModifier(uuid, modifierKey, value + attributeValue, AttributeModifier.Operation.ADDITION));
     }
 
-    public static void handleHit(ItemStack stack, LivingEntity target) {
+    public static void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (target != null && target.getHealth() <= 0.0) {
+
+            List<LootEffect> effects = LootEffect.getEffectList(stack);
+
+            if (effects.size() > 0) {
+                for (LootEffect effect : effects) {
+                    if (effect.getAction() != null)
+                        effect.getAction().handleHit(stack, target, attacker);
+                }
+            }
+
             int kills = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
             kills++;
             int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL);

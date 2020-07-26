@@ -4,10 +4,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
-import binary404.mystictools.common.loot.effects.effect.LootEffectActionSleep;
-import binary404.mystictools.common.loot.effects.effect.LootEffectAreaMiner;
-import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
-import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
+import binary404.mystictools.common.loot.effects.effect.*;
 import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,7 +17,7 @@ import java.util.*;
 public class LootEffect {
     public static final Map<String, LootEffect> REGISTRY = new HashMap<>();
 
-
+    public static final LootEffect LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(new LootEffectLightning()).setItemTypes(LootSet.LootSetType.SWORD);
     public static final LootEffect LEECH = create("leech", EffectType.PASSIVE).setAmplifier(1, 100).setItemTypes(LootSet.LootSetType.SWORD);
 
     public static final LootEffect SLEEP = create("sleep", EffectType.USE).setAction(new LootEffectActionSleep()).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
