@@ -21,9 +21,6 @@ public class ChestHelper {
         if (name.startsWith(prefix)) {
             String file = "inject";
             event.getTable().addPool(getInjectPool(file));
-        } else if (name.startsWith("minecraft:entities/") && ConfigHandler.COMMON.enableMobDropCrate.get()) {
-            String file = "entity";
-            event.getTable().addPool(getInjectPool(file));
         }
     }
 

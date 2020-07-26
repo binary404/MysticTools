@@ -30,8 +30,6 @@ public final class ConfigHandler {
         public final ForgeConfigSpec.BooleanValue enableResistance;
         public final ForgeConfigSpec.BooleanValue enableFireResistance;
 
-        public final ForgeConfigSpec.BooleanValue enableMobDropCrate;
-
         public CommonConfig(ForgeConfigSpec.Builder builder) {
             lootCrateWeight = builder.comment("The chance that the lootcrate loot table will be injected into a chest loot table").defineInRange("lootCrateWeight", 100, 1, 400);
             lootCrateMinRolls = builder.comment("The minimum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMinRolls", 3, 0, 300);
@@ -47,8 +45,6 @@ public final class ConfigHandler {
             enableHaste = builder.comment("enable haste effect on tools").define("enableHaste", true);
             enableResistance = builder.comment("enable resistance effect on tools").define("enableResistance", true);
             enableFireResistance = builder.comment("enable fire resistance effect on tools").define("enableFireResistance", true);
-
-            enableMobDropCrate = builder.comment("enables mobs dropping crates").define("enableMobDropCrate", true);
         }
     }
 }
