@@ -1,6 +1,5 @@
 package binary404.mystictools.common.network;
 
-import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -37,7 +36,7 @@ public class PacketOpenCrateFX {
         }
         ctx.get().enqueueWork(() -> {
             int count = 50;
-            World world = MysticTools.proxy.getWorld();
+            World world = Minecraft.getInstance().world;
             for (int a = 0; a < 50; a++) {
                 boolean floaty = (a < count / 3);
                 float r = MathHelper.nextInt(world.rand, 255, 255) / 255.0F;

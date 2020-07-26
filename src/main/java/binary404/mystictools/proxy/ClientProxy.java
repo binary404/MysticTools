@@ -3,8 +3,6 @@ package binary404.mystictools.proxy;
 import binary404.mystictools.client.RenderCauldron;
 import binary404.mystictools.common.blocks.ModTiles;
 import binary404.mystictools.common.core.ClientHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -25,8 +23,4 @@ public class ClientProxy implements IProxy {
         ClientRegistry.bindTileEntityRenderer(ModTiles.CAULDRON, RenderCauldron::new);
     }
 
-    @Override
-    public World getWorld() {
-        return Minecraft.getInstance().world;
-    }
 }
