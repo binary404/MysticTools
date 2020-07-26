@@ -1,6 +1,0 @@
-{
-	"parent": "mystictools:item/loot_axe",
-	"textures": {
-		"layer0": "mystictools:items/axe/3"
-	}
-}

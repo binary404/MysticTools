@@ -1,6 +1,0 @@
-{
-	"parent": "mystictools:item/loot_sword",
-	"textures": {
-		"layer0": "mystictools:items/sword/51"
-	}
-}
