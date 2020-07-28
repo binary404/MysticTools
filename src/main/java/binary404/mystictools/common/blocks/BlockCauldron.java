@@ -3,12 +3,12 @@ package binary404.mystictools.common.blocks;
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketOpenCrateFX;
+import binary404.mystictools.common.tile.TileEntityCauldron;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -25,7 +25,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import sun.security.provider.SHA;
 
 import javax.annotation.Nullable;
 

@@ -21,6 +21,9 @@ public class ModBlocks {
     @ObjectHolder("mystictools:cauldron")
     public static Block cauldron;
 
+    @ObjectHolder("mystictools:upgrader")
+    public static Block upgrader;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -28,6 +31,7 @@ public class ModBlocks {
         Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.ANVIL);
 
         register(r, new BlockCauldron(builder), "cauldron");
+        register(r, new BlockUpgrader(builder), "upgrader");
     }
 
     @SubscribeEvent

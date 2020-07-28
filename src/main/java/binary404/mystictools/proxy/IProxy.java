@@ -25,4 +25,7 @@ public interface IProxy {
     default World getWorld() {
         return null;
     }
+
+    default void blockParticle(int x, int y, int z) {
+    }
 }
