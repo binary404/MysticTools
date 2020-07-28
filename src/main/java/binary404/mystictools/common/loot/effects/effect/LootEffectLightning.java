@@ -11,14 +11,9 @@ public class LootEffectLightning implements IEffectAction {
 
     @Override
     public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-<<<<<<< HEAD
         LightningBoltEntity entity = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, target.world);
         entity.setPosition(target.getPosX(), target.getPosY(), target.getPosZ());
         entity.func_233623_a_(true);
-=======
-        LightningBoltEntity entity = new LightningBoltEntity(target.world, target.getPosX(), target.getPosY(), target.getPosZ(), true);
-        entity.setPosition(target.getPosX(), target.getPosY(), target.getPosZ());
->>>>>>> master
         target.world.addEntity(entity);
         target.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 10);
         target.setFire(15);

@@ -49,19 +49,19 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
     }
 
     @Override
-    public void render(int p_230430_2_, int p_230430_3_, float p_230430_4_) {
-        this.renderBackground();
-        super.render(p_230430_2_, p_230430_3_, p_230430_4_);
-        this.renderHoveredToolTip(p_230430_2_, p_230430_3_);
+    public void render(MatrixStack stack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
+        this.renderBackground(stack);
+        super.render(stack, p_230430_2_, p_230430_3_, p_230430_4_);
+        this.func_230459_a_(stack, p_230430_2_, p_230430_3_);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    protected void func_230450_a_(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("mystictools", "textures/gui/upgrader.png"));
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
-        blit(x, y, 0, 0, 176, 168);
+        blit(p_230450_1_, x, y, 0, 0, 176, 168);
     }
 
     private class ButtonBasic extends Button {
@@ -69,15 +69,15 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
         int tx, ty;
 
         public ButtonBasic(IPressable onPress, int x, int y, String text, int tx, int ty, int tw, int th) {
-            super(x, y, tw, th, text, onPress);
+            super(x, y, tw, th, ITextComponent.func_241827_a_(text), onPress);
             this.tx = tx;
             this.ty = ty;
         }
 
         @Override
-        public void render(int p_230431_2_, int p_230431_3_, float p_230431_4_) {
+        public void renderButton(MatrixStack stack, int p_230431_2_, int p_230431_3_, float p_230431_4_) {
             minecraft.getTextureManager().bindTexture(new ResourceLocation("mystictools", "textures/gui/upgrader.png"));
-            this.blit(this.x, this.y, this.tx, this.ty, this.width, this.height);
+            this.blit(stack, this.x, this.y, this.tx, this.ty, this.width, this.height);
         }
     }
 

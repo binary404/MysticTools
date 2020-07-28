@@ -2,8 +2,8 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import com.mojang.datafixers.util.Either;
+import com.sun.javafx.geom.Vec3d;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.renderer.Vector3d;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -16,7 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Unit;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -85,8 +85,8 @@ public class LootEffectSleep implements IEffectAction {
         } catch (Exception exception) {
         }
 
-        player.setBedPosition(player.getPosition());
-        player.setMotion(Vec3d.ZERO);
+        player.setBedPosition(player.func_233580_cy_());
+        player.setMotion(Vector3d.ZERO);
         player.isAirBorne = true;
 
 

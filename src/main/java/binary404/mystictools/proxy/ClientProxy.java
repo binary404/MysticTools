@@ -1,11 +1,11 @@
 package binary404.mystictools.proxy;
 
 import binary404.mystictools.client.RenderCauldron;
-import binary404.mystictools.common.blocks.ModTiles;
 import binary404.mystictools.common.core.ClientHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ItemLootBow;
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemModelsProperties;
