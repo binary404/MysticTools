@@ -1,6 +1,6 @@
 package binary404.mystictools.client;
 
-import binary404.mystictools.common.blocks.TileEntityCauldron;
+import binary404.mystictools.common.tile.TileEntityCauldron;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Blocks;
