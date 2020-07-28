@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 568df0e7d0a0173304249d5d2eb69b3925b209c9 data/mystictools/advancements/recipes/mystictools/cauldron.json
 aee0f29b0d22736b438a477a61e9f4890f858873 data/mystictools/advancements/recipes/mystictools/loot_case.json
 faf9cab28d8098622688f51d1e79328d1b74fe85 data/mystictools/recipes/cauldron.json
 f1b3095d66434071a5bbfdd787e29d379418e95f data/mystictools/recipes/loot_case.json
-=======
-568df0e7d0a0173304249d5d2eb69b3925b209c9 data\mystictools\advancements\recipes\mystictools\cauldron.json
-aee0f29b0d22736b438a477a61e9f4890f858873 data\mystictools\advancements\recipes\mystictools\loot_case.json
-faf9cab28d8098622688f51d1e79328d1b74fe85 data\mystictools\recipes\cauldron.json
-f1b3095d66434071a5bbfdd787e29d379418e95f data\mystictools\recipes\loot_case.json
->>>>>>> master

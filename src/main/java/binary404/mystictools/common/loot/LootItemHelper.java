@@ -361,22 +361,6 @@ public class LootItemHelper {
         return weaponEffect;
     }
 
-    public static ItemStack rerollStats(ItemStack stack) {
-        Random random = new Random();
-
-        LootRarity lootRarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
-
-        LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE, lootRarity.getDamage(random));
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_SPEED, lootRarity.getSpeed(random));
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY, lootRarity.getEfficiency(random));
-        LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_DURABILITY, lootRarity.getDurability(random));
-
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
-
-        return stack;
-    }
-
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
         Random random = new Random();
 

@@ -54,16 +54,6 @@ public class LootNbtHelper {
         stack.getTag().getCompound(LootTags.LOOT_TAG).putInt(key, value);
     }
 
-    public static void setLootFloatValue(ItemStack stack, String key, float value) {
-        if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
-
-        if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
-
-        stack.getTag().getCompound(LootTags.LOOT_TAG).putFloat(key, value);
-    }
-
     public static float getLootFloatValue(ItemStack stack, String key) {
         float value = 0;
 
