@@ -35,6 +35,12 @@ public class ModItems {
     @ObjectHolder("mystictools:shard")
     public static Item shard;
 
+    @ObjectHolder("mystictools:dice")
+    public static Item dice;
+
+    @ObjectHolder("mystictools:charm")
+    public static Item charm;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -46,6 +52,8 @@ public class ModItems {
         RegistryHelper.register(r, new ItemLootBow(), "weaponbow");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
         RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "shard");
+        RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "dice");
+        RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "charm");
     }
 
 }

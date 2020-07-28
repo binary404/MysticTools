@@ -1,8 +1,6 @@
-package binary404.mystictools.common.blocks;
+package binary404.mystictools.common.tile;
 
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 
 public class TileEntityCauldron extends TileEntity {
 
