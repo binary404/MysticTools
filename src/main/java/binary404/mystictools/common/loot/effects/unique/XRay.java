@@ -1,5 +1,6 @@
 package binary404.mystictools.common.loot.effects.unique;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXBlock;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import net.minecraft.block.BlockState;
@@ -27,8 +28,7 @@ public class XRay implements IUniqueEffect {
                 Thread tr = new Thread(() -> {
                     List<BlockPos> blocks = startSearch(entity.world, entity.func_233580_cy_(), 32);
                     for (BlockPos pos : blocks) {
-                        FXBlock data = new FXBlock(Minecraft.getInstance().world, pos.getX() + 0.5, pos.getZ() + 0.5, pos.getZ() + 0.5, true, 600, entity.getEntityWorld().getBlockState(pos).getBlock());
-                        Minecraft.getInstance().particles.addEffect(data);
+                        MysticTools.proxy.blockFX(pos);
                     }
                 });
                 tr.setName("ORE SCANNER " + id);

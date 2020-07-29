@@ -27,7 +27,7 @@ public class FXBlock extends TexturedParticle {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.depthIgnoring = depthIgnore;
         this.setMaxAge(maxAge);
-        this.particleScale = 0.5F;
+        this.particleScale = 0.2F;
         this.sprite = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(block.getDefaultState()).getQuads(block.getDefaultState(), Direction.UP, new Random()).get(0).func_187508_a();
     }
 
