@@ -41,6 +41,7 @@ public class ModBlocks {
         Item.Properties props = new Item.Properties().group(MysticTools.tab);
 
         register(r, new BlockItem(cauldron, props), "cauldron");
+        register(r, new BlockItem(upgrader, props), "upgrader");
     }
 
 }

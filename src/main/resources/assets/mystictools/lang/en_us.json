@@ -5,8 +5,11 @@
   "item.mystictools.loot_sword": "Loot Sword",
   "item.mystictools.loot_shovel": "Loot Shovel",
   "item.mystictools.shard": "Mystic Shard",
+  "item.mystictools.dice": "Dice of Creation",
+  "item.mystictools.charm": "Upgrade Charm",
 
   "block.mystictools.cauldron": "Corrosion Cauldron",
+  "block.mystictools.upgrader": "Tool Upgrader",
 
   "weaponeffect.regeneration.description": "Regeneration",
   "weaponeffect.speed.description": "Speed",
@@ -24,7 +27,9 @@
   "weaponeffect.void.description": "Void",
   "weaponeffect.area_miner.description": "Area Miner",
   "weaponeffect.lightning.description": "Lightning",
-  "weaponeffect.sleep.description": "Sleep",
+  "weaponeffect.sleep.description": "Sleep [Right Click]",
+
+  "container.mystictools.upgrader": "Tool Upgrader",
 
   "growthAura.description": "Growth Aura",
   "brainwash.description": "Brainwash",

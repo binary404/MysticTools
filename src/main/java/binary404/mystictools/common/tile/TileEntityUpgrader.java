@@ -79,7 +79,7 @@ public class TileEntityUpgrader extends TileEntity implements INamedContainerPro
                     LootNbtHelper.setLootIntValue(loot, LootTags.LOOT_TAG_UPGRADE, upgrades);
                 }
             }
-            this.storage.setStackInSlot(2, loot);
+            this.output.setStackInSlot(0, loot);
             this.storage.setStackInSlot(0, ItemStack.EMPTY);
         }
     }
