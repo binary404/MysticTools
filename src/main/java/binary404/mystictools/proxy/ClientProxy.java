@@ -1,12 +1,15 @@
 package binary404.mystictools.proxy;
 
 import binary404.mystictools.client.RenderCauldron;
+import binary404.mystictools.client.gui.GuiUpgrader;
 import binary404.mystictools.common.core.ClientHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ItemLootBow;
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.tile.ModContainers;
 import binary404.mystictools.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.util.IItemProvider;
@@ -31,6 +34,7 @@ public class ClientProxy implements IProxy {
             registerPropertyGetters();
         });
         ClientRegistry.bindTileEntityRenderer(ModTiles.CAULDRON, RenderCauldron::new);
+        ScreenManager.registerFactory(ModContainers.UPGRADER, GuiUpgrader::new);
     }
 
     private static void registerPropertyGetter(IItemProvider item, ResourceLocation id, IItemPropertyGetter propGetter) {

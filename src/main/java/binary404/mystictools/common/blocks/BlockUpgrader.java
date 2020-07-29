@@ -2,6 +2,7 @@ package binary404.mystictools.common.blocks;
 
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.tile.TileEntityUpgrader;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,6 +37,11 @@ public class BlockUpgrader extends ContainerBlock {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return createNewTileEntity(world);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
