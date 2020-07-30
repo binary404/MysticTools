@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "mystictools:dice",
+  "pattern": [
+    "DCD",
+    "CEC",
+    "DCD"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:diamond_block"
+    },
+    "E": {
+      "item": "minecraft:emerald_block"
+    },
+    "C": {
+      "item": "mystictools:loot_case"
+    }
+  },
+  "result": {
+    "item": "mystictools:dice"
+  }
+}

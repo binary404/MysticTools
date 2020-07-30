@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "mystictools:charm",
+  "pattern": [
+    "SES",
+    "ECE",
+    "SES"
+  ],
+  "key": {
+    "S": {
+      "item": "mystictools:shard"
+    },
+    "E": {
+      "tag": "forge:gems/emerald"
+    },
+    "C": {
+      "item": "mystictools:loot_case"
+    }
+  },
+  "result": {
+    "item": "mystictools:charm"
+  }
+}
