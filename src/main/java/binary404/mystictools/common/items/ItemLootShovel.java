@@ -39,7 +39,7 @@ import java.util.Set;
 public class ItemLootShovel extends ShovelItem implements ILootItem {
 
     public ItemLootShovel() {
-        super(ItemTier.DIAMOND, 1.5F, -3.0F, new Item.Properties().group(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 1.5F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
@@ -60,11 +60,6 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override

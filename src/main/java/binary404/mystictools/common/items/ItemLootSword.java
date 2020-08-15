@@ -32,7 +32,7 @@ import java.util.List;
 public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
-        super(ItemTier.DIAMOND, 3, -2.4F, new Item.Properties().group(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 3, -2.4F, new Item.Properties().group(MysticTools.tab));
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
@@ -52,11 +52,6 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override

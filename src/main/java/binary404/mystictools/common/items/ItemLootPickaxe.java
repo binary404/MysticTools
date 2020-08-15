@@ -39,7 +39,7 @@ import java.util.Set;
 public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     public ItemLootPickaxe() {
-        super(ItemTier.DIAMOND, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
@@ -59,11 +59,6 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override

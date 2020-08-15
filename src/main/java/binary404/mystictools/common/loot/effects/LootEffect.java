@@ -5,7 +5,6 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.effect.*;
-import com.sun.org.apache.regexp.internal.RE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;

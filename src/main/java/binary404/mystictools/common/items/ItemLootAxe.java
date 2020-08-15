@@ -41,7 +41,7 @@ import java.util.Set;
 public class ItemLootAxe extends AxeItem implements ILootItem {
 
     public ItemLootAxe() {
-        super(ItemTier.DIAMOND, 5.0F, -3.0F, new Item.Properties().group(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 5.0F, -3.0F, new Item.Properties().group(MysticTools.tab));
 
         /*this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
@@ -61,11 +61,6 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override

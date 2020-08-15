@@ -31,7 +31,7 @@ public class LootRarity {
             lootRarity = LootRarity.RARE;
         else if (rarity > commonRarity + uncommonRarity + rareRarity && rarity <= commonRarity + uncommonRarity + rareRarity + epicRarity)
             lootRarity = LootRarity.EPIC;
-        else if (rarity > commonRarity + uncommonRarity + rareRarity + epicRarity + uniqueRarity)
+        else if (rarity > commonRarity + uncommonRarity + rareRarity + epicRarity && rarity < commonRarity + uncommonRarity + rareRarity + epicRarity + uniqueRarity)
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
