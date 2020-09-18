@@ -35,7 +35,7 @@ public class LootRarity {
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
-            return LootRarity.UNIQUE;
+            return lootRarity;
     }
 
     public static void init() {
