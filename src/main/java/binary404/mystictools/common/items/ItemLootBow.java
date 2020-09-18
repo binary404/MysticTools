@@ -71,7 +71,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
+        return true;
     }
 
     @Override
