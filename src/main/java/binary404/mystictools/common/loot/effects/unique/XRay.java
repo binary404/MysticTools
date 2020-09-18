@@ -23,18 +23,15 @@ public class XRay implements IUniqueEffect {
     @Override
     public void rightClick(LivingEntity entity, ItemStack stack) {
         if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) entity;
-            if (!player.getCooldownTracker().hasCooldown(stack.getItem())) {
-                Thread tr = new Thread(() -> {
-                    List<BlockPos> blocks = startSearch(entity.world, entity.func_233580_cy_(), 32);
-                    for (BlockPos pos : blocks) {
-                        MysticTools.proxy.blockFX(pos);
-                    }
-                });
-                tr.setName("ORE SCANNER " + id);
-                id++;
-                tr.start();
-            }
+            Thread tr = new Thread(() -> {
+                List<BlockPos> blocks = startSearch(entity.world, entity.func_233580_cy_(), 32);
+                for (BlockPos pos : blocks) {
+                    MysticTools.proxy.blockFX(pos);
+                }
+            });
+            tr.setName("ORE SCANNER " + id);
+            id++;
+            tr.start();
         }
     }
 

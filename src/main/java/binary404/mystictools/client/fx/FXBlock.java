@@ -1,10 +1,13 @@
 package binary404.mystictools.client.fx;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.particle.TexturedParticle;
+import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -13,27 +16,34 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
-public class FXBlock extends TexturedParticle {
+public class FXBlock extends SpriteTexturedParticle {
 
     boolean depthIgnoring;
-    TextureAtlasSprite sprite;
+    Block block;
 
     public FXBlock(ClientWorld world, double x, double y, double z, boolean depthIgnore, int maxAge, Block block) {
         super(world, x, y, z, 0.0D, 0.0D, 0.0D);
         this.depthIgnoring = depthIgnore;
         this.setMaxAge(maxAge);
-        this.particleScale = 0.2F;
-        this.sprite = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(block.getDefaultState()).getQuads(block.getDefaultState(), Direction.UP, new Random()).get(0).func_187508_a();
+        this.particleScale = 0.6F;
+        this.block = block;
+        this.sprite = Minecraft.getInstance().getBlockRendererDispatcher().getModelForState(block.getDefaultState()).getParticleTexture();
+    }
+
+    @Override
+    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
+        super.renderParticle(buffer, renderInfo, partialTicks);
     }
 
     @Override
     public IParticleRenderType getRenderType() {
-        return depthIgnoring ? DI_RENDER : NORMAL_RENDER;
+        return DI_RENDER;
     }
 
     @Override
@@ -44,26 +54,9 @@ public class FXBlock extends TexturedParticle {
         if (this.age++ >= this.maxAge) {
             this.setExpired();
         }
-    }
-
-    @Override
-    protected float getMinU() {
-        return this.sprite.getMinU();
-    }
-
-    @Override
-    protected float getMaxU() {
-        return this.sprite.getMaxU();
-    }
-
-    @Override
-    protected float getMinV() {
-        return this.sprite.getMinV();
-    }
-
-    @Override
-    protected float getMaxV() {
-        return this.sprite.getMaxV();
+        if (this.world.getBlockState(new BlockPos(this.posX, this.posY, this.posZ)).getBlock() != this.block) {
+            this.setExpired();
+        }
     }
 
     public static void beginNormalRender(BufferBuilder bufferBuilder, TextureManager manager) {
@@ -73,7 +66,7 @@ public class FXBlock extends TexturedParticle {
         RenderSystem.disableLighting();
 
         manager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
     }
 
     private static final IParticleRenderType NORMAL_RENDER = new IParticleRenderType() {
@@ -99,7 +92,8 @@ public class FXBlock extends TexturedParticle {
         @Override
         public void finishRender(Tessellator p_217599_1_) {
             p_217599_1_.draw();
-            RenderSystem.disableDepthTest();
+            RenderSystem.enableDepthTest();
+            RenderSystem.disableBlend();
             RenderSystem.depthMask(true);
         }
     };

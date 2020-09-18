@@ -111,11 +111,11 @@ public final class ConfigHandler {
 
             enableMobDropCrate = builder.comment("enables mobs dropping crates").define("enableMobDropCrate", true);
 
-            commonRarity = builder.comment("chance that a loot crate will generate a common item").defineInRange("commonRarity", 50, 1, 100);
-            uncommonRarity = builder.comment("chance that a loot crate will generate a uncommon item").defineInRange("uncommonRarity", 20, 1, 100);
-            rareRarity = builder.comment("chance that a loot crate will generate a rare item").defineInRange("rareRarity", 12, 1, 100);
-            epicRarity = builder.comment("chance that a loot crate will generate a epic item").defineInRange("epicRarity", 10, 1, 100);
-            uniqueRarity = builder.comment("chance that a loot crate will generate a unique item").defineInRange("uniqueRarity", 8, 1, 100);
+            commonRarity = builder.comment("chance that a loot crate will generate a common item").defineInRange("commonRarity", 50, 0, 100);
+            uncommonRarity = builder.comment("chance that a loot crate will generate a uncommon item").defineInRange("uncommonRarity", 20, 0, 100);
+            rareRarity = builder.comment("chance that a loot crate will generate a rare item").defineInRange("rareRarity", 12, 0, 100);
+            epicRarity = builder.comment("chance that a loot crate will generate a epic item").defineInRange("epicRarity", 10, 0, 100);
+            uniqueRarity = builder.comment("chance that a loot crate will generate a unique item").defineInRange("uniqueRarity", 8, 0, 100);
         }
     }
 }

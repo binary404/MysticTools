@@ -1,5 +1,6 @@
 package binary404.mystictools.proxy;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
 import binary404.mystictools.client.gui.GuiUpgrader;
@@ -75,7 +76,7 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void blockFX(BlockPos pos) {
-        FXBlock data = new FXBlock(Minecraft.getInstance().world, pos.getX() + 0.5, pos.getZ() + 0.5, pos.getZ() + 0.5, true, 600, getWorld().getBlockState(pos).getBlock());
+        FXBlock data = new FXBlock(Minecraft.getInstance().world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true, 600, getWorld().getBlockState(pos).getBlock());
         Minecraft.getInstance().particles.addEffect(data);
     }
 }
