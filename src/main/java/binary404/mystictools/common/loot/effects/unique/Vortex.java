@@ -13,7 +13,7 @@ public class Vortex implements IUniqueEffect {
 
     @Override
     public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
-        List<LivingEntity> entities = target.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(target.func_233580_cy_()).grow(15, 15, 15));
+        List<LivingEntity> entities = target.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(target.getPosition()).grow(15, 15, 15));
         entities.remove(attacker);
         for (LivingEntity entity : entities) {
             Vector3d current = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ());

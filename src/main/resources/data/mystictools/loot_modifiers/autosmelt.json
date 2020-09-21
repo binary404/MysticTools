@@ -1,0 +1,8 @@
+{
+  "type": "mystictools:autosmelt",
+  "conditions": [
+    {
+      "condition": "mystictools:autosmelt"
+    }
+  ]
+}

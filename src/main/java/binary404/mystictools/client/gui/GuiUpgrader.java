@@ -56,7 +56,7 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("mystictools", "textures/gui/upgrader.png"));
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         int x = (this.width - this.xSize) / 2;
@@ -69,7 +69,7 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
         int tx, ty;
 
         public ButtonBasic(IPressable onPress, int x, int y, String text, int tx, int ty, int tw, int th) {
-            super(x, y, tw, th, ITextComponent.func_241827_a_(text), onPress);
+            super(x, y, tw, th, ITextComponent.func_244388_a(text), onPress);
             this.tx = tx;
             this.ty = ty;
         }

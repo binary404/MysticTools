@@ -70,7 +70,7 @@ public class ItemCase extends Item {
             }
             playerIn.dropItem(loot, false, true);
             stack.shrink(1);
-            NetworkHandler.sendToNearby(worldIn, playerIn.func_233580_cy_(), new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
+            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
             return super.onItemRightClick(worldIn, playerIn, handIn);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);

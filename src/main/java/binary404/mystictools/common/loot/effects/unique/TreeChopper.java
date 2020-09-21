@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -89,7 +90,8 @@ public class TreeChopper implements IUniqueEffect {
                     block.onPlayerDestroy(world, pos, state);
                     if (!dispose) {
                         block.harvestBlock(world, player, pos, state, tile, stack);
-                        block.dropXpOnBlockBreak(world, pos, exp);
+                        if (world instanceof ServerWorld)
+                            block.dropXpOnBlockBreak((ServerWorld) world, pos, exp);
                     }
                 }
             } else {

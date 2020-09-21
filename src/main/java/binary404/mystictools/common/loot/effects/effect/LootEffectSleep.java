@@ -85,7 +85,7 @@ public class LootEffectSleep implements IEffectAction {
         } catch (Exception exception) {
         }
 
-        player.setBedPosition(player.func_233580_cy_());
+        player.setBedPosition(player.getPosition());
         player.setMotion(Vector3d.ZERO);
         player.isAirBorne = true;
 

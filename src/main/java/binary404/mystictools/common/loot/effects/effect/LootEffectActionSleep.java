@@ -50,7 +50,7 @@ public class LootEffectActionSleep implements IEffectAction {
             return defaultAction;
         }
 
-        BlockPos pos = player.func_233580_cy_();
+        BlockPos pos = player.getPosition();
         trySleep((ServerPlayerEntity) player);
 
         return defaultAction;
@@ -97,7 +97,7 @@ public class LootEffectActionSleep implements IEffectAction {
         } catch (Exception exception) {
         }
 
-        player.setBedPosition(player.func_233580_cy_());
+        player.setBedPosition(player.getPosition());
         player.setMotion(Vector3d.ZERO);
         player.isAirBorne = true;
 

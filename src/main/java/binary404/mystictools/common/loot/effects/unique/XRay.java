@@ -24,7 +24,7 @@ public class XRay implements IUniqueEffect {
     public void rightClick(LivingEntity entity, ItemStack stack) {
         if (entity instanceof PlayerEntity) {
             Thread tr = new Thread(() -> {
-                List<BlockPos> blocks = startSearch(entity.world, entity.func_233580_cy_(), 32);
+                List<BlockPos> blocks = startSearch(entity.world, entity.getPosition(), 32);
                 for (BlockPos pos : blocks) {
                     MysticTools.proxy.blockFX(pos);
                 }

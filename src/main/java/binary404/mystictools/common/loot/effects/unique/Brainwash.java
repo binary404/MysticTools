@@ -19,7 +19,7 @@ public class Brainwash implements IUniqueEffect {
     @Override
     public void tick(Entity entity, ItemStack stack) {
         if (entity.ticksExisted % 40 == 0) {
-            List<MobEntity> mobs = entity.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.func_233580_cy_()).grow(10, 10, 10));
+            List<MobEntity> mobs = entity.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.getPosition()).grow(10, 10, 10));
             if (!mobs.isEmpty()) {
                 MobEntity target = mobs.get(0);
                 MobEntity newTarget = mobs.get(entity.world.rand.nextInt(mobs.size()));

@@ -36,6 +36,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeInternalHandler;
@@ -625,7 +626,8 @@ public class LootItemHelper {
             if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                 block.onPlayerDestroy(world, pos, state);
                 block.harvestBlock(world, player, pos, state, tileEntity, stack);
-                block.dropXpOnBlockBreak(world, pos, xp);
+                if (world instanceof ServerWorld)
+                    block.dropXpOnBlockBreak((ServerWorld) world, pos, xp);
             }
 
             ((ServerPlayerEntity) player).connection.sendPacket(new SChangeBlockPacket(world, pos));
