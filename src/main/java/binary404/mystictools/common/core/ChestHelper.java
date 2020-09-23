@@ -15,8 +15,8 @@ public class ChestHelper {
 
     @SubscribeEvent
     public static void onLootTableLoad(LootTableLoadEvent event) {
-        String prefix = "minecraft:chests/";
-        String name = event.getName().toString();
+        String prefix = "chests/";
+        String name = event.getName().getPath();
         if (name.startsWith(prefix)) {
             String file = "inject";
             event.getTable().addPool(getInjectPool(file));

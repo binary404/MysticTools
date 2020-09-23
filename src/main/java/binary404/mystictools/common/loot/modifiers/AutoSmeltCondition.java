@@ -27,15 +27,16 @@ public class AutoSmeltCondition implements ILootCondition {
         tools.add(ModItems.loot_pickaxe);
         tools.add(ModItems.loot_shovel);
 
-        if (tools.contains(tool.getItem())) {
-            List<LootEffect> effects = LootEffect.getEffectList(tool);
+        if (tool != null)
+            if (tools.contains(tool.getItem())) {
+                List<LootEffect> effects = LootEffect.getEffectList(tool);
 
-            for (LootEffect effect : effects) {
-                if (effect == LootEffect.AUTO_SMELT) {
-                    return ((LootEffectAutoSmelt) effect.getAction()).active(tool);
+                for (LootEffect effect : effects) {
+                    if (effect == LootEffect.AUTO_SMELT) {
+                        return ((LootEffectAutoSmelt) effect.getAction()).active(tool);
+                    }
                 }
             }
-        }
         return false;
     }
 

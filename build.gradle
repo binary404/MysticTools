@@ -24,7 +24,7 @@ mixin {
     add sourceSets.main, "mystictools.refmap.json"
 }
 
-version = '1.16.2-1.1.2'
+version = '1.16-1.1.3'
 group = 'binary404.mystictools' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'mystictools'
 

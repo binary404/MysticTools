@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[33,)"
+loaderVersion="[32,)"
 license="All Rights Reserved"
 issueTrackerURL="https://github.com/binary404/MysticTools-2.0/issues" #optional
 [[mods]] #mandatory

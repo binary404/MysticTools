@@ -2,6 +2,7 @@ package binary404.mystictools.common.loot;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.util.RandomCollection;
+import binary404.mystictools.common.items.ItemLootSword;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
@@ -109,7 +110,7 @@ public class LootItemHelper {
             float armorToughness = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_TOUGHNESS);
 
             //MysticTools armor TODO
-            if (attackDamage > 0 && !(stack.getItem() instanceof ArmorItem))
+            if (attackDamage > 0 && !(stack.getItem() instanceof ArmorItem) && stack.getItem() instanceof ItemLootSword)
                 applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
 
             if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
@@ -314,7 +315,7 @@ public class LootItemHelper {
         }
 
         if (rarity != null)
-            tooltip.add(new StringTextComponent("Rarity: " + rarity.getColor() + rarity.getId()));
+            tooltip.add(new StringTextComponent("Rarity: " + rarity.getColor() + I18n.format(rarity.getId())));
 
         if (show_durability)
             tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + durability + "" + TextFormatting.GRAY + " Durability"));
