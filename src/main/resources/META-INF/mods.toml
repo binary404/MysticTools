@@ -1,5 +1,6 @@
 modLoader="javafml" #mandatory
-loaderVersion="[31,)"
+loaderVersion="[32,)"
+license="All Rights Reserved"
 issueTrackerURL="https://github.com/binary404/MysticTools-2.0/issues" #optional
 [[mods]] #mandatory
 modId="mystictools" #mandatory
@@ -23,13 +24,6 @@ description='''
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"
-# Here's another dependency
-[[dependencies.mystictools]]
-    modId="additionalevents"
-    mandatory=true
-    versionRange="[1.0,)"
-    ordering="NONE"
     side="BOTH"
 [[dependencies.mystictools]]
     modId="fx_lib"

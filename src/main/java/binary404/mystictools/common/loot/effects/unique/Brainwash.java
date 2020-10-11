@@ -3,6 +3,7 @@ package binary404.mystictools.common.loot.effects.unique;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
+import binary404.mystictools.mixin.AccessorGoalSelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -25,7 +26,7 @@ public class Brainwash implements IUniqueEffect {
                 if (newTarget != null) {
                     target.setAttackTarget(null);
 
-                    for (PrioritizedGoal entry : target.targetSelector.goals) {
+                    for (PrioritizedGoal entry : ((AccessorGoalSelector)target.targetSelector).getGoals()) {
                         if (entry.getGoal() instanceof HurtByTargetGoal) {
                             target.targetSelector.removeGoal(entry.getGoal());
                             target.targetSelector.addGoal(-1, entry.getGoal());

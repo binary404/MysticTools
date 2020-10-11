@@ -45,7 +45,7 @@ public class PacketToggle {
                         IEffectAction action = effect.getAction();
                         if(action != null) {
                             action.toggleAction(player, tool);
-                            player.sendMessage(action.modificationResponseMessage(player, tool));
+                            player.sendMessage(action.modificationResponseMessage(player, tool), player.getUniqueID());
                         }
                     }
                 }

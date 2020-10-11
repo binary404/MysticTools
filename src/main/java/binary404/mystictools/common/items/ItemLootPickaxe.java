@@ -39,8 +39,8 @@ import java.util.Set;
 public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     public ItemLootPickaxe() {
-        super(ItemTier.DIAMOND, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
-
+        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
+        /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
@@ -51,7 +51,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
                 return model;
             }
         });
-
+        */
     }
 
     @Override
@@ -59,11 +59,6 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override
@@ -117,9 +112,9 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
 
-        Multimap<String, AttributeModifier> multiMap = super.getAttributeModifiers(slot, stack);
+        Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
 
         return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Tool modifier");
     }

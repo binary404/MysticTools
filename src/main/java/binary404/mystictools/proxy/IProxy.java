@@ -1,5 +1,6 @@
 package binary404.mystictools.proxy;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -26,6 +27,7 @@ public interface IProxy {
         return null;
     }
 
-    default void blockParticle(int x, int y, int z) {
+    default void blockFX(BlockPos pos) {
+
     }
 }

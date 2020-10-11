@@ -135,8 +135,8 @@ public class TileEntityUpgrader extends TileEntity implements INamedContainerPro
     }
 
     @Override
-    public void read(CompoundNBT nbtIn) {
-        super.read(nbtIn);
+    public void read(BlockState state, CompoundNBT nbtIn) {
+        super.read(state, nbtIn);
         storage.deserializeNBT(nbtIn.getCompound("storage"));
     }
 
@@ -147,7 +147,7 @@ public class TileEntityUpgrader extends TileEntity implements INamedContainerPro
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        this.read(null, pkt.getNbtCompound());
     }
 
     @Override

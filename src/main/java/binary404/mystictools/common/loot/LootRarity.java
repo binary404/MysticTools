@@ -1,5 +1,8 @@
 package binary404.mystictools.common.loot;
 
+import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.gamestages.GameStageHandler;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -11,60 +14,91 @@ public class LootRarity {
 
     private static final Map<String, LootRarity> REGISTRY = new HashMap<>();
 
+    public static LootRarity generateRandomRarity(Random random, PlayerEntity entity) {
+        int rarity = random.nextInt(100) + 1;
+        LootRarity lootRarity;
+        int commonRarity = ConfigHandler.COMMON.commonRarity.get();
+        int uncommonRarity = ConfigHandler.COMMON.uncommonRarity.get();
+        int rareRarity = ConfigHandler.COMMON.rareRarity.get();
+        int epicRarity = ConfigHandler.COMMON.epicRarity.get();
+        int uniqueRarity = ConfigHandler.COMMON.uniqueRarity.get();
 
-    public static final LootRarity COMMON = get("Common", TextFormatting.WHITE)
-            .setDamage(6, 12)
-            .setSpeed(-3.1F, -2.399F)
-            .setArmor(0, 1)
-            .setToughness(0, 0)
-            .setEfficiency(5.0F, 12.0F)
-            .setDurability(100, 500)
-            .setPotionCount(0, 1)
-            .setEffectCount(0, 0);
+        if (rarity <= commonRarity)
+            lootRarity = LootRarity.COMMON;
+        else if (rarity > commonRarity && rarity <= commonRarity + uncommonRarity)
+            lootRarity = LootRarity.UNCOMMON;
+        else if (rarity > commonRarity + uncommonRarity && rarity <= commonRarity + uncommonRarity + rareRarity)
+            lootRarity = LootRarity.RARE;
+        else if (rarity > commonRarity + uncommonRarity + rareRarity && rarity <= commonRarity + uncommonRarity + rareRarity + epicRarity)
+            lootRarity = LootRarity.EPIC;
+        else if (rarity > commonRarity + uncommonRarity + rareRarity + epicRarity && rarity <= commonRarity + uncommonRarity + rareRarity + epicRarity + uniqueRarity)
+            lootRarity = LootRarity.UNIQUE;
+        else
+            lootRarity = LootRarity.COMMON;
+            return lootRarity;
+    }
 
-    public static final LootRarity UNCOMMON =
-            get("Uncommon", TextFormatting.GRAY)
-                    .setDamage(9, 16)
-                    .setSpeed(-2.8F, -2.3F)
-                    .setArmor(1, 3)
-                    .setToughness(1, 3)
-                    .setEfficiency(11.0F, 25.0F)
-                    .setDurability(350, 1450)
-                    .setPotionCount(0, 3)
-                    .setEffectCount(1, 2);
+    public static void init() {
+        COMMON = get("common", TextFormatting.WHITE)
+                .setDamage(6, 12)
+                .setSpeed(-3.1F, -2.399F)
+                .setArmor(1, 2)
+                .setToughness(0, 0)
+                .setEfficiency(5.0F, 12.0F)
+                .setDurability(100, 500)
+                .setPotionCount(ConfigHandler.COMMON.commonPotionMin.get(), ConfigHandler.COMMON.commonPotionMax.get())
+                .setEffectCount(ConfigHandler.COMMON.commonEffectMin.get(), ConfigHandler.COMMON.commonEffectMax.get());
 
-    public static final LootRarity RARE =
-            get("Rare", TextFormatting.YELLOW)
-                    .setDamage(12, 29)
-                    .setSpeed(-2.6999F, -2.1F)
-                    .setArmor(2, 5)
-                    .setToughness(2, 5)
-                    .setEfficiency(15.0F, 40.0F)
-                    .setDurability(850, 2500)
-                    .setPotionCount(1, 4)
-                    .setEffectCount(2, 4);
+        UNCOMMON = get("uncommon", TextFormatting.GRAY)
+                .setDamage(9, 16)
+                .setSpeed(-2.8F, -2.3F)
+                .setArmor(1, 3)
+                .setToughness(1, 3)
+                .setEfficiency(11.0F, 25.0F)
+                .setDurability(350, 1450)
+                .setPotionCount(ConfigHandler.COMMON.uncommonPotionMin.get(), ConfigHandler.COMMON.uncommonPotionMax.get())
+                .setEffectCount(ConfigHandler.COMMON.uncommonEffectMin.get(), ConfigHandler.COMMON.uncommonEffectMax.get());
 
-    public static final LootRarity EPIC =
-            get("Epic", TextFormatting.BLUE)
-                    .setDamage(16, 34)
-                    .setSpeed(-2.39999F, -1.8F)
-                    .setArmor(2, 5)
-                    .setToughness(1, 5)
-                    .setEfficiency(20.0F, 42.0F)
-                    .setDurability(2000, 4500)
-                    .setPotionCount(2, 5)
-                    .setEffectCount(2, 4);
+        RARE = get("rare", TextFormatting.YELLOW)
+                .setDamage(12, 29)
+                .setSpeed(-2.6999F, -2.1F)
+                .setArmor(2, 5)
+                .setToughness(2, 5)
+                .setEfficiency(15.0F, 40.0F)
+                .setDurability(850, 2500)
+                .setPotionCount(ConfigHandler.COMMON.rarePotionMin.get(), ConfigHandler.COMMON.rarePotionMax.get())
+                .setEffectCount(ConfigHandler.COMMON.rareEffectMin.get(), ConfigHandler.COMMON.rareEffectMax.get());
 
-    public static final LootRarity UNIQUE =
-            get("Unique", TextFormatting.DARK_PURPLE)
-                    .setDamage(20, 54)
-                    .setSpeed(-2.0F, -1.5F)
-                    .setArmor(3, 7)
-                    .setToughness(2, 6)
-                    .setEfficiency(20.56F, 56.05F)
-                    .setDurability(1000, 4000)
-                    .setPotionCount(3, 6)
-                    .setEffectCount(3, 5);
+        EPIC = get("epic", TextFormatting.BLUE)
+                .setDamage(16, 34)
+                .setSpeed(-2.39999F, -1.8F)
+                .setArmor(2, 5)
+                .setToughness(1, 5)
+                .setEfficiency(20.0F, 42.0F)
+                .setDurability(2000, 4500)
+                .setPotionCount(ConfigHandler.COMMON.epicPotionMin.get(), ConfigHandler.COMMON.epicPotionMax.get())
+                .setEffectCount(ConfigHandler.COMMON.epicEffectMin.get(), ConfigHandler.COMMON.epicEffectMax.get());
+
+        UNIQUE = get("unique", TextFormatting.DARK_PURPLE)
+                .setDamage(20, 54)
+                .setSpeed(-2.0F, -1.5F)
+                .setArmor(3, 7)
+                .setToughness(2, 6)
+                .setEfficiency(20.56F, 56.05F)
+                .setDurability(1000, 4000)
+                .setPotionCount(ConfigHandler.COMMON.uniquePotionMin.get(), ConfigHandler.COMMON.uniquePotionMax.get())
+                .setEffectCount(ConfigHandler.COMMON.uniqueEffectMin.get(), ConfigHandler.COMMON.uniqueEffectMax.get());
+    }
+
+    public static LootRarity COMMON;
+
+    public static LootRarity UNCOMMON;
+
+    public static LootRarity RARE;
+
+    public static LootRarity EPIC;
+
+    public static LootRarity UNIQUE;
 
     private TextFormatting color = TextFormatting.WHITE;
     private int damageMin = 0;

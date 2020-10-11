@@ -3,31 +3,38 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+        maven { url = 'https://dist.creeper.host/Sponge/maven' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
 plugins {
-    id "com.wynprice.cursemaven" version "2.1.0"
+    id "com.wynprice.cursemaven" version "2.1.5"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
-version = "1.15.2-1.1.7"
+version = "1.16.3-1.2.4"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
+mixin {
+    add sourceSets.main, "mystictools.refmap.json"
+}
 
+version = '1.16.3-1.1.4'
+group = 'binary404.mystictools' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'mystictools'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200510-1.15.1'
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    mappings channel: 'snapshot', version: '20200723-1.16.1'
     runs {
         client {
             properties 'forge.logging.console.level': 'debug'
@@ -73,41 +80,58 @@ repositories {
     maven {
         url = "https://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+        url 'https://maven.mcmoddev.com'
+    }
+    maven {
+        url 'https://maven.blamejared.com/'
+    }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.17'
 
-    compile fg.deobf("curse.maven:additional-events:2851529")
-    compile fg.deobf("curse.maven:fx-lib:2979664")
+    annotationProcessor 'org.spongepowered:mixin:0.8'
+    annotationProcessor 'com.google.code.gson:gson:2.8.0'
+    annotationProcessor 'com.google.guava:guava:21.0'
+    annotationProcessor 'org.ow2.asm:asm-tree:7.2'
+    annotationProcessor 'org.ow2.asm:asm-commons:7.2'
+    annotationProcessor 'org.ow2.asm:asm-util:7.2'
+
+    compile 'org.spongepowered:mixin:0.8'
+
+    compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.3:7.0.0.45")
+    compile fg.deobf("net.darkhax.gamestages:GameStages-1.16.3:5.0.1")
+    compile fg.deobf("net.darkhax.bookshelf:Bookshelf-1.16.3:8.4.15")
+    compile fg.deobf("curse.maven:fx-lib:3059845")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
-        attributes(
-                [
-                        "Specification-Title"     : "mystictools",
-                        "Specification-Vendor"    : "mystictools",
-                        "Specification-Version"   : "1", // We are version 1 of ourselves
-                        "Implementation-Title"    : project.name,
-                        "Implementation-Version"  : "${version}",
-                        "Implementation-Vendor"   : "mystictools",
-                        "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                ])
+        attributes([
+                "Specification-Title"     : "examplemod",
+                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Version"   : "1", // We are version 1 of ourselves
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConnector"          : "binary404.mystictools.mixin.MixinConnector"
+        ])
     }
 }
 
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
+// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//publish.dependsOn('reobfJar')
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact reobfArtifact
+            artifact jar
         }
     }
     repositories {

@@ -7,11 +7,13 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -30,8 +32,8 @@ import java.util.List;
 public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
-        super(ItemTier.DIAMOND, 3, -2.4F, new Item.Properties().group(MysticTools.tab));
-
+        super(MysticTier.MYSTIC_TIER, 3, -2.4F, new Item.Properties().group(MysticTools.tab));
+        /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
             public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
@@ -42,6 +44,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
                 return model;
             }
         });
+         */
     }
 
     @Override
@@ -49,11 +52,6 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
-    }
-
-    @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
     }
 
     @Override
@@ -71,7 +69,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         boolean hit = super.hitEntity(stack, target, attacker);
 
         LootItemHelper.handlePotionEffects(stack, target, attacker);
-        LootItemHelper.handleHit(stack, target);
+        LootItemHelper.handleHit(stack, target, attacker);
 
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {
@@ -102,9 +100,9 @@ public class ItemLootSword extends SwordItem implements ILootItem {
     }
 
     @Override
-    public Multimap<String, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
 
-        Multimap<String, AttributeModifier> multiMap = super.getAttributeModifiers(slot, stack);
+        Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
 
         return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Weapon modifier");
     }

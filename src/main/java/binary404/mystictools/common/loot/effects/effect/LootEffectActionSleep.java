@@ -2,7 +2,6 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import com.mojang.datafixers.util.Either;
-import com.sun.javafx.geom.Vec3d;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.Pose;
@@ -28,7 +27,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
-public class LootEffectSleep implements IEffectAction {
+public class LootEffectActionSleep implements IEffectAction {
 
     @Override
     public void toggleAction(PlayerEntity player, ItemStack stack) {
@@ -51,6 +50,7 @@ public class LootEffectSleep implements IEffectAction {
             return defaultAction;
         }
 
+        BlockPos pos = player.getPosition();
         trySleep((ServerPlayerEntity) player);
 
         return defaultAction;
@@ -66,6 +66,9 @@ public class LootEffectSleep implements IEffectAction {
             return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
         }
 
+        if (!player.world.func_230315_m_().func_236043_f_()) {
+            return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
+        }
         if (player.world.isDaytime()) {
             return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
         }
@@ -73,6 +76,15 @@ public class LootEffectSleep implements IEffectAction {
         if (!ForgeEventFactory.fireSleepingTimeCheck((PlayerEntity) player, Optional.empty())) {
             return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
         }
+
+        if (!player.isCreative()) {
+            Vector3d vector3d = player.getPositionVec();
+            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(vector3d.getX() - 8.0D, vector3d.getY() - 5.0D, vector3d.getZ() - 8.0D, vector3d.getX() + 8.0D, vector3d.getY() + 5.0D, vector3d.getZ() + 8.0D), entity -> entity.func_230292_f_((PlayerEntity) player));
+            if (!list.isEmpty()) {
+                return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
+            }
+        }
+
 
         player.takeStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
         if (player.isPassenger()) {
@@ -117,5 +129,4 @@ public class LootEffectSleep implements IEffectAction {
     public String getStatusString(ItemStack stack) {
         return "";
     }
-
 }

@@ -38,5 +38,10 @@
   "treeChopper.description": "Tree Chopper",
   "emeralds.description": "Emeralds",
 
-  "itemGroup.mystictools": "Mystic Tools"
+  "itemGroup.mystictools": "Mystic Tools",
+
+  "common": "Common",
+  "rare": "Rare",
+  "epic": "Epic",
+  "unique": "Unique"
 }

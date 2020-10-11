@@ -34,10 +34,10 @@ public class UniqueSave extends WorldSavedData {
             Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(cmp.getString("item")));
             UniqueEffect effect = UniqueEffect.getById(cmp.getString("effect"));
             boolean found = cmp.getBoolean("found");
-            System.out.println(found);
             info.add(new UniqueInfo(item, effect, found));
         }
         uniques = info;
+        System.out.println(info);
     }
 
     @Override

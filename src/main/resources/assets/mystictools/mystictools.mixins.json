@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "package": "binary404.mystictools.mixin",
+  "refmap": "mystictools.refmap.json",
+  "mixins": [
+    "AccessorGoalSelector"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

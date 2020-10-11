@@ -7,7 +7,6 @@ import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
-import com.tfar.additionalevents.event.DropLootEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -72,9 +71,8 @@ public class EntityHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void onHarvest(DropLootEvent event) {
-        PlayerEntity player = event.getPlayer();
+    public static void onHarvest() {
+        PlayerEntity player = null;
         if (player != null) {
             List<Item> tools = new ArrayList<Item>();
             tools.add(ModItems.loot_axe);
@@ -89,7 +87,7 @@ public class EntityHandler {
                 for (LootEffect effect : effects) {
                     IEffectAction action = effect.getAction();
                     if (action != null) {
-                        action.handleHarvest(player, tool, event.getDrops(), event.getPos());
+                        //action.handleHarvest(player, tool, event.getDrops(), event.getPos());
                     }
                 }
             }

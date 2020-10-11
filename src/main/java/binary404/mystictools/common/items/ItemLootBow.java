@@ -28,15 +28,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
     public ItemLootBow() {
         super(new Item.Properties().group(MysticTools.tab));
-
-        this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
-            @Override
-            public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-                float model = 1.0F;
-                model = (float) LootNbtHelper.getLootIntValue(p_call_1_, LootTags.LOOT_TAG_MODEL);
-                return model;
-            }
-        });
+        /*
         this.addPropertyOverride(new ResourceLocation("ml_pull"), new IItemPropertyGetter() {
             public float call(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) {
                 float pull = 0.0F;
@@ -56,11 +48,30 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
             }
         });
+         */
     }
+
+    public float getPull(ItemStack stack, World world, LivingEntity entity) {
+        float pull = 0.0F;
+
+        if (entity == null) {
+            return pull;
+        } else {
+            ItemStack itemstack = entity.getActiveItemStack();
+            pull = itemstack != null && itemstack.getItem() == ModItems.loot_bow ? (float) (stack.getUseDuration() - entity.getItemInUseCount()) / 20.0F : 0.0F;
+
+            return pull;
+        }
+    }
+
+    public float getPulling(ItemStack stack, World world, LivingEntity entity) {
+        return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
+    }
+
 
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        return false;
+        return true;
     }
 
     @Override
@@ -141,7 +152,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                     entityarrow.pickupStatus = ArrowEntity.PickupStatus.CREATIVE_ONLY;
                 }
 
-                entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                entityarrow.func_234612_a_(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                 if (f == 1.0F)
                     entityarrow.setIsCritical(true);

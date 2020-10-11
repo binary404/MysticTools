@@ -3,8 +3,10 @@ package binary404.mystictools;
 import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
+import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.effects.PotionEffect;
+import binary404.mystictools.common.loot.modifiers.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
@@ -45,12 +47,15 @@ public class MysticTools {
         proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+
+        ModLootModifiers.init();
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         proxy.init();
 
         PotionEffect.init();
+        LootRarity.init();
 
         NetworkHandler.init();
 

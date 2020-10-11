@@ -4,7 +4,11 @@ import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.RegistryHelper;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootSet;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemTier;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -51,6 +55,7 @@ public class ModItems {
         RegistryHelper.register(r, new ItemLootPickaxe(), "loot_pickaxe");
         RegistryHelper.register(r, new ItemLootBow(), "weaponbow");
         RegistryHelper.register(r, new ItemCase(), "loot_case");
+
         RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "shard");
         RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "dice");
         RegistryHelper.register(r, new Item(new Item.Properties().group(MysticTools.tab)), "charm");
