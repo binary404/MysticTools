@@ -403,6 +403,12 @@ public class LootItemHelper {
         lootTag.putFloat(LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
         lootTag.putFloat(LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
 
+        if (type == LootSet.LootSetType.ARMOR_BOOTS) {
+            lootTag.putFloat(LootTags.LOOT_TAG_ARMOR, lootRarity.getArmor(random));
+            lootTag.putFloat(LootTags.LOOT_TAG_TOUGHNESS, lootRarity.getToughness(random));
+            LootNbtHelper.setLootIntValue(loot, LootTags.LOOT_TAG_LOOTSET, random.nextInt(8));
+        }
+
         int modifierCount = lootRarity.getPotionCount(random);
 
         boolean unbreakable = false;

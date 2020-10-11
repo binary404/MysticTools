@@ -21,22 +21,24 @@ public class AutoSmeltCondition implements ILootCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
-        ItemStack tool = lootContext.get(LootParameters.TOOL);
-        List<Item> tools = new ArrayList<Item>();
-        tools.add(ModItems.loot_axe);
-        tools.add(ModItems.loot_pickaxe);
-        tools.add(ModItems.loot_shovel);
+        if (lootContext != null) {
+            ItemStack tool = lootContext.get(LootParameters.TOOL);
+            List<Item> tools = new ArrayList<Item>();
+            tools.add(ModItems.loot_axe);
+            tools.add(ModItems.loot_pickaxe);
+            tools.add(ModItems.loot_shovel);
 
-        if (tool != null)
-            if (tools.contains(tool.getItem())) {
-                List<LootEffect> effects = LootEffect.getEffectList(tool);
+            if (tool != null)
+                if (tools.contains(tool.getItem())) {
+                    List<LootEffect> effects = LootEffect.getEffectList(tool);
 
-                for (LootEffect effect : effects) {
-                    if (effect == LootEffect.AUTO_SMELT) {
-                        return ((LootEffectAutoSmelt) effect.getAction()).active(tool);
+                    for (LootEffect effect : effects) {
+                        if (effect == LootEffect.AUTO_SMELT) {
+                            return ((LootEffectAutoSmelt) effect.getAction()).active(tool);
+                        }
                     }
                 }
-            }
+        }
         return false;
     }
 

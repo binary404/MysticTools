@@ -11,7 +11,6 @@ import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
-import com.blamejared.crafttweaker.api.CraftTweakerAPI;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;

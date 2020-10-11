@@ -42,7 +42,7 @@ public class LootRarity {
         COMMON = get("common", TextFormatting.WHITE)
                 .setDamage(6, 12)
                 .setSpeed(-3.1F, -2.399F)
-                .setArmor(0, 1)
+                .setArmor(1, 2)
                 .setToughness(0, 0)
                 .setEfficiency(5.0F, 12.0F)
                 .setDurability(100, 500)

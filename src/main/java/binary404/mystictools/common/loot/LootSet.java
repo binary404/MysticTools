@@ -97,6 +97,7 @@ public class LootSet {
         LOOT_NAMES.put(LootSetType.PICKAXE, TOOL_NAMES);
         LOOT_NAMES.put(LootSetType.SHOVEL, TOOL_NAMES);
         LOOT_NAMES.put(LootSetType.BOW, BOW_NAMES);
+        LOOT_NAMES.put(LootSetType.ARMOR_BOOTS, TOOL_NAMES);
     }
 
     protected LootSet(int model) {
@@ -147,7 +148,8 @@ public class LootSet {
         PICKAXE("pickaxe", 16),
         AXE("axe", 21),
         SHOVEL("shovel", 15),
-        BOW("bow", 12);
+        BOW("bow", 12),
+        ARMOR_BOOTS("armor_boots", 8);
 
         public final int models;
         private String id;
