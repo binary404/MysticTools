@@ -71,6 +71,7 @@ public class EntityHandler {
         }
     }
 
+    //Not used
     public static void onHarvest() {
         PlayerEntity player = null;
         if (player != null) {

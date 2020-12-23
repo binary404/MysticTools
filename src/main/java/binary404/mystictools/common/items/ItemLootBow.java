@@ -3,6 +3,7 @@ package binary404.mystictools.common.items;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
+import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,6 +12,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,6 +51,13 @@ public class ItemLootBow extends BowItem implements ILootItem {
             }
         });
          */
+    }
+
+    @Override
+    public boolean hasEffect(ItemStack stack) {
+        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+
+        return rarity == LootRarity.UNIQUE;
     }
 
     public float getPull(ItemStack stack, World world, LivingEntity entity) {
@@ -140,13 +149,15 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
                 boolean flag1 = entityplayer.abilities.isCreativeMode || (itemstack.getItem() instanceof ArrowItem ? ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer) : false);
                 ArrowItem itemarrow = ((ArrowItem) (itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW));
-                ArrowEntity entityarrow = (ArrowEntity) itemarrow.createArrow(world, itemstack, entityplayer);
+                AbstractArrowEntity entityarrow = itemarrow.createArrow(world, itemstack, entityplayer);
+
 
                 if (effects.size() > 0) {
                     for (PotionEffect effect : effects) {
                         EffectInstance potionEffect = effect.getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
-                        if (potionEffect != null)
-                            entityarrow.addEffect(potionEffect);
+                        if (potionEffect != null && entityarrow instanceof ArrowEntity) {
+                            ((ArrowEntity) entityarrow).addEffect(potionEffect);
+                        }
                     }
 
                     entityarrow.pickupStatus = ArrowEntity.PickupStatus.CREATIVE_ONLY;

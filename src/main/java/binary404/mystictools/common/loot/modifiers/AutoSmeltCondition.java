@@ -48,13 +48,14 @@ public class AutoSmeltCondition implements ILootCondition {
     }
 
     public static class Serializer implements ILootSerializer<AutoSmeltCondition> {
+
         @Override
-        public void func_230424_a_(JsonObject p_230424_1_, AutoSmeltCondition p_230424_2_, JsonSerializationContext p_230424_3_) {
+        public void serialize(JsonObject p_230424_1_, AutoSmeltCondition p_230424_2_, JsonSerializationContext p_230424_3_) {
 
         }
 
         @Override
-        public AutoSmeltCondition func_230423_a_(JsonObject p_230423_1_, JsonDeserializationContext p_230423_2_) {
+        public AutoSmeltCondition deserialize(JsonObject p_230423_1_, JsonDeserializationContext p_230423_2_) {
             return new AutoSmeltCondition();
         }
     }

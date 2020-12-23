@@ -65,10 +65,6 @@ public class LootEffectActionSleep implements IEffectAction {
         if (player.isSleeping() || !player.isAlive()) {
             return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
         }
-
-        if (!player.world.func_230315_m_().func_236043_f_()) {
-            return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_HERE);
-        }
         if (player.world.isDaytime()) {
             return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
         }

@@ -66,10 +66,10 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
                             d1 = d0 * 100.0D;
 
                         if (d0 > 0.0D) {
-                            tooltip.add(new StringTextComponent(TextFormatting.BLUE + " " + I18n.format("attribute.modifier.plus." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().func_233754_c_()))));
+                            tooltip.add(new StringTextComponent(TextFormatting.BLUE + " " + I18n.format("attribute.modifier.plus." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().getAttributeName()))));
                         } else if (d0 < 0.0D) {
                             d1 = d1 * -1.0D;
-                            tooltip.add(new StringTextComponent(TextFormatting.RED + " " + I18n.format("attribute.modifier.take." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().func_233754_c_()))));
+                            tooltip.add(new StringTextComponent(TextFormatting.RED + " " + I18n.format("attribute.modifier.take." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().getAttributeName()))));
                         }
                     }
                 }

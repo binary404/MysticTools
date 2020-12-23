@@ -4,6 +4,7 @@ import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXBlock;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.OreBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
@@ -12,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ public class XRay implements IUniqueEffect {
                 for (int y = 0; y < highest; y++) {
                     pooled.setY(y);
                     BlockState at = c.getBlockState(pooled);
-                    if (at.getBlock() instanceof OreBlock) {
+                    if (at.getBlock() instanceof OreBlock || at.getBlock() == Blocks.ANCIENT_DEBRIS || Tags.Blocks.ORES.contains(at.getBlock())) {
                         successful.add(new BlockPos(pooled));
                     }
                 }

@@ -52,7 +52,7 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
     public void render(MatrixStack stack, int p_230430_2_, int p_230430_3_, float p_230430_4_) {
         this.renderBackground(stack);
         super.render(stack, p_230430_2_, p_230430_3_, p_230430_4_);
-        this.func_230459_a_(stack, p_230430_2_, p_230430_3_);
+        this.renderHoveredTooltip(stack, p_230430_2_, p_230430_3_);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GuiUpgrader extends ContainerScreen<UpgraderContainer> {
         int tx, ty;
 
         public ButtonBasic(IPressable onPress, int x, int y, String text, int tx, int ty, int tw, int th) {
-            super(x, y, tw, th, ITextComponent.func_244388_a(text), onPress);
+            super(x, y, tw, th, ITextComponent.getTextComponentOrEmpty(text), onPress);
             this.tx = tx;
             this.ty = ty;
         }

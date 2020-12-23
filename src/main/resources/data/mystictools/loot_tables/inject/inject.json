@@ -6,11 +6,11 @@
       {
         "type": "item",
         "name": "mystictools:loot_case",
-        "weight": 30
+        "weight": 60
       },
       {
         "type": "empty",
-        "weight": 70
+        "weight": 40
       }
     ]
   }]

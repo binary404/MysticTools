@@ -1,6 +1,8 @@
 package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.core.UniqueCommand;
+import binary404.mystictools.common.core.VillagerHandler;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootRarity;
@@ -11,9 +13,12 @@ import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -47,15 +52,19 @@ public class MysticTools {
         proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
         ModLootModifiers.init();
+    }
+
+    private void registerCommands(RegisterCommandsEvent event) {
+        UniqueCommand.register(event.getDispatcher());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         proxy.init();
 
         PotionEffect.init();
-        LootRarity.init();
 
         NetworkHandler.init();
 
@@ -66,6 +75,8 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_shovel, LootSet.LootSetType.SHOVEL);
             ItemTypeRegistry.register(ModItems.loot_bow, LootSet.LootSetType.BOW);
         });
+
+        VillagerHandler.init();
     }
 
 }

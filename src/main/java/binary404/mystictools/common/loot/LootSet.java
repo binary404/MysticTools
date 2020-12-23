@@ -1,5 +1,8 @@
 package binary404.mystictools.common.loot;
 
+import binary404.mystictools.common.items.ModItems;
+import net.minecraft.item.Item;
+
 import java.util.*;
 
 public class LootSet {
@@ -144,23 +147,29 @@ public class LootSet {
     }
 
     public enum LootSetType {
-        SWORD("sword", 76),
-        PICKAXE("pickaxe", 16),
-        AXE("axe", 21),
-        SHOVEL("shovel", 15),
-        BOW("bow", 12),
-        ARMOR_BOOTS("armor_boots", 8);
+        SWORD("sword", 76, ModItems.loot_sword),
+        PICKAXE("pickaxe", 16, ModItems.loot_pickaxe),
+        AXE("axe", 21, ModItems.loot_axe),
+        SHOVEL("shovel", 15, ModItems.loot_shovel),
+        BOW("bow", 12, ModItems.loot_bow),
+        ARMOR_BOOTS("armor_boots", 8, ModItems.loot_shovel);
 
         public final int models;
         private String id;
+        private Item item;
 
-        private LootSetType(String typeId, int totalModels) {
+        private LootSetType(String typeId, int totalModels, Item item) {
             this.id = typeId;
             this.models = totalModels;
+            this.item = item;
         }
 
         public String getId() {
             return this.id;
+        }
+
+        public Item getItem() {
+            return item;
         }
     }
 

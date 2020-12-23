@@ -31,7 +31,7 @@ public class ItemCase extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         if (worldIn.isRemote)
             return super.onItemRightClick(worldIn, playerIn, handIn);
-        ServerWorld serverWorld = ServerLifecycleHooks.getCurrentServer().getWorld(worldIn.func_234923_W_());
+        ServerWorld serverWorld = ServerLifecycleHooks.getCurrentServer().getWorld(worldIn.getDimensionKey());
         ItemStack stack = playerIn.getHeldItem(handIn);
 
         LootRarity lootRarity = LootRarity.generateRandomRarity(worldIn.rand, playerIn);
@@ -57,9 +57,9 @@ public class ItemCase extends Item {
         ItemStack loot;
         if (lootRarity != null) {
             if (lootRarity == LootRarity.UNIQUE) {
-                loot = UniqueHandler.getRandomUniqueItem(serverWorld);
+                loot = UniqueHandler.getRandomUniqueItem(serverWorld, playerIn);
             } else {
-                loot = LootItemHelper.getRandomLoot(random, lootRarity);
+                loot = LootItemHelper.getRandomLoot(random);
 
                 LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 

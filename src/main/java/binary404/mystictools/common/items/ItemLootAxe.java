@@ -42,18 +42,6 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     public ItemLootAxe() {
         super(MysticTier.MYSTIC_TIER, 5.0F, -3.0F, new Item.Properties().group(MysticTools.tab));
-
-        /*this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
-            @Override
-            public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-                float model = 0F;
-
-                model = LootNbtHelper.getLootIntValue(p_call_1_, LootTags.LOOT_TAG_MODEL);
-
-                return model;
-            }
-        });
-         */
     }
 
     @Override

@@ -5,7 +5,10 @@
   "package": "binary404.mystictools.mixin",
   "refmap": "mystictools.refmap.json",
   "mixins": [
-    "AccessorGoalSelector"
+    "AccessorGoalSelector",
+    "PoITypeAccess",
+    "SingleJigsawAccess",
+    "HeroGiftTaskAccess"
   ],
   "injectors": {
     "defaultRequire": 1

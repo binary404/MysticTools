@@ -37,7 +37,6 @@ public class UniqueSave extends WorldSavedData {
             info.add(new UniqueInfo(item, effect, found));
         }
         uniques = info;
-        System.out.println(info);
     }
 
     @Override

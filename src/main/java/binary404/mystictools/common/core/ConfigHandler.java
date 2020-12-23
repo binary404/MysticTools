@@ -63,6 +63,8 @@ public final class ConfigHandler {
         public final ForgeConfigSpec.IntValue uniqueEffectMin;
         public final ForgeConfigSpec.IntValue uniqueEffectMax;
 
+        public final ForgeConfigSpec.IntValue uniqueCount;
+
         public CommonConfig(ForgeConfigSpec.Builder builder) {
             commonPotionMin = builder.comment("Minimum number of potion effects on a common item").defineInRange("commonPotionMin", 0, 0, 5);
             commonPotionMax = builder.comment("Maximum number of potion effects on a common item").defineInRange("commonPotionMax", 1, 0, 5);
@@ -116,6 +118,8 @@ public final class ConfigHandler {
             rareRarity = builder.comment("chance that a loot crate will generate a rare item").defineInRange("rareRarity", 12, 0, 100);
             epicRarity = builder.comment("chance that a loot crate will generate a epic item").defineInRange("epicRarity", 10, 0, 100);
             uniqueRarity = builder.comment("chance that a loot crate will generate a unique item").defineInRange("uniqueRarity", 8, 0, 100);
+
+            uniqueCount = builder.comment("amount of unique items that can be found in a world").defineInRange("uniqueCount", 5, 1, 50);
         }
     }
 }

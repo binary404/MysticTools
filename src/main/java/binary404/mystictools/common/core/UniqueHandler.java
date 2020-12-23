@@ -1,14 +1,18 @@
 package binary404.mystictools.common.core;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.world.UniqueSave;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import org.lwjgl.system.CallbackI;
@@ -22,8 +26,8 @@ public class UniqueHandler {
 
     public static void generateUniqueItems(ServerWorld world) {
         UniqueSave.forWorld(world).uniques.clear();
-        for (int i = 0; i < 5; i++) {
-            ItemStack stack = LootItemHelper.getRandomLoot(new Random(), LootRarity.UNIQUE);
+        for (int i = 0; i < ConfigHandler.COMMON.uniqueCount.get(); i++) {
+            ItemStack stack = LootItemHelper.getRandomLoot(new Random());
             UniqueEffect effect = LootItemHelper.getRandomUnique(new Random(), LootItemHelper.getItemType(stack.getItem()));
             if (stack.getItem().getRegistryName() == null)
                 stack = new ItemStack(ModItems.loot_pickaxe);
@@ -39,7 +43,7 @@ public class UniqueHandler {
         generateUniqueItems(world);
     }
 
-    public static ItemStack getRandomUniqueItem(ServerWorld world) {
+    public static ItemStack getRandomUniqueItem(ServerWorld world, PlayerEntity target) {
         UniqueSave save = UniqueSave.forWorld(world);
         int randomInt = new Random().nextInt(save.uniques.size());
         UniqueSave.UniqueInfo info = save.uniques.get(randomInt);
@@ -55,6 +59,16 @@ public class UniqueHandler {
         info.found = true;
         save.uniques.set(randomInt, info);
         save.markDirty();
+
+        int found = 0;
+
+        for (UniqueSave.UniqueInfo unique : save.uniques) {
+            if (unique.found)
+                found++;
+        }
+
+        target.sendStatusMessage(new StringTextComponent("Unique Found! " + "(" + found + "/5) found"), true);
+
         return loot;
     }
 

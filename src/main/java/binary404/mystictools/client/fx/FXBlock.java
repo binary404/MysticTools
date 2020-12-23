@@ -37,11 +37,6 @@ public class FXBlock extends SpriteTexturedParticle {
     }
 
     @Override
-    public void renderParticle(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
-        super.renderParticle(buffer, renderInfo, partialTicks);
-    }
-
-    @Override
     public IParticleRenderType getRenderType() {
         return DI_RENDER;
     }
@@ -61,12 +56,16 @@ public class FXBlock extends SpriteTexturedParticle {
 
     public static void beginNormalRender(BufferBuilder bufferBuilder, TextureManager manager) {
         RenderSystem.depthMask(false);
-
         RenderSystem.disableBlend();
         RenderSystem.disableLighting();
 
         manager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+    }
+
+    @Override
+    protected int getBrightnessForRender(float partialTick) {
+        return 15 << 20;
     }
 
     private static final IParticleRenderType NORMAL_RENDER = new IParticleRenderType() {

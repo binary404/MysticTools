@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:gift",
+  "pools": [
+    {
+      "rolls": 6,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mystictools:shard"
+        }
+      ]
+    }
+  ]
+}

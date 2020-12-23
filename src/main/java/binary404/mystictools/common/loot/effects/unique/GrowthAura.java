@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.IPlantable;
 
 import java.util.Random;
 
@@ -24,7 +25,7 @@ public class GrowthAura implements IUniqueEffect {
                     for (int z = -1; z <= 1; z++) {
                         World world = entity.world;
                         BlockPos pos = entity.getPosition().add(x, y, z);
-                        if (world.getBlockState(pos).getBlock() instanceof IGrowable && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
+                        if ((world.getBlockState(pos).getBlock() instanceof IGrowable) && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
                             if (world instanceof ServerWorld && world.rand.nextInt(1) == 0) {
                                 if (((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), false)) {
                                     ((IGrowable) world.getBlockState(pos).getBlock()).grow((ServerWorld) world, new Random(), pos, world.getBlockState(pos));

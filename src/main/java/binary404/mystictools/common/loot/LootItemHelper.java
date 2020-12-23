@@ -54,8 +54,7 @@ public class LootItemHelper {
     protected static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
     protected static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
-
-    public static ItemStack getRandomLoot(Random rand, LootRarity rarity) {
+    public static ItemStack getRandomLoot(Random rand) {
         RandomCollection<Item> col = new RandomCollection<Item>(rand);
 
         col.add(3, ModItems.loot_sword);

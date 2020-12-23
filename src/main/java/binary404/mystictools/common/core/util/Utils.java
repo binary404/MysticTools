@@ -61,6 +61,14 @@ public class Utils {
         }
     }
 
+    public static ItemStack copyStackWithAmount(ItemStack stack, int amount) {
+        if(stack.isEmpty())
+            return ItemStack.EMPTY;
+        ItemStack s2 = stack.copy();
+        s2.setCount(amount);
+        return s2;
+    }
+
     public static CompoundNBT readCompoundNBTFromBuffer(PacketBuffer bb) {
         int i = bb.readerIndex();
         byte b0 = bb.readByte();

@@ -42,7 +42,7 @@ public class TreeChopper implements IUniqueEffect {
             return;
         }
         if (event.phase == TickEvent.Phase.END && event.world.getGameTime() % 5 == 0) {
-            DimensionType dim = event.world.func_230315_m_();
+            DimensionType dim = event.world.getDimensionType();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
                 swappers.removeIf(next -> next == null || !next.tick());
@@ -61,7 +61,7 @@ public class TreeChopper implements IUniqueEffect {
         if (world.isRemote) {
             return;
         }
-        DimensionType dim = world.func_230315_m_();
+        DimensionType dim = world.getDimensionType();
         blockSwappers.computeIfAbsent(dim, d -> new HashSet<>()).add(swapper);
     }
 
