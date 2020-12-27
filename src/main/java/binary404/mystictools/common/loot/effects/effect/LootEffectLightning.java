@@ -4,6 +4,7 @@ import binary404.mystictools.common.loot.effects.IEffectAction;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 
@@ -17,5 +18,10 @@ public class LootEffectLightning implements IEffectAction {
         target.world.addEntity(entity);
         target.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 10);
         target.setFire(15);
+    }
+
+    @Override
+    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+        return false;
     }
 }

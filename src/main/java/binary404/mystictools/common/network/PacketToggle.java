@@ -34,7 +34,6 @@ public class PacketToggle {
     public static void handle(PacketToggle msg, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide().isServer()) {
             ctx.get().enqueueWork(() -> {
-                System.out.println("Handling");
                 ServerPlayerEntity player = ctx.get().getSender();
                 ItemStack tool = player.getHeldItemMainhand();
 
@@ -43,7 +42,7 @@ public class PacketToggle {
 
                     for (LootEffect effect : effects) {
                         IEffectAction action = effect.getAction();
-                        if(action != null) {
+                        if(action != null && action.hasResponseMessage(player, tool)) {
                             action.toggleAction(player, tool);
                             player.sendMessage(action.modificationResponseMessage(player, tool), player.getUniqueID());
                         }

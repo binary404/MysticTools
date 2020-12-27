@@ -21,8 +21,7 @@ import java.util.List;
 public class LootEffectVoid implements IEffectAction {
 
     @Override
-    public void toggleAction(PlayerEntity player, ItemStack stack)
-    {
+    public void toggleAction(PlayerEntity player, ItemStack stack) {
         boolean active = false;
 
         if (stack == null)
@@ -33,8 +32,7 @@ public class LootEffectVoid implements IEffectAction {
     }
 
     @Override
-    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos)
-    {
+    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
         boolean effectActive = LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE);
 
         if (!effectActive)
@@ -44,8 +42,7 @@ public class LootEffectVoid implements IEffectAction {
     }
 
     @Override
-    public ITextComponent modificationResponseMessage(PlayerEntity player, ItemStack stack)
-    {
+    public ITextComponent modificationResponseMessage(PlayerEntity player, ItemStack stack) {
         boolean active = LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE);
 
         String message = "[Mystic Tools]: ";
@@ -53,7 +50,7 @@ public class LootEffectVoid implements IEffectAction {
         message += stack.getDisplayName().getString();
         message += TextFormatting.RESET;
         message += "'s ";
-        message += I18n.format("weaponeffect.void.name");
+        message += "void";
         message += ", has been set to: ";
         message += active;
 
@@ -61,13 +58,11 @@ public class LootEffectVoid implements IEffectAction {
     }
 
     @Override
-    public void handleUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected)
-    {
+    public void handleUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
     }
 
     @Override
-    public String getStatusString(ItemStack stack)
-    {
+    public String getStatusString(ItemStack stack) {
         String status = "[Off]";
 
         if (LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE))
@@ -77,8 +72,7 @@ public class LootEffectVoid implements IEffectAction {
     }
 
     @Override
-    public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand)
-    {
+    public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
         return defaultAction;
     }
 

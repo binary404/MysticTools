@@ -81,8 +81,6 @@ public class VillagerHandler {
     private static void addToPool(ResourceLocation pool, ResourceLocation toAdd, int weight) {
         JigsawPattern old = WorldGenRegistries.JIGSAW_POOL.getOrDefault(pool);
 
-        System.out.println("Adding to pool " + pool.toString());
-
         // Fixed seed to prevent inconsistencies between different worlds
         List<JigsawPiece> shuffled;
         if (old != null)
@@ -141,27 +139,27 @@ public class VillagerHandler {
             Int2ObjectMap<List<VillagerTrades.ITrade>> trades = event.getTrades();
 
             if (MERCHANT.equals(event.getType().getRegistryName())) {
-                trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.shard), new PriceInterval(4, 26), 4, 3));
-                trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.loot_case), new PriceInterval(1, 4), new PriceInterval(4, 10), 8, 6));
-                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.loot_case), new PriceInterval(10, 24), 4, 2, 0.05F));
+                trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.shard), new PriceInterval(4, 26), 4, 2));
+                trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.loot_case), new PriceInterval(1, 4), new PriceInterval(4, 10), 8, 1));
+                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.loot_case), new PriceInterval(10, 24), 4, 1, 0.05F));
                 trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.loot_shovel), new PriceInterval(1, 1), 8, 2));
                 trades.get(1).add(new EmeraldForItems(new ItemStack(ModItems.loot_axe), new PriceInterval(1, 1), 8, 2));
-                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.common_case), new PriceInterval(4, 10), 8, 2, 0.008F));
-                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.uncommon_case), new PriceInterval(10, 24), 8, 2, 0.006F));
+                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.common_case), new PriceInterval(4, 10), 8, 1, 0.008F));
+                trades.get(1).add(new ItemsForEmerald(new ItemStack(ModItems.uncommon_case), new PriceInterval(10, 24), 8, 1, 0.006F));
 
-                trades.get(2).add(new EmeraldForItems(new ItemStack(ModItems.loot_pickaxe), new PriceInterval(1, 1), 8, 2));
-                trades.get(2).add(new EmeraldForItems(new ItemStack(ModItems.loot_bow), new PriceInterval(1, 1), 8, 2));
-                trades.get(2).add(new ItemsForEmerald(ModItems.shovel_case, new PriceInterval(12, 38), 1, 4, 0.05F));
-                trades.get(2).add(new ItemsForEmerald(ModItems.axe_case, new PriceInterval(18, 44), 1, 5, 0.05F));
+                trades.get(2).add(new EmeraldForItems(new ItemStack(ModItems.loot_pickaxe), new PriceInterval(1, 1), 8, 4));
+                trades.get(2).add(new EmeraldForItems(new ItemStack(ModItems.loot_bow), new PriceInterval(1, 1), 8, 6));
+                trades.get(2).add(new ItemsForEmerald(ModItems.shovel_case, new PriceInterval(12, 38), 1, 6, 0.05F));
+                trades.get(2).add(new ItemsForEmerald(ModItems.axe_case, new PriceInterval(18, 44), 1, 4, 0.05F));
 
-                trades.get(3).add(new ItemsForEmerald(ModItems.pickaxe_case, new PriceInterval(20, 46), 1, 6, 0.05F));
+                trades.get(3).add(new ItemsForEmerald(ModItems.pickaxe_case, new PriceInterval(20, 46), 1, 10, 0.05F));
                 trades.get(3).add(new ItemsForEmerald(ModItems.bow_case, new PriceInterval(25, 55), 1, 7, 0.05F));
-                trades.get(3).add(new ItemsForEmerald(ModItems.rare_case, new PriceInterval(20, 30), 8, 3, 0.05F));
+                trades.get(3).add(new ItemsForEmerald(ModItems.rare_case, new PriceInterval(20, 30), 8, 10, 0.05F));
 
-                trades.get(4).add(new ItemsForEmerald(ModItems.sword_case, new PriceInterval(25, 58), 1, 7, 0.05F));
-                trades.get(4).add(new ItemsForEmerald(ModItems.epic_case, new PriceInterval(30, 50), 8, 4, 0.04F));
+                trades.get(4).add(new ItemsForEmerald(ModItems.sword_case, new PriceInterval(25, 58), 1, 15, 0.05F));
+                trades.get(4).add(new ItemsForEmerald(ModItems.epic_case, new PriceInterval(30, 50), 8, 15, 0.04F));
 
-                trades.get(5).add(new ItemsForEmerald(ModItems.unique_case, new PriceInterval(50, 64), 8, 5, 0.03F));
+                trades.get(5).add(new ItemsForEmeraldBlock(ModItems.unique_case, new PriceInterval(40, 64), 1, 30, 0.03F));
             }
         }
     }
@@ -229,6 +227,44 @@ public class VillagerHandler {
                 selling = Utils.copyStackWithAmount(sellingItem, -i);
             } else {
                 buying = new ItemStack(Items.EMERALD, i);
+                selling = sellingItem;
+            }
+            return new MerchantOffer(buying, selling, maxUses, xp, priceMult);
+        }
+    }
+
+    private static class ItemsForEmeraldBlock implements VillagerTrades.ITrade {
+        public ItemStack sellingItem;
+        public PriceInterval priceInfo;
+        final int maxUses;
+        final int xp;
+        final float priceMult;
+
+        public ItemsForEmeraldBlock(IItemProvider item, PriceInterval priceInfo, int maxUses, int xp, float priceMult) {
+            this(new ItemStack(item), priceInfo, maxUses, xp, priceMult);
+        }
+
+        public ItemsForEmeraldBlock(ItemStack par1Item, PriceInterval priceInfo, int maxUses, int xp, float priceMult) {
+            this.sellingItem = par1Item;
+            this.priceInfo = priceInfo;
+            this.maxUses = maxUses;
+            this.xp = xp;
+            this.priceMult = priceMult;
+        }
+
+        @Nullable
+        @Override
+        public MerchantOffer getOffer(Entity trader, Random rand) {
+            int i = 1;
+            if (this.priceInfo != null)
+                i = this.priceInfo.getPrice(rand);
+            ItemStack buying;
+            ItemStack selling;
+            if (i < 0) {
+                buying = new ItemStack(Items.EMERALD_BLOCK);
+                selling = Utils.copyStackWithAmount(sellingItem, -i);
+            } else {
+                buying = new ItemStack(Items.EMERALD_BLOCK, i);
                 selling = sellingItem;
             }
             return new MerchantOffer(buying, selling, maxUses, xp, priceMult);

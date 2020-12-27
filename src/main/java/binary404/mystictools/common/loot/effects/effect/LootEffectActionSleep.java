@@ -45,6 +45,11 @@ public class LootEffectActionSleep implements IEffectAction {
     }
 
     @Override
+    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+        return false;
+    }
+
+    @Override
     public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
         if (player.isSneaking() || player.world.isRemote) {
             return defaultAction;

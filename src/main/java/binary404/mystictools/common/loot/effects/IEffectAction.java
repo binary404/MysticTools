@@ -34,6 +34,10 @@ public interface IEffectAction {
         return new StringTextComponent("");
     }
 
+    default public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+        return true;
+    }
+
     default public String getStatusString(ItemStack stack) {
         return "";
     }

@@ -73,7 +73,7 @@ public class LootEffectAutoSmelt implements IEffectAction {
         message += stack.getDisplayName().getString();
         message += TextFormatting.RESET;
         message += "'s ";
-        message += I18n.format("weaponeffect.auto_smelt.name");
+        message += "auto smelt";
         message += ", has been set to: ";
         message += active;
 

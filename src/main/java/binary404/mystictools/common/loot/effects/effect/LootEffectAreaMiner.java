@@ -43,7 +43,7 @@ public class LootEffectAreaMiner implements IEffectAction {
         message += stack.getDisplayName().getString();
         message += TextFormatting.RESET;
         message += "'s ";
-        message += I18n.format("weaponeffect.area_miner.name");
+        message += "area miner";
         message += ", has been set to: ";
         if (level == 0)
             message += "[Off]";
