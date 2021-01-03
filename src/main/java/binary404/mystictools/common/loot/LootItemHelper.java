@@ -2,6 +2,8 @@ package binary404.mystictools.common.loot;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.util.RandomCollection;
+import binary404.mystictools.common.items.ItemLootArmor;
+import binary404.mystictools.common.items.ItemLootAxe;
 import binary404.mystictools.common.items.ItemLootSword;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
@@ -57,11 +59,15 @@ public class LootItemHelper {
     public static ItemStack getRandomLoot(Random rand) {
         RandomCollection<Item> col = new RandomCollection<Item>(rand);
 
-        col.add(3, ModItems.loot_sword);
-        col.add(2, ModItems.loot_axe);
-        col.add(2, ModItems.loot_pickaxe);
-        col.add(2, ModItems.loot_shovel);
-        col.add(1, ModItems.loot_bow);
+        col.add(2, ModItems.loot_sword);
+        col.add(3, ModItems.loot_axe);
+        col.add(3, ModItems.loot_pickaxe);
+        col.add(3, ModItems.loot_shovel);
+        col.add(2, ModItems.loot_bow);
+        col.add(1, ModItems.loot_boots);
+        col.add(1, ModItems.loot_leggings);
+        col.add(1, ModItems.loot_chestplate);
+        col.add(1, ModItems.loot_helmet);
 
         ItemStack stack = new ItemStack(col.next());
 
@@ -108,17 +114,16 @@ public class LootItemHelper {
             float armorPoints = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_ARMOR);
             float armorToughness = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_TOUGHNESS);
 
-            //MysticTools armor TODO
             if (attackDamage > 0 && !(stack.getItem() instanceof ArmorItem) && stack.getItem() instanceof ItemLootSword)
                 applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
 
             if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
                 applyAttributeModifier(modifiers, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, (double) attackSpeed);
 
-            if (armorPoints > 0)
+            if (armorPoints > 0 && stack.getItem() instanceof ItemLootArmor)
                 applyAttributeModifier(modifiers, Attributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorPoints);
 
-            if (armorToughness > 0)
+            if (armorToughness > 0 && stack.getItem() instanceof ItemLootArmor)
                 applyAttributeModifier(modifiers, Attributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
         }
 
@@ -402,7 +407,7 @@ public class LootItemHelper {
         lootTag.putFloat(LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
         lootTag.putFloat(LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
 
-        if (type == LootSet.LootSetType.ARMOR_BOOTS) {
+        if (loot.getItem() instanceof ItemLootArmor) {
             lootTag.putFloat(LootTags.LOOT_TAG_ARMOR, lootRarity.getArmor(random));
             lootTag.putFloat(LootTags.LOOT_TAG_TOUGHNESS, lootRarity.getToughness(random));
             LootNbtHelper.setLootIntValue(loot, LootTags.LOOT_TAG_LOOTSET, random.nextInt(8));

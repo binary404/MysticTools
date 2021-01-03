@@ -55,6 +55,11 @@ public class ModItems {
     public static Item epic_case;
     public static Item unique_case;
 
+    public static Item loot_boots;
+    public static Item loot_leggings;
+    public static Item loot_chestplate;
+    public static Item loot_helmet;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -66,6 +71,12 @@ public class ModItems {
         loot_shovel = register(r, new ItemLootShovel(), "loot_shovel");
         loot_pickaxe = register(r, new ItemLootPickaxe(), "loot_pickaxe");
         loot_bow = register(r, new ItemLootBow(), "weaponbow");
+
+        loot_boots = register(r, new ItemLootArmor(EquipmentSlotType.FEET), "loot_boots");
+        loot_leggings = register(r, new ItemLootArmor(EquipmentSlotType.LEGS), "loot_leggings");
+        loot_chestplate = register(r, new ItemLootArmor(EquipmentSlotType.CHEST), "loot_chestplate");
+        loot_helmet = register(r, new ItemLootArmor(EquipmentSlotType.HEAD), "loot_helmet");
+
         register(r, new ItemCase(), "loot_case");
 
         pickaxe_case = register(r, new ItemSelectTypeCase(loot_pickaxe), "pickaxe_case");

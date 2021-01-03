@@ -74,6 +74,10 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.PICKAXE);
             ItemTypeRegistry.register(ModItems.loot_shovel, LootSet.LootSetType.SHOVEL);
             ItemTypeRegistry.register(ModItems.loot_bow, LootSet.LootSetType.BOW);
+            ItemTypeRegistry.register(ModItems.loot_boots, LootSet.LootSetType.ARMOR_BOOTS);
+            ItemTypeRegistry.register(ModItems.loot_leggings, LootSet.LootSetType.ARMOR_LEGGINGS);
+            ItemTypeRegistry.register(ModItems.loot_chestplate, LootSet.LootSetType.ARMOR_CHESTPLATE);
+            ItemTypeRegistry.register(ModItems.loot_helmet, LootSet.LootSetType.ARMOR_HELMET);
         });
 
         VillagerHandler.init();
