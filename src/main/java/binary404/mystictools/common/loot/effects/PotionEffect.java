@@ -57,7 +57,7 @@ public class PotionEffect implements IEffect {
         if (ConfigHandler.COMMON.enableFireResistance.get())
             FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableNightVision.get())
-            NIGHTVISION = create("night_vision", PotionType.USER, Effects.NIGHT_VISION).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
+            NIGHTVISION = create("night_vision", PotionType.USER, Effects.NIGHT_VISION).setAmplifier(0, 0).setDuration(10, 10).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableWaterBreathing.get())
             WATERBREATHING = create("water_breathing", PotionType.USER, Effects.WATER_BREATHING).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableHeroOfTheVillage.get())

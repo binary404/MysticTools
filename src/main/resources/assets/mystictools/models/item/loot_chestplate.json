@@ -1,14 +1,14 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "mystictools:items/chestplates/1"
+    "layer0": "mystictools:items/chestplate/1"
   },
   "overrides": [
     {
       "predicate": {
         "model": 1
       },
-      "model": "mystictools:item/chestplates/1"
+      "model": "mystictools:item/chestplate/1"
     },
     {
       "predicate": {
