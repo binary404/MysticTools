@@ -43,15 +43,15 @@ public class PotionEffect implements IEffect {
         if (ConfigHandler.COMMON.enableBlindness.get())
             BLINDNESS = create("blindness", PotionType.TARGET, Effects.BLINDNESS).setAmplifier(0, 3).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
         if (ConfigHandler.COMMON.enableRegeneration.get())
-            REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.ARMOR_BOOTS);
+            REGENERATION = create("regeneration", PotionType.USER, Effects.REGENERATION).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableSpeed.get())
-            SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.ARMOR_BOOTS);
+            SPEED = create("speed", PotionType.USER, Effects.SPEED).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableHaste.get())
-            HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL);
+            HASTE = create("haste", PotionType.USER, Effects.HASTE).setAmplifier(2, 4).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableResistance.get())
-            RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS);
+            RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableFireResistance.get())
-            FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS);
+            FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
     }
 
     private final PotionType effectType;
