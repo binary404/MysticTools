@@ -31,6 +31,10 @@ public class PotionEffect implements IEffect {
     public static PotionEffect RESISTANCE;
     public static PotionEffect FIRE_RESISTANCE;
 
+    public static PotionEffect NIGHTVISION;
+    public static PotionEffect WATERBREATHING;
+    public static PotionEffect HEROOFTHEVILLAGE;
+
     public static void init() {
         if (ConfigHandler.COMMON.enableWither.get())
             WITHERING = create("wither", PotionType.TARGET, Effects.WITHER).setAmplifier(0, 1).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.BOW);
@@ -52,6 +56,12 @@ public class PotionEffect implements IEffect {
             RESISTANCE = create("resistance", PotionType.USER, Effects.RESISTANCE).setAmplifier(0, 2).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
         if (ConfigHandler.COMMON.enableFireResistance.get())
             FIRE_RESISTANCE = create("fire_resistance", PotionType.USER, Effects.FIRE_RESISTANCE).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.SWORD, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_HELMET);
+        if (ConfigHandler.COMMON.enableNightVision.get())
+            NIGHTVISION = create("night_vision", PotionType.USER, Effects.NIGHT_VISION).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
+        if (ConfigHandler.COMMON.enableWaterBreathing.get())
+            WATERBREATHING = create("water_breathing", PotionType.USER, Effects.WATER_BREATHING).setAmplifier(0, 0).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
+        if (ConfigHandler.COMMON.enableHeroOfTheVillage.get())
+            HEROOFTHEVILLAGE = create("hero_of_the_village", PotionType.USER, Effects.HERO_OF_THE_VILLAGE).setAmplifier(0, 4).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
     }
 
     private final PotionType effectType;

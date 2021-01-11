@@ -97,7 +97,12 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
         String texture = "mystictools:textures/models/armor/1.png";
 
         if (id > 0)
-            texture = "mystictools:textures/models/armor/" + id + ".png";
+            texture = "mystictools:textures/models/armor/" + id;
+
+        if (stack.getItem() == ModItems.loot_leggings)
+            texture = texture + "_2";
+
+        texture += ".png";
 
         return texture;
     }

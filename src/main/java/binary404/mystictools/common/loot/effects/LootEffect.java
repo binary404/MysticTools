@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.*;
 
-public class LootEffect {
+public class LootEffect implements IEffect {
     public static final Map<String, LootEffect> REGISTRY = new HashMap<>();
 
     public static final LootEffect LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(new LootEffectLightning()).setItemTypes(LootSet.LootSetType.SWORD);

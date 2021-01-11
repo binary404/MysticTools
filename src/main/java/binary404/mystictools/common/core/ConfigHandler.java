@@ -29,6 +29,9 @@ public final class ConfigHandler {
         public final ForgeConfigSpec.BooleanValue enableHaste;
         public final ForgeConfigSpec.BooleanValue enableResistance;
         public final ForgeConfigSpec.BooleanValue enableFireResistance;
+        public final ForgeConfigSpec.BooleanValue enableNightVision;
+        public final ForgeConfigSpec.BooleanValue enableWaterBreathing;
+        public final ForgeConfigSpec.BooleanValue enableHeroOfTheVillage;
 
         public final ForgeConfigSpec.BooleanValue enableMobDropCrate;
 
@@ -72,8 +75,8 @@ public final class ConfigHandler {
             commonEffectMin = builder.comment("Minimum number of effects on a common item").defineInRange("commonEffectMin", 0, 0, 4);
             commonEffectMax = builder.comment("Maximum number of effects on a common item").defineInRange("commonEffectMax", 0, 0, 4);
 
-            uncommonPotionMin = builder.comment("Minimum number of potion effects on a uncommon item").defineInRange("uncommonPotionMin", 0, 0, 5);
-            uncommonPotionMax = builder.comment("Maximum number of potion effects on a uncommon item").defineInRange("uncommonPotionMax", 4, 0, 5);
+            uncommonPotionMin = builder.comment("Minimum number of potion effects on a uncommon item").defineInRange("uncommonPotionMin", 2, 0, 5);
+            uncommonPotionMax = builder.comment("Maximum number of potion effects on a uncommon item").defineInRange("uncommonPotionMax", 3, 0, 5);
 
             uncommonEffectMin = builder.comment("Minimum number of effects on a uncommon item").defineInRange("uncommonEffectMin", 0, 0, 4);
             uncommonEffectMax = builder.comment("Maximum number of effects on a uncommon item").defineInRange("uncommonEffectMax", 1, 2, 4);
@@ -110,6 +113,9 @@ public final class ConfigHandler {
             enableHaste = builder.comment("enable haste effect on tools").define("enableHaste", true);
             enableResistance = builder.comment("enable resistance effect on tools").define("enableResistance", true);
             enableFireResistance = builder.comment("enable fire resistance effect on tools").define("enableFireResistance", true);
+            enableNightVision = builder.comment("enable night vision effect on helmets").define("enableNightVision", true);
+            enableWaterBreathing = builder.comment("enable water breathing effect on helmets").define("enableWaterBreathing", true);
+            enableHeroOfTheVillage = builder.comment("enable hero of the village effect on helmets").define("enableHeroOfTheVillage", true);
 
             enableMobDropCrate = builder.comment("enables mobs dropping crates").define("enableMobDropCrate", true);
 
