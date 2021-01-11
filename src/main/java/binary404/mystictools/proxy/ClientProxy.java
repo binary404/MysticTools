@@ -49,11 +49,22 @@ public class ClientProxy implements IProxy {
             ILootItem item = ((ILootItem) stack.getItem());
             return item.getModel(stack);
         };
+
         registerPropertyGetter(ModItems.loot_sword, new ResourceLocation("model"), lootGetter);
         registerPropertyGetter(ModItems.loot_bow, new ResourceLocation("model"), lootGetter);
         registerPropertyGetter(ModItems.loot_shovel, new ResourceLocation("model"), lootGetter);
         registerPropertyGetter(ModItems.loot_pickaxe, new ResourceLocation("model"), lootGetter);
         registerPropertyGetter(ModItems.loot_axe, new ResourceLocation("model"), lootGetter);
+
+        IItemPropertyGetter armorGetter = (stack, world, entity) -> {
+            ILootItem item = ((ILootItem) stack.getItem());
+            return item.getArmorModel(stack);
+        };
+
+        registerPropertyGetter(ModItems.loot_boots, new ResourceLocation("model"), armorGetter);
+        registerPropertyGetter(ModItems.loot_leggings, new ResourceLocation("model"), armorGetter);
+        registerPropertyGetter(ModItems.loot_chestplate, new ResourceLocation("model"), armorGetter);
+        registerPropertyGetter(ModItems.loot_helmet, new ResourceLocation("model"), armorGetter);
 
         IItemPropertyGetter pulling = (stack, world, entity) -> {
             ItemLootBow bow = ((ItemLootBow) stack.getItem());

@@ -1,0 +1,56 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "mystictools:items/chestplates/1"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "model": 1
+      },
+      "model": "mystictools:item/chestplates/1"
+    },
+    {
+      "predicate": {
+        "model": 2
+      },
+      "model": "mystictools:item/chestplate/2"
+    },
+    {
+      "predicate": {
+        "model": 3
+      },
+      "model": "mystictools:item/chestplate/3"
+    },
+    {
+      "predicate": {
+        "model": 4
+      },
+      "model": "mystictools:item/chestplate/4"
+    },
+    {
+      "predicate": {
+        "model": 5
+      },
+      "model": "mystictools:item/chestplate/5"
+    },
+    {
+      "predicate": {
+        "model": 6
+      },
+      "model": "mystictools:item/chestplate/6"
+    },
+    {
+      "predicate": {
+        "model": 7
+      },
+      "model": "mystictools:item/chestplate/7"
+    },
+    {
+      "predicate": {
+        "model": 8
+      },
+      "model": "mystictools:item/chestplate/8"
+    }
+  ]
+}
