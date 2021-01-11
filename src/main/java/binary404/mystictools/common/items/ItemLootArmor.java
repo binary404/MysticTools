@@ -47,6 +47,11 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     }
 
     @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new StringTextComponent(LootItemHelper.getLootName(stack, super.getDisplayName(stack).getString()));
+    }
+
+    @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip, false);
