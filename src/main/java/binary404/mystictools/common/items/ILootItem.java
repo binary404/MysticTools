@@ -10,8 +10,4 @@ public interface ILootItem {
         return LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_MODEL);
     }
 
-    default float getArmorModel(ItemStack stack) {
-        return LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_LOOTSET);
-    }
-
 }

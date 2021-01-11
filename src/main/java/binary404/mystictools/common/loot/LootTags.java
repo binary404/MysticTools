@@ -4,7 +4,6 @@ public class LootTags {
 
     public static final String LOOT_TAG = "mysticTools";
     public static final String LOOT_TAG_NAME = "loot_name";
-    public static final String LOOT_TAG_LOOTSET = "loot_set";
     public static final String LOOT_TAG_RARITY = "rarity";
     public static final String LOOT_TAG_MODEL = "model";
     public static final String LOOT_TAG_DAMAGE = "damage";

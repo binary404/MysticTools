@@ -410,7 +410,6 @@ public class LootItemHelper {
         if (loot.getItem() instanceof ItemLootArmor) {
             lootTag.putFloat(LootTags.LOOT_TAG_ARMOR, lootRarity.getArmor(random));
             lootTag.putFloat(LootTags.LOOT_TAG_TOUGHNESS, lootRarity.getToughness(random));
-            LootNbtHelper.setLootIntValue(loot, LootTags.LOOT_TAG_LOOTSET, random.nextInt(8));
         }
 
         int modifierCount = lootRarity.getPotionCount(random);
