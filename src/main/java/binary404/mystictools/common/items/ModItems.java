@@ -72,10 +72,10 @@ public class ModItems {
         loot_pickaxe = register(r, new ItemLootPickaxe(), "loot_pickaxe");
         loot_bow = register(r, new ItemLootBow(), "weaponbow");
 
-        loot_boots = register(r, new ItemLootArmor(EquipmentSlotType.FEET), "loot_boots");
-        loot_leggings = register(r, new ItemLootArmor(EquipmentSlotType.LEGS), "loot_leggings");
-        loot_chestplate = register(r, new ItemLootArmor(EquipmentSlotType.CHEST), "loot_chestplate");
-        loot_helmet = register(r, new ItemLootArmor(EquipmentSlotType.HEAD), "loot_helmet");
+        loot_boots = register(r, new ItemLootArmor(EquipmentSlotType.FEET, "Boots"), "loot_boots");
+        loot_leggings = register(r, new ItemLootArmor(EquipmentSlotType.LEGS, "Leggings"), "loot_leggings");
+        loot_chestplate = register(r, new ItemLootArmor(EquipmentSlotType.CHEST, "Chestplate"), "loot_chestplate");
+        loot_helmet = register(r, new ItemLootArmor(EquipmentSlotType.HEAD, "Helmet"), "loot_helmet");
 
         register(r, new ItemCase(), "loot_case");
 

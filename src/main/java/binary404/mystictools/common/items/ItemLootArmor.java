@@ -32,8 +32,11 @@ import java.util.Map;
 
 public class ItemLootArmor extends ArmorItem implements ILootItem {
 
-    public ItemLootArmor(EquipmentSlotType type) {
+    String type;
+
+    public ItemLootArmor(EquipmentSlotType type, String pieceType) {
         super(ArmorMaterial.DIAMOND, type, new Item.Properties().group(MysticTools.tab));
+        this.type = pieceType;
     }
 
     @Override
@@ -49,10 +52,9 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip, false);
         } else {
             EquipmentSlotType type = this.slot;
+            tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + this.type));
             Multimap<Attribute, AttributeModifier> multimap = stack.getAttributeModifiers(type);
-
             if (!multimap.isEmpty() && type != EquipmentSlotType.MAINHAND) {
-                tooltip.add(new StringTextComponent(I18n.format("item.modifiers." + type.getName())));
                 for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                     if (entry.getKey().equals(Attributes.ARMOR_TOUGHNESS) || entry.getKey().equals(Attributes.ARMOR)) {
                         AttributeModifier modifier = entry.getValue();
