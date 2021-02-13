@@ -1,5 +1,6 @@
 package binary404.mystictools.common.core;
 
+import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.IEffectAction;
@@ -8,12 +9,17 @@ import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,7 +32,7 @@ import java.util.List;
 public class EntityHandler {
 
     @SubscribeEvent
-    public static void entityHit(ProjectileImpactEvent.Arrow event) {
+    public static void arrowHit(ProjectileImpactEvent.Arrow event) {
         if (event.getArrow().getPersistentData().contains("unique")) {
             CompoundNBT compound = event.getArrow().getPersistentData().getCompound("unique");
             String id = compound.getString("id");
@@ -40,14 +46,14 @@ public class EntityHandler {
     public static void sleepingCheck(SleepingLocationCheckEvent event) {
         if (event.getEntityLiving().isSleeping() && !event.getEntityLiving().world.isDaytime()) {
             ItemStack stack = event.getEntityLiving().getHeldItemMainhand();
-            if(LootItemHelper.hasEffect(stack, LootEffect.SLEEP)) {
+            if (LootItemHelper.hasEffect(stack, LootEffect.SLEEP)) {
                 event.setResult(Event.Result.ALLOW);
             }
         }
     }
 
     @SubscribeEvent
-    public static void onEntityAttacked(LivingAttackEvent event) {
+    public static void onEntityAttacked(LivingDamageEvent event) {
         Entity sourceEntity = event.getSource().getTrueSource();
 
         if (sourceEntity != null && !sourceEntity.world.isRemote) {
@@ -68,31 +74,29 @@ public class EntityHandler {
                     }
                 }
             }
-        }
-    }
-
-    //Not used
-    public static void onHarvest() {
-        PlayerEntity player = null;
-        if (player != null) {
-            List<Item> tools = new ArrayList<Item>();
-            tools.add(ModItems.loot_axe);
-            tools.add(ModItems.loot_pickaxe);
-            tools.add(ModItems.loot_shovel);
-
-            ItemStack tool = player.getHeldItemMainhand();
-
-            if (tools.contains(tool.getItem())) {
-                List<LootEffect> effects = LootEffect.getEffectList(tool);
-
-                for (LootEffect effect : effects) {
-                    IEffectAction action = effect.getAction();
-                    if (action != null) {
-                        //action.handleHarvest(player, tool, event.getDrops(), event.getPos());
+            if (event.getEntityLiving() instanceof PlayerEntity && event.getSource().getTrueSource() instanceof LivingEntity) {
+                PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+                for (ItemStack stack : player.inventory.armorInventory) {
+                    List<LootEffect> effects = LootEffect.getEffectList(stack);
+                    for (LootEffect effect : effects) {
+                        if (effect.getAction() != null)
+                            effect.getAction().handleArmorHit(stack, player, (LivingEntity) event.getSource().getTrueSource());
+                    }
+                }
+            }
+            if (event.getEntityLiving() instanceof PlayerEntity) {
+                PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+                for (ItemStack stack : playerEntity.inventory.armorInventory) {
+                    List<LootEffect> effects = LootEffect.getEffectList(stack);
+                    if (effects.contains(LootEffect.REFLECT)) {
+                        float damage = event.getAmount() / 2;
+                        event.setAmount(damage);
+                        if (event.getSource().getTrueSource() != null) {
+                            event.getSource().getTrueSource().attackEntityFrom(new DamageSource("reflect"), damage);
+                        }
                     }
                 }
             }
         }
     }
-
 }

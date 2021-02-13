@@ -26,13 +26,17 @@ public class UniqueHandler {
 
     public static void generateUniqueItems(ServerWorld world) {
         UniqueSave.forWorld(world).uniques.clear();
-        for (int i = 0; i < ConfigHandler.COMMON.uniqueCount.get(); i++) {
+        int generated = 0;
+        while (generated <= ConfigHandler.COMMON.uniqueCount.get()) {
             ItemStack stack = LootItemHelper.getRandomLoot(new Random());
             UniqueEffect effect = LootItemHelper.getRandomUnique(new Random(), LootItemHelper.getItemType(stack.getItem()));
             if (stack.getItem().getRegistryName() == null)
                 stack = new ItemStack(ModItems.loot_pickaxe);
-            UniqueSave.UniqueInfo info = new UniqueSave.UniqueInfo(stack.getItem(), effect, false);
-            UniqueSave.forWorld(world).uniques.add(info);
+            if (effect != null) {
+                UniqueSave.UniqueInfo info = new UniqueSave.UniqueInfo(stack.getItem(), effect, false);
+                UniqueSave.forWorld(world).uniques.add(info);
+                generated++;
+            }
         }
         UniqueSave.forWorld(world).markDirty();
     }

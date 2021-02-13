@@ -3,6 +3,7 @@ package binary404.mystictools.proxy;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
+import binary404.mystictools.client.fx.ModEffects;
 import binary404.mystictools.client.gui.GuiUpgrader;
 import binary404.mystictools.common.core.ClientHandler;
 import binary404.mystictools.common.items.ILootItem;
@@ -38,6 +39,8 @@ public class ClientProxy implements IProxy {
         });
         ClientRegistry.bindTileEntityRenderer(ModTiles.CAULDRON, RenderCauldron::new);
         ScreenManager.registerFactory(ModContainers.UPGRADER, GuiUpgrader::new);
+
+        ModEffects.init();
     }
 
     private static void registerPropertyGetter(IItemProvider item, ResourceLocation id, IItemPropertyGetter propGetter) {
@@ -84,5 +87,10 @@ public class ClientProxy implements IProxy {
     public void blockFX(BlockPos pos) {
         FXBlock data = new FXBlock(Minecraft.getInstance().world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true, 600, getWorld().getBlockState(pos).getBlock());
         Minecraft.getInstance().particles.addEffect(data);
+    }
+
+    @Override
+    public void scheduleDelayed(Runnable r, int delay) {
+        System.out.println("Scheduling runnable on client");
     }
 }

@@ -1,5 +1,6 @@
 package binary404.mystictools.common.network;
 
+import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -19,9 +20,11 @@ public class NetworkHandler {
     public static void init() {
         int id = 0;
         HANDLER.registerMessage(id++, PacketToggle.class, PacketToggle::encode, PacketToggle::decode, PacketToggle::handle);
-        HANDLER.registerMessage(id++, PacketOpenCrateFX.class, PacketOpenCrateFX::encode, PacketOpenCrateFX::decode, PacketOpenCrateFX::handle);
         HANDLER.registerMessage(id++, PacketSparkle.class, PacketSparkle::encode, PacketSparkle::decode, PacketSparkle::handle);
+        HANDLER.registerMessage(id++, PacketFX.class, PacketFX::encode, PacketFX::decode, PacketFX::handle);
         HANDLER.registerMessage(id++, PacketUpgrader.class, PacketUpgrader::encode, PacketUpgrader::decode, PacketUpgrader::handle);
+        HANDLER.registerMessage(id++, PacketJump.class, PacketJump::encode, PacketJump::decode, PacketJump::handle);
+        HANDLER.registerMessage(id++, PacketArc.class, PacketArc::encode, PacketArc::decode, PacketArc::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend) {

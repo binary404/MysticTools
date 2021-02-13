@@ -26,7 +26,7 @@ public class Brainwash implements IUniqueEffect {
                 if (newTarget != null) {
                     target.setAttackTarget(null);
 
-                    for (PrioritizedGoal entry : ((AccessorGoalSelector)target.targetSelector).getGoals()) {
+                    for (PrioritizedGoal entry : ((AccessorGoalSelector) target.targetSelector).getGoals()) {
                         if (entry.getGoal() instanceof HurtByTargetGoal) {
                             target.targetSelector.removeGoal(entry.getGoal());
                             target.targetSelector.addGoal(-1, entry.getGoal());
@@ -37,7 +37,7 @@ public class Brainwash implements IUniqueEffect {
                     target.setRevengeTarget(newTarget);
                     NetworkHandler.sendToNearby(entity.world, entity, new PacketSparkle(target.getPosX() + 0.5, target.getPosY() + 0.5, target.getPosZ() + 0.5, 0.1F, 0.25F, 0.67F));
 
-                }else {
+                } else {
                     target.setAttackTarget(null);
                 }
             }

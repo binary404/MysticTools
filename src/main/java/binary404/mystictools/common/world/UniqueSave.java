@@ -44,6 +44,7 @@ public class UniqueSave extends WorldSavedData {
         CompoundNBT nbt = new CompoundNBT();
         ListNBT list = new ListNBT();
         for (UniqueInfo info : uniques) {
+            System.out.println(info.toString());
             CompoundNBT cmp = new CompoundNBT();
             cmp.putString("item", info.item.getRegistryName().toString());
             cmp.putString("effect", info.effect.getId());

@@ -4,6 +4,7 @@ import com.sun.javafx.geom.Vec3d;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
+import net.minecraft.entity.Entity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 
 public class Utils {
@@ -43,6 +47,33 @@ public class Utils {
                 mgr.getRecipe(IRecipeType.SMOKING, inv, world),
                 Optional.empty());
         return optRecipe.map(recipe -> recipe.getCraftingResult(inv).copy());
+    }
+
+    public static Predicate<? super Entity> selectEntities(Class<? extends Entity>... entities) {
+        return (Predicate<Entity>) entity -> {
+            if (entity == null || !entity.isAlive()) return false;
+            Class<? extends Entity> clazz = entity.getClass();
+            for (Class<? extends Entity> test : entities) {
+                if (test.isAssignableFrom(clazz)) return true;
+            }
+            return false;
+        };
+    }
+
+    @Nullable
+    public static <T> T selectClosest(Collection<T> elements, Function<T, Double> dstFunc) {
+        if (elements.isEmpty()) return null;
+
+        double dstClosest = Double.MAX_VALUE;
+        T closestElement = null;
+        for (T element : elements) {
+            double dst = dstFunc.apply(element);
+            if (dst < dstClosest) {
+                closestElement = element;
+                dstClosest = dst;
+            }
+        }
+        return closestElement;
     }
 
     public static void writeCompoundNBTToBuffer(PacketBuffer bb, CompoundNBT nbt) {
@@ -62,7 +93,7 @@ public class Utils {
     }
 
     public static ItemStack copyStackWithAmount(ItemStack stack, int amount) {
-        if(stack.isEmpty())
+        if (stack.isEmpty())
             return ItemStack.EMPTY;
         ItemStack s2 = stack.copy();
         s2.setCount(amount);

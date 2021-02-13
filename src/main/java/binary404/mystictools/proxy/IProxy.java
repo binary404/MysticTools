@@ -9,11 +9,7 @@ public interface IProxy {
     default void registerHandlers() {
     }
 
-    default void scheduleDelayed(Runnable r) {
-    }
-
-    default void scheduleDelayed(Runnable r, int delay) {
-    }
+    void scheduleDelayed(Runnable r, int delay);
 
     default void init() {
 

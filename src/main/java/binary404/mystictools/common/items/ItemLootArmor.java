@@ -4,9 +4,14 @@ import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
+import binary404.mystictools.common.loot.effects.LootEffect;
+import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketJump;
+import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -25,6 +30,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -85,9 +92,37 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
 
     }
 
+    private static int timesJumped;
+    private static boolean jumpDown;
+
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
         LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) player);
+
+        List<LootEffect> effects = LootEffect.getEffectList(stack);
+
+        if (effects.contains(LootEffect.getById("jump"))) {
+            DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+                if (player == Minecraft.getInstance().player) {
+                    ClientPlayerEntity playerSp = (ClientPlayerEntity) player;
+
+                    if (playerSp.isOnGround()) {
+                        timesJumped = 0;
+                    } else {
+                        if (playerSp.movementInput.jump) {
+                            if (!jumpDown && timesJumped < LootEffect.getAmplifierFromStack(stack, "jump")) {
+                                playerSp.jump();
+                                NetworkHandler.sendToServer(new PacketJump());
+                                timesJumped++;
+                            }
+                            jumpDown = true;
+                        } else {
+                            jumpDown = false;
+                        }
+                    }
+                }
+            });
+        }
     }
 
     @Nullable

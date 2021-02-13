@@ -26,6 +26,10 @@ public interface IEffectAction {
 
     }
 
+    default public void handleArmorHit(ItemStack stack, LivingEntity wearer, LivingEntity attacker) {
+
+    }
+
     default public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
         return defaultAction;
     }

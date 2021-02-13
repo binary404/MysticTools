@@ -40,6 +40,7 @@
   "weaponeffect.area_miner.description": "Area Miner",
   "weaponeffect.lightning.description": "Lightning",
   "weaponeffect.sleep.description": "Sleep [Right Click]",
+  "weaponeffect.jump.description": "Jump %1$s",
 
   "container.mystictools.upgrader": "Tool Upgrader",
 
