@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.16.5-1.4.0B"
+version = "1.16.5-1.4.0B2"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 

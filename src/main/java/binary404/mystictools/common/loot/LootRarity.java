@@ -40,7 +40,7 @@ public class LootRarity {
 
     public static void init() {
         COMMON = get("common", TextFormatting.WHITE)
-                .setDamage(6, 12)
+                .setDamage(ConfigHandler.COMMON.commonDamageMin.get(), ConfigHandler.COMMON.commonDamageMax.get())
                 .setSpeed(-3.1F, -2.399F)
                 .setArmor(1, 3)
                 .setToughness(0, 0)
@@ -50,7 +50,7 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.commonEffectMin.get(), ConfigHandler.COMMON.commonEffectMax.get());
 
         UNCOMMON = get("uncommon", TextFormatting.GRAY)
-                .setDamage(9, 16)
+                .setDamage(ConfigHandler.COMMON.uncommonDamageMin.get(), ConfigHandler.COMMON.uncommonDamageMax.get())
                 .setSpeed(-2.8F, -2.3F)
                 .setArmor(2, 5)
                 .setToughness(1, 3)
@@ -60,7 +60,7 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.uncommonEffectMin.get(), ConfigHandler.COMMON.uncommonEffectMax.get());
 
         RARE = get("rare", TextFormatting.YELLOW)
-                .setDamage(12, 29)
+                .setDamage(ConfigHandler.COMMON.rareDamageMin.get(), ConfigHandler.COMMON.rareDamageMax.get())
                 .setSpeed(-2.6999F, -2.1F)
                 .setArmor(3, 6)
                 .setToughness(2, 5)
@@ -70,7 +70,7 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.rareEffectMin.get(), ConfigHandler.COMMON.rareEffectMax.get());
 
         EPIC = get("epic", TextFormatting.BLUE)
-                .setDamage(16, 34)
+                .setDamage(ConfigHandler.COMMON.epicDamageMin.get(), ConfigHandler.COMMON.epicDamageMax.get())
                 .setSpeed(-2.39999F, -1.8F)
                 .setArmor(4, 8)
                 .setToughness(1, 5)
@@ -80,7 +80,7 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.epicEffectMin.get(), ConfigHandler.COMMON.epicEffectMax.get());
 
         UNIQUE = get("unique", TextFormatting.DARK_PURPLE)
-                .setDamage(20, 54)
+                .setDamage(ConfigHandler.COMMON.uniqueDamageMin.get(), ConfigHandler.COMMON.uniqueDamageMax.get())
                 .setSpeed(-2.0F, -1.5F)
                 .setArmor(5, 10)
                 .setToughness(2, 6)
