@@ -123,6 +123,12 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
                 }
             });
         }
+
+        for(LootEffect effect : effects) {
+            if(effect.getAction() != null) {
+                effect.getAction().handleUpdate(stack, world, player, 0, false);
+            }
+        }
     }
 
     @Nullable

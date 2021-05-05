@@ -15,8 +15,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.LogicalSide;
-import sun.rmi.runtime.Log;
-
 import java.util.List;
 
 public class Arc implements IUniqueEffect {

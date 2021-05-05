@@ -10,16 +10,21 @@ import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -84,6 +89,7 @@ public class EntityHandler {
                     }
                 }
             }
+
             if (event.getEntityLiving() instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
                 for (ItemStack stack : playerEntity.inventory.armorInventory) {
@@ -95,7 +101,32 @@ public class EntityHandler {
                             event.getSource().getTrueSource().attackEntityFrom(new DamageSource("reflect"), damage);
                         }
                     }
+                    if (effects.contains(LootEffect.PARRY)) {
+                        int chance = LootEffect.getAmplifierFromStack(stack, LootEffect.PARRY.getId());
+                        if (playerEntity.world.rand.nextInt(100) <= chance) {
+                            playerEntity.world.playSound(null, playerEntity.getPosX(), playerEntity.getPosY(), playerEntity.getPosZ(),
+                                    SoundEvents.ITEM_SHIELD_BLOCK,
+                                    SoundCategory.MASTER,
+                                    1F, 1F);
+                            event.setCanceled(true);
+                        }
+                    }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onOrbPickup(PlayerXpEvent.PickupXp event) {
+        if (!(event.getPlayer() instanceof ServerPlayerEntity))
+            return;
+        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        for (ItemStack stack : player.inventory.armorInventory) {
+            List<LootEffect> effects = LootEffect.getEffectList(stack);
+            if (effects.contains(LootEffect.INSIGHT)) {
+                int level = LootEffect.getAmplifierFromStack(stack, LootEffect.INSIGHT.getId());
+                ExperienceOrbEntity orb = event.getOrb();
+                orb.xpValue *= (1 + level);
             }
         }
     }

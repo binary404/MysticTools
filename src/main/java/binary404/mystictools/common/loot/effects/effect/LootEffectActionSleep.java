@@ -30,21 +30,6 @@ import java.util.Optional;
 public class LootEffectActionSleep implements IEffectAction {
 
     @Override
-    public void toggleAction(PlayerEntity player, ItemStack stack) {
-
-    }
-
-    @Override
-    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
-
-    }
-
-    @Override
-    public void handleUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
-
-    }
-
-    @Override
     public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
         return false;
     }
@@ -85,7 +70,6 @@ public class LootEffectActionSleep implements IEffectAction {
                 return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
             }
         }
-
 
         player.takeStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
         if (player.isPassenger()) {

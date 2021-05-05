@@ -96,7 +96,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
 
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return LootItemHelper.use(super.onItemRightClick(worldIn, playerIn, handIn), worldIn, playerIn, handIn);
     }
 
     @Override

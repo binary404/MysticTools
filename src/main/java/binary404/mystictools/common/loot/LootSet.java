@@ -155,10 +155,10 @@ public class LootSet {
         AXE("axe", 21, ModItems.loot_axe),
         SHOVEL("shovel", 15, ModItems.loot_shovel),
         BOW("bow", 12, ModItems.loot_bow),
-        ARMOR_BOOTS("armor_boots", 8, ModItems.loot_boots),
-        ARMOR_LEGGINGS("armor_leggings", 8, ModItems.loot_leggings),
-        ARMOR_CHESTPLATE("armor_chestplate", 8, ModItems.loot_chestplate),
-        ARMOR_HELMET("armor_helmet", 8, ModItems.loot_helmet);
+        ARMOR_BOOTS("armor_boots", 5, ModItems.loot_boots),
+        ARMOR_LEGGINGS("armor_leggings", 5, ModItems.loot_leggings),
+        ARMOR_CHESTPLATE("armor_chestplate", 5, ModItems.loot_chestplate),
+        ARMOR_HELMET("armor_helmet", 5, ModItems.loot_helmet);
 
         public final int models;
         private String id;

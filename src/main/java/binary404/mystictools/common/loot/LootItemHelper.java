@@ -114,7 +114,7 @@ public class LootItemHelper {
             float armorPoints = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_ARMOR);
             float armorToughness = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_TOUGHNESS);
 
-            if (attackDamage > 0 && !(stack.getItem() instanceof ArmorItem) && stack.getItem() instanceof ItemLootSword)
+            if (attackDamage > 0 && stack.getItem() instanceof ItemLootSword)
                 applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
 
             if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
@@ -125,6 +125,20 @@ public class LootItemHelper {
 
             if (armorToughness > 0 && stack.getItem() instanceof ItemLootArmor)
                 applyAttributeModifier(modifiers, Attributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
+
+            List<LootEffect> effects = LootEffect.getEffectList(stack);
+
+            String uuid_string = LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_UUID);
+
+            if (uuid_string.length() > 0) {
+                for(LootEffect effect : effects) {
+                    if(effect != null) {
+                        if(effect.getAttribute() != null) {
+                            modifiers.put(effect.getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
+                        }
+                    }
+                }
+            }
         }
 
         return modifiers;
@@ -187,7 +201,7 @@ public class LootItemHelper {
     }
 
     public static ActionResult<ItemStack> use(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItemMainhand();
+        ItemStack stack = player.getHeldItem(hand);
 
         List<LootEffect> effects = LootEffect.getEffectList(stack);
 
@@ -221,7 +235,6 @@ public class LootItemHelper {
 
         return hasEffect;
     }
-
 
     public static void handlePotionEffects(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
