@@ -51,17 +51,6 @@ public class LootEffectAutoSmelt implements IEffectAction {
             return;
 
         NetworkHandler.sendToNearby(player.world, player, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.92F, 0.35F, 0.12F));
-
-        List<ItemStack> smelted = new ArrayList<ItemStack>();
-
-        for (ItemStack drop : drops) {
-            ItemStack smeltResult = Utils.findSmeltingResult(player.world, drop).orElse(drop);
-
-            smelted.add(smeltResult.copy());
-        }
-
-        drops.clear();
-        drops.addAll(smelted);
     }
 
     @Override

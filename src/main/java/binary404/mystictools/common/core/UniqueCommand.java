@@ -29,7 +29,6 @@ public class UniqueCommand {
                 });
 
         LiteralCommandNode<CommandSource> command = dispatcher.register(commandBuilder);
-
     }
 
 }

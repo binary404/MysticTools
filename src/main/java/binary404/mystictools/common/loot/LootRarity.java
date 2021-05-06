@@ -1,9 +1,12 @@
 package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.core.ConfigHandler;
-import binary404.mystictools.common.gamestages.GameStageHandler;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -13,6 +16,10 @@ import java.util.Random;
 public class LootRarity {
 
     private static final Map<String, LootRarity> REGISTRY = new HashMap<>();
+
+    public static Map<String, LootRarity> getRegistry() {
+        return REGISTRY;
+    }
 
     public static LootRarity generateRandomRarity(Random random, PlayerEntity entity) {
         int rarity = random.nextInt(100) + 1;
@@ -35,7 +42,7 @@ public class LootRarity {
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
-            return lootRarity;
+        return lootRarity;
     }
 
     public static void init() {
@@ -140,6 +147,27 @@ public class LootRarity {
         }
 
         return r;
+    }
+
+    public static LootRarity read(StringReader reader) throws CommandSyntaxException {
+        int i = reader.getCursor();
+
+        while (reader.canRead() && isValidPathCharacter(reader.peek())) {
+            reader.skip();
+        }
+
+        String s = reader.getString().substring(i, reader.getCursor());
+
+        try {
+            return LootRarity.fromId(s);
+        } catch (Exception e) {
+            reader.setCursor(i);
+            throw new SimpleCommandExceptionType(new TranslationTextComponent("argument.id.invalid")).createWithContext(reader);
+        }
+    }
+
+    public static boolean isValidPathCharacter(char charIn) {
+        return charIn >= 'a' && charIn <= 'z';
     }
 
     protected LootRarity setPotionCount(int min, int max) {

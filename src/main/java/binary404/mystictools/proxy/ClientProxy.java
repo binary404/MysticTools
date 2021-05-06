@@ -3,6 +3,7 @@ package binary404.mystictools.proxy;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
+import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.client.fx.ModEffects;
 import binary404.mystictools.client.gui.GuiUpgrader;
 import binary404.mystictools.common.core.ClientHandler;
@@ -39,8 +40,8 @@ public class ClientProxy implements IProxy {
         });
         ClientRegistry.bindTileEntityRenderer(ModTiles.CAULDRON, RenderCauldron::new);
         ScreenManager.registerFactory(ModContainers.UPGRADER, GuiUpgrader::new);
-
-        ModEffects.init();
+        if (FXHelper.fxlibLoaded())
+            ModEffects.init();
     }
 
     private static void registerPropertyGetter(IItemProvider item, ResourceLocation id, IItemPropertyGetter propGetter) {

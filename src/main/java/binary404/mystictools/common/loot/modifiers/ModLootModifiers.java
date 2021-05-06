@@ -13,14 +13,17 @@ import net.minecraftforge.fml.common.Mod;
 public class ModLootModifiers {
 
     public static final LootConditionType AUTOSMELT = new LootConditionType(new AutoSmeltCondition.Serializer());
+    public static final LootConditionType VOID = new LootConditionType(new VoidCondition.Serializer());
 
     public static void init() {
         Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation("mystictools", "autosmelt"), AUTOSMELT);
+        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation("mystictools", "void"), VOID);
     }
 
     @SubscribeEvent
     public static void registerModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
         event.getRegistry().register(new AutoSmeltModifier.Serializer().setRegistryName(new ResourceLocation("mystictools", "autosmelt")));
+        event.getRegistry().register(new VoidModifier.Serializer().setRegistryName(new ResourceLocation("mystictools", "void")));
     }
 
 }

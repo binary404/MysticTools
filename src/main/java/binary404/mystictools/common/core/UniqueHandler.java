@@ -71,7 +71,7 @@ public class UniqueHandler {
                 found++;
         }
 
-        target.sendStatusMessage(new StringTextComponent("Unique Found! " + "(" + found + "/" + ConfigHandler.COMMON.uniqueCount + ") found"), true);
+        target.sendStatusMessage(new StringTextComponent("Unique Found! " + "(" + found + "/" + ConfigHandler.COMMON.uniqueCount.get() + ") found"), true);
 
         return loot;
     }

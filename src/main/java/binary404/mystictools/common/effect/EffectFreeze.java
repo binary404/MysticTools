@@ -24,8 +24,8 @@ public class EffectFreeze extends Effect {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingTick(LivingEvent.LivingUpdateEvent event) {
         if (shouldFreeze(event.getEntityLiving())) {
-            event.setCanceled(true);
             handleImportantTicks(event.getEntityLiving());
+            event.setCanceled(true);
         }
     }
 
@@ -45,29 +45,27 @@ public class EffectFreeze extends Effect {
 
     static void handleImportantTicks(LivingEntity entity) {
         if (entity.hurtTime > 0) {
-            entity.hurtTime--;
+            --entity.hurtTime;
         }
-
         if (entity.hurtResistantTime > 0) {
-            entity.hurtResistantTime--;
+            --entity.hurtResistantTime;
         }
-
         entity.prevPosX = entity.getPosX();
         entity.prevPosY = entity.getPosY();
         entity.prevPosZ = entity.getPosZ();
         entity.prevLimbSwingAmount = entity.limbSwingAmount;
         entity.prevRenderYawOffset = entity.renderYawOffset;
         entity.prevRotationPitch = entity.rotationPitch;
-        entity.prevRotationYaw = entity.rotationYawHead;
+        entity.prevRotationYaw = entity.rotationYaw;
+        entity.prevRotationYawHead = entity.rotationYawHead;
         entity.prevSwingProgress = entity.swingProgress;
         entity.prevDistanceWalkedModified = entity.distanceWalkedModified;
 
-        if(entity.isPotionActive(ModPotions.FREEZE)) {
+        if (entity.isPotionActive(ModPotions.FREEZE)) {
             EffectInstance e = entity.getActivePotionEffect(ModPotions.FREEZE);
-            if(!e.tick(entity, () -> {})) {
-                if(!entity.world.isRemote) {
-                    entity.removePotionEffect(ModPotions.FREEZE);
-                }
+            if (!e.tick(entity, () -> {
+            })) {
+                entity.removePotionEffect(ModPotions.FREEZE);
             }
         }
     }

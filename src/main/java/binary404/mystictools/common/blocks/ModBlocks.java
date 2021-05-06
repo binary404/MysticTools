@@ -31,7 +31,7 @@ public class ModBlocks {
         Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.ANVIL);
 
         register(r, new BlockCauldron(builder), "cauldron");
-        register(r, new BlockUpgrader(builder), "upgrader");
+        register(r, new BlockUpgrader(builder.notSolid()), "upgrader");
     }
 
     @SubscribeEvent

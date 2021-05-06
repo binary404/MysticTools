@@ -17,7 +17,7 @@ public final class ConfigHandler {
     public static class CommonConfig {
         public final ForgeConfigSpec.IntValue lootCrateWeight;
         public final ForgeConfigSpec.IntValue lootCrateMinRolls;
-        public final ForgeConfigSpec.IntValue lootCrateMaxRools;
+        public final ForgeConfigSpec.IntValue lootCrateMaxRolls;
 
         public final ForgeConfigSpec.BooleanValue enableWither;
         public final ForgeConfigSpec.BooleanValue enableSlowness;
@@ -140,7 +140,7 @@ public final class ConfigHandler {
 
             lootCrateWeight = builder.comment("The chance that the lootcrate loot table will be injected into a chest loot table").defineInRange("lootCrateWeight", 100, 1, 400);
             lootCrateMinRolls = builder.comment("The minimum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMinRolls", 3, 0, 300);
-            lootCrateMaxRools = builder.comment("the maximum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMaxRolls", 5, 0, 300);
+            lootCrateMaxRolls = builder.comment("the maximum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMaxRolls", 5, 0, 300);
 
             enableWither = builder.comment("enable wither effect on tools").define("enableWither", true);
             enableSlowness = builder.comment("enable slowness effect on tools").define("enableSlowness", true);

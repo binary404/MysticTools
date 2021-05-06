@@ -42,8 +42,10 @@ public class EntityHandler {
             CompoundNBT compound = event.getArrow().getPersistentData().getCompound("unique");
             String id = compound.getString("id");
             UniqueEffect effect = UniqueEffect.getById(id);
-            if (effect != null)
-                effect.arrowImpact(event.getEntity());
+            if (effect != null) {
+                Entity entity = event.getArrow().world.getEntityByID(event.getArrow().field_234610_c_);
+                effect.arrowImpact(entity, event.getArrow());
+            }
         }
     }
 
@@ -118,9 +120,7 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void onOrbPickup(PlayerXpEvent.PickupXp event) {
-        if (!(event.getPlayer() instanceof ServerPlayerEntity))
-            return;
-        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        PlayerEntity player = event.getPlayer();
         for (ItemStack stack : player.inventory.armorInventory) {
             List<LootEffect> effects = LootEffect.getEffectList(stack);
             if (effects.contains(LootEffect.INSIGHT)) {

@@ -97,8 +97,8 @@ public class UniqueEffect {
         this.effect.tick(entity, stack);
     }
 
-    public void arrowImpact(Entity entity) {
-        this.effect.arrowImpact(entity);
+    public void arrowImpact(Entity shooter, Entity arrow) {
+        this.effect.arrowImpact(shooter, arrow);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

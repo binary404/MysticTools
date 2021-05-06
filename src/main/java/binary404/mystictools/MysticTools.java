@@ -1,6 +1,7 @@
 package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.core.GenerateLootCommand;
 import binary404.mystictools.common.core.UniqueCommand;
 import binary404.mystictools.common.core.VillagerHandler;
 import binary404.mystictools.common.items.ModItems;
@@ -60,6 +61,7 @@ public class MysticTools {
 
     private void registerCommands(RegisterCommandsEvent event) {
         UniqueCommand.register(event.getDispatcher());
+        GenerateLootCommand.register(event.getDispatcher());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

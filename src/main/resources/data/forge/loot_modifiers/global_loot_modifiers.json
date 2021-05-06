@@ -1,6 +1,7 @@
 {
   "replace": false,
   "entries": [
-    "mystictools:autosmelt"
+    "mystictools:autosmelt",
+    "mystictools:void"
   ]
 }

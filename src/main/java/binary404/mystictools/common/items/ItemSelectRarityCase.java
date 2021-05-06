@@ -36,8 +36,6 @@ public class ItemSelectRarityCase extends Item {
 
         ItemStack loot;
 
-        System.out.println(rarity);
-
         if (this.rarity == LootRarity.UNIQUE) {
             loot = UniqueHandler.getRandomUniqueItem(world, playerIn);
         } else {

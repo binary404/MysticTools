@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.16.5-1.4.0B2"
+version = "1.16.5-1.4.0"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 
@@ -36,6 +36,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'snapshot', version: "20201028-1.16.3"
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
             properties 'forge.logging.console.level': 'debug'

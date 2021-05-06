@@ -1,7 +1,11 @@
 package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.items.ModItems;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.*;
 
@@ -176,6 +180,44 @@ public class LootSet {
 
         public Item getItem() {
             return item;
+        }
+
+        public static LootSetType fromString(String text) {
+            for (LootSetType type : LootSetType.values()) {
+                if (type.id.equalsIgnoreCase(text)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+
+        public static String[] getIds() {
+            List<String> ids = new ArrayList<>();
+            for (LootSetType type : LootSetType.values()) {
+                ids.add(type.id);
+            }
+            return ids.toArray(new String[0]);
+        }
+
+        public static LootSetType read(StringReader reader) throws CommandSyntaxException {
+            int i = reader.getCursor();
+
+            while (reader.canRead() && isValidPathCharacter(reader.peek())) {
+                reader.skip();
+            }
+
+            String s = reader.getString().substring(i, reader.getCursor());
+
+            try {
+                return LootSetType.fromString(s);
+            } catch (Exception e) {
+                reader.setCursor(i);
+                throw new SimpleCommandExceptionType(new TranslationTextComponent("argument.id.invalid")).createWithContext(reader);
+            }
+        }
+
+        public static boolean isValidPathCharacter(char charIn) {
+            return charIn >= 'a' && charIn <= 'z' || charIn == '_';
         }
     }
 

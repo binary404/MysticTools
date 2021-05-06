@@ -26,7 +26,7 @@ public interface IUniqueEffect {
 
     }
 
-    default void arrowImpact(Entity entity) {
+    default void arrowImpact(Entity shooter, Entity arrow) {
 
     }
 }
