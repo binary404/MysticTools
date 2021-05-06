@@ -34,6 +34,8 @@ public class UniqueEffect {
     public static final UniqueEffect treeChopper = create("treeChopper", new TreeChopper()).setItemTypes(LootSet.LootSetType.AXE);
     public static final UniqueEffect growthAura = create("growthAura", new GrowthAura()).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
 
+    public static final UniqueEffect arc = create("arc", new Arc()).setItemTypes(LootSet.LootSetType.SWORD);
+
     private String id;
     private IUniqueEffect effect;
 
@@ -95,8 +97,8 @@ public class UniqueEffect {
         this.effect.tick(entity, stack);
     }
 
-    public void arrowImpact(Entity entity) {
-        this.effect.arrowImpact(entity);
+    public void arrowImpact(Entity shooter, Entity arrow) {
+        this.effect.arrowImpact(shooter, arrow);
     }
 
     protected static UniqueEffect create(String id, IUniqueEffect effect) {

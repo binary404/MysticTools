@@ -5,7 +5,7 @@ import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.gamestages.GameStageHandler;
 import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.network.NetworkHandler;
-import binary404.mystictools.common.network.PacketOpenCrateFX;
+import binary404.mystictools.common.network.PacketFX;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -70,7 +70,7 @@ public class ItemCase extends Item {
             }
             playerIn.dropItem(loot, false, true);
             stack.shrink(1);
-            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
+            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), 0));
             return super.onItemRightClick(worldIn, playerIn, handIn);
         }
         return super.onItemRightClick(worldIn, playerIn, handIn);

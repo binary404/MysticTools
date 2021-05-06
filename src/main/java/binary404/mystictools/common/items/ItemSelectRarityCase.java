@@ -6,7 +6,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.network.NetworkHandler;
-import binary404.mystictools.common.network.PacketOpenCrateFX;
+import binary404.mystictools.common.network.PacketFX;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,8 +36,6 @@ public class ItemSelectRarityCase extends Item {
 
         ItemStack loot;
 
-        System.out.println(rarity);
-
         if (this.rarity == LootRarity.UNIQUE) {
             loot = UniqueHandler.getRandomUniqueItem(world, playerIn);
         } else {
@@ -52,7 +50,7 @@ public class ItemSelectRarityCase extends Item {
         }
         playerIn.dropItem(loot, false, true);
         stack.shrink(1);
-        NetworkHandler.sendToNearby(worldIn, playerIn, new PacketOpenCrateFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
+        NetworkHandler.sendToNearby(worldIn, playerIn, new PacketFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), 0));
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 }

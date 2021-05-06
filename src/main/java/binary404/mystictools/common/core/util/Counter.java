@@ -18,4 +18,7 @@ public class Counter {
         value++;
     }
 
+    public int getValue() {
+        return value;
+    }
 }

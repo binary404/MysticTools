@@ -7,7 +7,7 @@ import net.minecraft.world.Explosion;
 public class ExplodingArrow implements IUniqueEffect {
 
     @Override
-    public void arrowImpact(Entity entity) {
-        entity.world.createExplosion(entity, entity.getPosX() + 0.5, entity.getPosY() + 0.5, entity.getPosZ() + 0.5, 4, Explosion.Mode.NONE);
+    public void arrowImpact(Entity shooter, Entity arrow) {
+        shooter.world.createExplosion(shooter, arrow.getPosX() + 0.5, arrow.getPosY() + 0.5, arrow.getPosZ() + 0.5, 4, Explosion.Mode.NONE);
     }
 }

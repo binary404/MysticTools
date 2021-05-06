@@ -7,7 +7,7 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.network.NetworkHandler;
-import binary404.mystictools.common.network.PacketOpenCrateFX;
+import binary404.mystictools.common.network.PacketFX;
 import binary404.mystictools.common.tile.TileEntityCauldron;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -65,7 +65,7 @@ public class BlockCauldron extends Block {
                 } else {
                     stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 3, 7));
                 }
-                NetworkHandler.sendToNearby(worldIn, entityIn, new PacketOpenCrateFX(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ()));
+                NetworkHandler.sendToNearby(worldIn, entityIn, new PacketFX(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), 0));
                 itemEntity.setItem(stack);
             }
         }

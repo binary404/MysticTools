@@ -1,9 +1,12 @@
 package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.core.ConfigHandler;
-import binary404.mystictools.common.gamestages.GameStageHandler;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -13,6 +16,10 @@ import java.util.Random;
 public class LootRarity {
 
     private static final Map<String, LootRarity> REGISTRY = new HashMap<>();
+
+    public static Map<String, LootRarity> getRegistry() {
+        return REGISTRY;
+    }
 
     public static LootRarity generateRandomRarity(Random random, PlayerEntity entity) {
         int rarity = random.nextInt(100) + 1;
@@ -35,14 +42,14 @@ public class LootRarity {
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;
-            return lootRarity;
+        return lootRarity;
     }
 
     public static void init() {
         COMMON = get("common", TextFormatting.WHITE)
-                .setDamage(6, 12)
+                .setDamage(ConfigHandler.COMMON.commonDamageMin.get(), ConfigHandler.COMMON.commonDamageMax.get())
                 .setSpeed(-3.1F, -2.399F)
-                .setArmor(1, 2)
+                .setArmor(1, 3)
                 .setToughness(0, 0)
                 .setEfficiency(5.0F, 12.0F)
                 .setDurability(100, 500)
@@ -50,9 +57,9 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.commonEffectMin.get(), ConfigHandler.COMMON.commonEffectMax.get());
 
         UNCOMMON = get("uncommon", TextFormatting.GRAY)
-                .setDamage(9, 16)
+                .setDamage(ConfigHandler.COMMON.uncommonDamageMin.get(), ConfigHandler.COMMON.uncommonDamageMax.get())
                 .setSpeed(-2.8F, -2.3F)
-                .setArmor(1, 3)
+                .setArmor(2, 5)
                 .setToughness(1, 3)
                 .setEfficiency(11.0F, 25.0F)
                 .setDurability(350, 1450)
@@ -60,9 +67,9 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.uncommonEffectMin.get(), ConfigHandler.COMMON.uncommonEffectMax.get());
 
         RARE = get("rare", TextFormatting.YELLOW)
-                .setDamage(12, 29)
+                .setDamage(ConfigHandler.COMMON.rareDamageMin.get(), ConfigHandler.COMMON.rareDamageMax.get())
                 .setSpeed(-2.6999F, -2.1F)
-                .setArmor(2, 5)
+                .setArmor(3, 6)
                 .setToughness(2, 5)
                 .setEfficiency(15.0F, 40.0F)
                 .setDurability(850, 2500)
@@ -70,9 +77,9 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.rareEffectMin.get(), ConfigHandler.COMMON.rareEffectMax.get());
 
         EPIC = get("epic", TextFormatting.BLUE)
-                .setDamage(16, 34)
+                .setDamage(ConfigHandler.COMMON.epicDamageMin.get(), ConfigHandler.COMMON.epicDamageMax.get())
                 .setSpeed(-2.39999F, -1.8F)
-                .setArmor(2, 5)
+                .setArmor(4, 8)
                 .setToughness(1, 5)
                 .setEfficiency(20.0F, 42.0F)
                 .setDurability(2000, 4500)
@@ -80,9 +87,9 @@ public class LootRarity {
                 .setEffectCount(ConfigHandler.COMMON.epicEffectMin.get(), ConfigHandler.COMMON.epicEffectMax.get());
 
         UNIQUE = get("unique", TextFormatting.DARK_PURPLE)
-                .setDamage(20, 54)
+                .setDamage(ConfigHandler.COMMON.uniqueDamageMin.get(), ConfigHandler.COMMON.uniqueDamageMax.get())
                 .setSpeed(-2.0F, -1.5F)
-                .setArmor(3, 7)
+                .setArmor(5, 10)
                 .setToughness(2, 6)
                 .setEfficiency(20.56F, 56.05F)
                 .setDurability(1000, 4000)
@@ -140,6 +147,27 @@ public class LootRarity {
         }
 
         return r;
+    }
+
+    public static LootRarity read(StringReader reader) throws CommandSyntaxException {
+        int i = reader.getCursor();
+
+        while (reader.canRead() && isValidPathCharacter(reader.peek())) {
+            reader.skip();
+        }
+
+        String s = reader.getString().substring(i, reader.getCursor());
+
+        try {
+            return LootRarity.fromId(s);
+        } catch (Exception e) {
+            reader.setCursor(i);
+            throw new SimpleCommandExceptionType(new TranslationTextComponent("argument.id.invalid")).createWithContext(reader);
+        }
+    }
+
+    public static boolean isValidPathCharacter(char charIn) {
+        return charIn >= 'a' && charIn <= 'z';
     }
 
     protected LootRarity setPotionCount(int min, int max) {

@@ -1,12 +1,14 @@
 package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.core.GenerateLootCommand;
 import binary404.mystictools.common.core.UniqueCommand;
 import binary404.mystictools.common.core.VillagerHandler;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
+import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.modifiers.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
@@ -59,12 +61,14 @@ public class MysticTools {
 
     private void registerCommands(RegisterCommandsEvent event) {
         UniqueCommand.register(event.getDispatcher());
+        GenerateLootCommand.register(event.getDispatcher());
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
         proxy.init();
 
         PotionEffect.init();
+        LootEffect.init();
 
         NetworkHandler.init();
 
@@ -74,6 +78,10 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.PICKAXE);
             ItemTypeRegistry.register(ModItems.loot_shovel, LootSet.LootSetType.SHOVEL);
             ItemTypeRegistry.register(ModItems.loot_bow, LootSet.LootSetType.BOW);
+            ItemTypeRegistry.register(ModItems.loot_boots, LootSet.LootSetType.ARMOR_BOOTS);
+            ItemTypeRegistry.register(ModItems.loot_leggings, LootSet.LootSetType.ARMOR_LEGGINGS);
+            ItemTypeRegistry.register(ModItems.loot_chestplate, LootSet.LootSetType.ARMOR_CHESTPLATE);
+            ItemTypeRegistry.register(ModItems.loot_helmet, LootSet.LootSetType.ARMOR_HELMET);
         });
 
         VillagerHandler.init();

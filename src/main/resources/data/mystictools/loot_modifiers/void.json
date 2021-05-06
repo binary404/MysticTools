@@ -1,0 +1,8 @@
+{
+  "type": "mystictools:void",
+  "conditions": [
+    {
+      "condition": "mystictools:void"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 
@@ -19,14 +20,14 @@ public class Brainwash implements IUniqueEffect {
     @Override
     public void tick(Entity entity, ItemStack stack) {
         if (entity.ticksExisted % 40 == 0) {
-            List<MobEntity> mobs = entity.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(entity.getPosition()).grow(10, 10, 10));
+            List<MonsterEntity> mobs = entity.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(entity.getPosition()).grow(10, 10, 10));
             if (!mobs.isEmpty()) {
-                MobEntity target = mobs.get(0);
-                MobEntity newTarget = mobs.get(entity.world.rand.nextInt(mobs.size()));
+                MonsterEntity target = mobs.get(0);
+                MonsterEntity newTarget = mobs.get(entity.world.rand.nextInt(mobs.size()));
                 if (newTarget != null) {
                     target.setAttackTarget(null);
 
-                    for (PrioritizedGoal entry : ((AccessorGoalSelector)target.targetSelector).getGoals()) {
+                    for (PrioritizedGoal entry : ((AccessorGoalSelector) target.targetSelector).getGoals()) {
                         if (entry.getGoal() instanceof HurtByTargetGoal) {
                             target.targetSelector.removeGoal(entry.getGoal());
                             target.targetSelector.addGoal(-1, entry.getGoal());
@@ -37,7 +38,7 @@ public class Brainwash implements IUniqueEffect {
                     target.setRevengeTarget(newTarget);
                     NetworkHandler.sendToNearby(entity.world, entity, new PacketSparkle(target.getPosX() + 0.5, target.getPosY() + 0.5, target.getPosZ() + 0.5, 0.1F, 0.25F, 0.67F));
 
-                }else {
+                } else {
                     target.setAttackTarget(null);
                 }
             }

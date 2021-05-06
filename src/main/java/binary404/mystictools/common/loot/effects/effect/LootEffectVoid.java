@@ -31,14 +31,8 @@ public class LootEffectVoid implements IEffectAction {
         LootNbtHelper.setLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE, active);
     }
 
-    @Override
-    public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
-        boolean effectActive = LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE);
-
-        if (!effectActive)
-            return;
-
-        drops.clear();
+    public boolean active(ItemStack stack) {
+        return LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE);
     }
 
     @Override
