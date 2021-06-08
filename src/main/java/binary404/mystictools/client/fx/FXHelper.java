@@ -48,7 +48,7 @@ public class FXHelper {
 
     public static void shockwave(double x, double y, double z) {
         if (fxlibLoaded()) {
-            EffectHelper.of(EffectRegistry.SPRITE_PLANE)
+            EffectHelper.createEffect(EffectRegistry.SPRITE_PLANE)
                     .spawn(new Vector3(x, y + 0.2F, z))
                     .setAxis(Vector3.RotAxis.Y_AXIS)
                     .setSprite(ModEffects.sheet_shockwave)
@@ -59,7 +59,7 @@ public class FXHelper {
 
     public static void arc(double x, double y, double z, double tx, double ty, double tz) {
         if (fxlibLoaded()) {
-            EffectHelper.of(EffectRegistry.LIGHTBEAM)
+            EffectHelper.createEffect(EffectRegistry.LIGHTBEAM)
                     .spawn(new Vector3(x, y, z))
                     .setup(new Vector3(tx, ty, tz), 0.8F, 0.8F)
                     .color(ColorFunction.WHITE)

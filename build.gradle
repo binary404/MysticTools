@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.16.5-1.4.0"
+version = "1.16.5-1.4.1"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 
@@ -79,6 +79,7 @@ sourceSets.main.resources {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url = "https://minecraft.curseforge.com/api/maven/"
     }
@@ -108,7 +109,7 @@ dependencies {
     compile fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.3:7.0.0.45")
     compile fg.deobf("net.darkhax.gamestages:GameStages-1.16.3:5.0.1")
     compile fg.deobf("net.darkhax.bookshelf:Bookshelf-1.16.3:8.4.15")
-    compile fg.deobf("curse.maven:fx_lib-388603:3166797")
+    compile fg.deobf("binary404.fx_lib:fx_lib:1.16.4-1.7")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

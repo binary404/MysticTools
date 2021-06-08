@@ -136,10 +136,18 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
     @Override
     public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
         if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
-            return 3;
+            return 4;
         }
 
         return super.getHarvestLevel(stack, tool, player, blockState);
+    }
+
+    @Override
+    public boolean canHarvestBlock(ItemStack stack, BlockState state) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            return true;
+        }
+        return super.canHarvestBlock(state);
     }
 
     @Override
