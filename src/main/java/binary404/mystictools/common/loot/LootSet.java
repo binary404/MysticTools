@@ -154,7 +154,7 @@ public class LootSet {
     }
 
     public enum LootSetType {
-        SWORD("sword", 76, ModItems.loot_sword),
+        SWORD("sword", 79, ModItems.loot_sword),
         PICKAXE("pickaxe", 16, ModItems.loot_pickaxe),
         AXE("axe", 21, ModItems.loot_axe),
         SHOVEL("shovel", 15, ModItems.loot_shovel),

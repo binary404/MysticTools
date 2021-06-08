@@ -459,6 +459,24 @@
 				"model": 76
 			},
 			"model": "mystictools:item/sword/76"
+		},
+		{
+			"predicate": {
+				"model": 77
+			},
+			"model": "mystictools:item/sword/77"
+		},
+		{
+			"predicate": {
+				"model": 78
+			},
+			"model": "mystictools:item/sword/78"
+		},
+		{
+			"predicate": {
+				"model": 79
+			},
+			"model": "mystictools:item/sword/79"
 		}
 	]
 }
