@@ -1,7 +1,5 @@
 package binary404.mystictools.common.core;
 
-import binary404.mystictools.MysticTools;
-import net.minecraft.item.Item;
 import net.minecraft.loot.LootEntry;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.TableLootEntry;
@@ -20,7 +18,7 @@ public class ChestHelper {
         if (name.startsWith(prefix)) {
             String file = "inject";
             event.getTable().addPool(getInjectPool(file));
-        } else if (name.startsWith("minecraft:entities/") && ConfigHandler.COMMON.enableMobDropCrate.get()) {
+        } else if (name.startsWith("entities/") && ConfigHandler.COMMON.enableMobDropShards.get()) {
             String file = "entity";
             event.getTable().addPool(getInjectPool(file));
         }

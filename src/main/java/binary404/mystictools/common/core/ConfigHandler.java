@@ -57,7 +57,7 @@ public final class ConfigHandler {
         public final ForgeConfigSpec.BooleanValue enableInsight;
         public final ForgeConfigSpec.IntValue maxInsight;
 
-        public final ForgeConfigSpec.BooleanValue enableMobDropCrate;
+        public final ForgeConfigSpec.BooleanValue enableMobDropShards;
 
         public final ForgeConfigSpec.IntValue commonRarity;
         public final ForgeConfigSpec.IntValue uncommonRarity;
@@ -138,7 +138,7 @@ public final class ConfigHandler {
             uniqueEffectMin = builder.comment("Minimum number of effects on a unique item").defineInRange("uniqueEffectMin", 3, 0, 4);
             uniqueEffectMax = builder.comment("Maximum number of effects on a unique item").defineInRange("uniqueEffectMax", 4, 0, 4);
 
-            lootCrateWeight = builder.comment("The chance that the lootcrate loot table will be injected into a chest loot table").defineInRange("lootCrateWeight", 100, 1, 400);
+            lootCrateWeight = builder.comment("The chance that the lootcrate loot table will be injected into a chest loot table").defineInRange("lootCrateWeight", 100, 1, 100);
             lootCrateMinRolls = builder.comment("The minimum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMinRolls", 3, 0, 300);
             lootCrateMaxRolls = builder.comment("the maximum number of rolls a loot crate will try to generate, each roll has a 30% chance of generating a loot crate").defineInRange("lootCrateMaxRolls", 5, 0, 300);
 
@@ -180,7 +180,7 @@ public final class ConfigHandler {
             enableInsight = builder.comment("enable insight effect on helmets").define("enableInsight", true);
             maxInsight = builder.comment("max insight level").defineInRange("maxInsight", 5, 1, 20);
 
-            enableMobDropCrate = builder.comment("enables mobs dropping crates").define("enableMobDropCrate", false);
+            enableMobDropShards = builder.comment("enables mobs dropping shards").define("enableMobDropShards", false);
 
             commonRarity = builder.comment("chance that a loot crate will generate a common item").defineInRange("commonRarity", 50, 0, 100);
             uncommonRarity = builder.comment("chance that a loot crate will generate a uncommon item").defineInRange("uncommonRarity", 20, 0, 100);

@@ -67,6 +67,7 @@ public class MysticTools {
     private void commonSetup(FMLCommonSetupEvent event) {
         proxy.init();
 
+        LootRarity.init();
         PotionEffect.init();
         LootEffect.init();
 

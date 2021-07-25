@@ -19,11 +19,11 @@ import javax.annotation.Nonnull;
 
 public class ItemSelectRarityCase extends Item {
 
-    final LootRarity rarity;
+     public LootRarity lootRarity;
 
     public ItemSelectRarityCase(@Nonnull LootRarity item) {
         super(new Properties().group(MysticTools.tab));
-        this.rarity = item;
+        this.lootRarity = item;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ItemSelectRarityCase extends Item {
 
         ItemStack loot;
 
-        if (this.rarity == LootRarity.UNIQUE) {
+        if (this.lootRarity == LootRarity.UNIQUE) {
             loot = UniqueHandler.getRandomUniqueItem(world, playerIn);
         } else {
             loot = LootItemHelper.getRandomLoot(random);
@@ -46,7 +46,7 @@ public class ItemSelectRarityCase extends Item {
             if (type == null)
                 type = LootSet.LootSetType.SWORD;
 
-            loot = LootItemHelper.generateLoot(this.rarity, type, loot);
+            loot = LootItemHelper.generateLoot(this.lootRarity, type, loot);
         }
         playerIn.dropItem(loot, false, true);
         stack.shrink(1);
