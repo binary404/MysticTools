@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.items.ModItems;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -95,6 +96,12 @@ public class LootRarity {
                 .setDurability(1000, 4000)
                 .setPotionCount(ConfigHandler.COMMON.uniquePotionMin.get(), ConfigHandler.COMMON.uniquePotionMax.get())
                 .setEffectCount(ConfigHandler.COMMON.uniqueEffectMin.get(), ConfigHandler.COMMON.uniqueEffectMax.get());
+
+        ModItems.common_case.lootRarity = COMMON;
+        ModItems.uncommon_case.lootRarity = UNCOMMON;
+        ModItems.rare_case.lootRarity = RARE;
+        ModItems.epic_case.lootRarity = EPIC;
+        ModItems.unique_case.lootRarity = UNIQUE;
     }
 
     public static LootRarity COMMON;

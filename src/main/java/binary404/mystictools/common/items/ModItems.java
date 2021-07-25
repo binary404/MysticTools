@@ -49,11 +49,11 @@ public class ModItems {
     public static Item bow_case;
     public static Item sword_case;
 
-    public static Item common_case;
-    public static Item uncommon_case;
-    public static Item rare_case;
-    public static Item epic_case;
-    public static Item unique_case;
+    public static ItemSelectRarityCase common_case;
+    public static ItemSelectRarityCase uncommon_case;
+    public static ItemSelectRarityCase rare_case;
+    public static ItemSelectRarityCase epic_case;
+    public static ItemSelectRarityCase unique_case;
 
     public static Item loot_boots;
     public static Item loot_leggings;
@@ -63,8 +63,6 @@ public class ModItems {
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
-
-        LootRarity.init();
 
         loot_sword = register(r, new ItemLootSword(), "loot_sword");
         loot_axe = register(r, new ItemLootAxe(), "loot_axe");
@@ -85,11 +83,11 @@ public class ModItems {
         bow_case = register(r, new ItemSelectTypeCase(loot_bow), "bow_case");
         sword_case = register(r, new ItemSelectTypeCase(loot_sword), "sword_case");
 
-        common_case = register(r, new ItemSelectRarityCase(LootRarity.COMMON), "common_case");
-        uncommon_case = register(r, new ItemSelectRarityCase(LootRarity.UNCOMMON), "uncommon_case");
-        rare_case = register(r, new ItemSelectRarityCase(LootRarity.RARE), "rare_case");
-        epic_case = register(r, new ItemSelectRarityCase(LootRarity.EPIC), "epic_case");
-        unique_case = register(r, new ItemSelectRarityCase(LootRarity.UNIQUE), "unique_case");
+        common_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.COMMON), "common_case");
+        uncommon_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNCOMMON), "uncommon_case");
+        rare_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.RARE), "rare_case");
+        epic_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.EPIC), "epic_case");
+        unique_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNIQUE), "unique_case");
 
         register(r, new Item(new Item.Properties().group(MysticTools.tab)), "shard");
         register(r, new Item(new Item.Properties().group(MysticTools.tab)), "dice");
