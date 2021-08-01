@@ -6,14 +6,13 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.effect.*;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
-import org.spongepowered.asm.mixin.injection.At;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
@@ -91,17 +90,17 @@ public class LootEffect implements IEffect {
     private final EffectType effectType;
 
     public enum EffectType {
-        ACTIVE(TextFormatting.GOLD),
-        PASSIVE(TextFormatting.GREEN),
-        USE(TextFormatting.AQUA);
+        ACTIVE(ChatFormatting.GOLD),
+        PASSIVE(ChatFormatting.GREEN),
+        USE(ChatFormatting.AQUA);
 
-        private TextFormatting color;
+        private ChatFormatting color;
 
-        private EffectType(TextFormatting color) {
+        private EffectType(ChatFormatting color) {
             this.color = color;
         }
 
-        public TextFormatting getColor() {
+        public ChatFormatting getColor() {
             return this.color;
         }
 
@@ -148,8 +147,8 @@ public class LootEffect implements IEffect {
         return this.id;
     }
 
-    public CompoundNBT getNbt(Random rand) {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag getNbt(Random rand) {
+        CompoundTag tag = new CompoundTag();
 
         tag.putString("id", this.getId());
         tag.putInt("amplifier", this.getAmplifier(rand));
@@ -159,12 +158,12 @@ public class LootEffect implements IEffect {
     public static int getAmplifierFromStack(ItemStack stack, String effectId) {
         int amplifier = 0;
 
-        ListNBT effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        ListTag effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
 
         int count = effectTagList.size();
 
         for (int i = 0; i < count; ++i) {
-            CompoundNBT e = effectTagList.getCompound(i);
+            CompoundTag e = effectTagList.getCompound(i);
             if (e.getString("id").contains(effectId)) {
                 amplifier = e.getInt("amplifier");
             }
@@ -176,12 +175,12 @@ public class LootEffect implements IEffect {
     public static List<LootEffect> getEffectList(ItemStack stack) {
         List<LootEffect> list = new ArrayList<>();
 
-        ListNBT effectList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        ListTag effectList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
 
         int count = effectList.size();
 
         for (int i = 0; i < count; ++i) {
-            CompoundNBT e = effectList.getCompound(i);
+            CompoundTag e = effectList.getCompound(i);
             list.add(LootEffect.getById(e.getString("id")));
         }
 
@@ -213,7 +212,7 @@ public class LootEffect implements IEffect {
     }
 
     private int getAmplifier(Random rand) {
-        return MathHelper.nextInt(rand, this.amplifierMin, this.amplifierMax);
+        return Mth.nextInt(rand, this.amplifierMin, this.amplifierMax);
     }
 
     public Attribute getAttribute() {
@@ -235,7 +234,7 @@ public class LootEffect implements IEffect {
     }
 
     public String getAmplifierString(ItemStack stack, String effectId, int add) {
-        return TextFormatting.BOLD + "" + (getAmplifierFromStack(stack, effectId) + add) + "" + TextFormatting.RESET + "" + ((this.getType() == EffectType.PASSIVE) ? TextFormatting.GREEN : TextFormatting.GOLD) + "";
+        return ChatFormatting.BOLD + "" + (getAmplifierFromStack(stack, effectId) + add) + "" + ChatFormatting.RESET + "" + ((this.getType() == EffectType.PASSIVE) ? ChatFormatting.GREEN : ChatFormatting.GOLD) + "";
     }
 
 }

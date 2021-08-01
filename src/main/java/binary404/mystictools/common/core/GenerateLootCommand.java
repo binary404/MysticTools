@@ -9,22 +9,22 @@ import binary404.mystictools.common.loot.LootSet;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Collection;
 import java.util.Random;
 
 public class GenerateLootCommand {
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> commandBuilder = Commands.literal("generateLoot")
-                .requires(s -> s.hasPermissionLevel(3))
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("generateLoot")
+                .requires(s -> s.hasPermission(3))
                 .then(Commands.argument("targets", EntityArgument.players())
                         .then(Commands.argument("rarity", RarityArgument.rarity())
                                 .executes((p) -> {
@@ -35,11 +35,11 @@ public class GenerateLootCommand {
                                             return generateItemFromRarityAndSet(p.getSource(), RarityArgument.getRarity(p, "rarity"), LootSetArgument.getType(p, "set"), EntityArgument.getPlayers(p, "targets"));
                                         }))
                         ));
-        LiteralCommandNode<CommandSource> command = dispatcher.register(commandBuilder);
+        LiteralCommandNode<CommandSourceStack> command = dispatcher.register(commandBuilder);
     }
 
-    private static int generateItemFromRarity(CommandSource source, RarityInput input, Collection<ServerPlayerEntity> targets) {
-        for (ServerPlayerEntity player : targets) {
+    private static int generateItemFromRarity(CommandSourceStack source, RarityInput input, Collection<ServerPlayer> targets) {
+        for (ServerPlayer player : targets) {
             Random random = new Random();
             ItemStack itemStack = LootItemHelper.getRandomLoot(random);
             LootSet.LootSetType type = LootItemHelper.getItemType(itemStack.getItem());
@@ -48,20 +48,20 @@ public class GenerateLootCommand {
                 type = LootSet.LootSetType.SWORD;
 
             itemStack = LootItemHelper.generateLoot(input.getRarity(), type, itemStack);
-            boolean flag = player.inventory.addItemStackToInventory(itemStack);
+            boolean flag = player.getInventory().add(itemStack);
             if (flag && itemStack.isEmpty()) {
                 itemStack.setCount(1);
-                ItemEntity itemEntity = player.dropItem(itemStack, false);
+                ItemEntity itemEntity = player.drop(itemStack, false);
                 if (itemEntity != null) {
                     itemEntity.makeFakeItem();
                 }
 
-                player.container.detectAndSendChanges();
+                player.inventoryMenu.broadcastChanges();
             } else {
-                ItemEntity itemEntity = player.dropItem(itemStack, false);
+                ItemEntity itemEntity = player.drop(itemStack, false);
                 if (itemEntity != null) {
-                    itemEntity.setNoPickupDelay();
-                    itemEntity.setOwnerId(player.getUniqueID());
+                    itemEntity.setNoPickUpDelay();
+                    itemEntity.setOwner(player.getUUID());
                 }
             }
         }
@@ -69,8 +69,8 @@ public class GenerateLootCommand {
         return targets.size();
     }
 
-    private static int generateItemFromRarityAndSet(CommandSource source, RarityInput input, LootSetInput set, Collection<ServerPlayerEntity> targets) {
-        for (ServerPlayerEntity player : targets) {
+    private static int generateItemFromRarityAndSet(CommandSourceStack source, RarityInput input, LootSetInput set, Collection<ServerPlayer> targets) {
+        for (ServerPlayer player : targets) {
             Random random = new Random();
             LootSet.LootSetType type = set.getType();
 
@@ -80,20 +80,20 @@ public class GenerateLootCommand {
             ItemStack itemStack = new ItemStack(type.getItem());
 
             itemStack = LootItemHelper.generateLoot(input.getRarity(), type, itemStack);
-            boolean flag = player.inventory.addItemStackToInventory(itemStack);
+            boolean flag = player.getInventory().add(itemStack);
             if (flag && itemStack.isEmpty()) {
                 itemStack.setCount(1);
-                ItemEntity itemEntity = player.dropItem(itemStack, false);
+                ItemEntity itemEntity = player.drop(itemStack, false);
                 if (itemEntity != null) {
                     itemEntity.makeFakeItem();
                 }
 
-                player.container.detectAndSendChanges();
+                player.inventoryMenu.broadcastChanges();
             } else {
-                ItemEntity itemEntity = player.dropItem(itemStack, false);
+                ItemEntity itemEntity = player.drop(itemStack, false);
                 if (itemEntity != null) {
-                    itemEntity.setNoPickupDelay();
-                    itemEntity.setOwnerId(player.getUniqueID());
+                    itemEntity.setNoPickUpDelay();
+                    itemEntity.setOwner(player.getUUID());
                 }
             }
         }

@@ -3,11 +3,10 @@ package binary404.mystictools.common.core.util;
 import binary404.mystictools.common.loot.LootRarity;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.SharedSuggestionProvider;
 
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +46,7 @@ public class RarityParser {
     }
 
     private CompletableFuture<Suggestions> suggestRarity(SuggestionsBuilder builder, Collection<LootRarity> list) {
-        return ISuggestionProvider.suggest(LootRarity.getRegistry().keySet(), builder);
+        return SharedSuggestionProvider.suggest(LootRarity.getRegistry().keySet(), builder);
     }
 
     public CompletableFuture<Suggestions> fillSuggestions(SuggestionsBuilder builder, Collection<LootRarity> list) {

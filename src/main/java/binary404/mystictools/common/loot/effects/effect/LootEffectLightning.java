@@ -1,27 +1,28 @@
 package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.loot.effects.IEffectAction;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
 
 public class LootEffectLightning implements IEffectAction {
 
     @Override
     public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        LightningBoltEntity entity = new LightningBoltEntity(EntityType.LIGHTNING_BOLT, target.world);
-        entity.setPosition(target.getPosX(), target.getPosY(), target.getPosZ());
-        entity.setEffectOnly(true);
-        target.world.addEntity(entity);
-        target.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 10);
-        target.setFire(15);
+        LightningBolt entity = new LightningBolt(EntityType.LIGHTNING_BOLT, target.level);
+        entity.setPos(target.getX(), target.getY(), target.getZ());
+        entity.setVisualOnly(true);
+        target.level.addFreshEntity(entity);
+        target.setSecondsOnFire(8);
+        target.hurt(DamageSource.LIGHTNING_BOLT, 10);
     }
 
     @Override
-    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+    public boolean hasResponseMessage(Player player, ItemStack stack) {
         return false;
     }
 }

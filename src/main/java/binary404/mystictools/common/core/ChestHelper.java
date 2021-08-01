@@ -1,9 +1,10 @@
 package binary404.mystictools.common.core;
 
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.TableLootEntry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -52,17 +53,16 @@ public class ChestHelper {
     }
 
     public static LootPool getInjectPool(String entryName) {
-        return LootPool.builder()
-                .addEntry(getInjectEntry(entryName, ConfigHandler.COMMON.lootCrateWeight.get()))
+        return LootPool.lootPool()
+                .add(getInjectEntry(entryName, ConfigHandler.COMMON.lootCrateWeight.get()))
                 .bonusRolls(ConfigHandler.COMMON.lootCrateMinRolls.get(), ConfigHandler.COMMON.lootCrateMaxRolls.get())
                 .name("mystictools_inject" + entryName)
                 .build();
     }
 
-    private static LootEntry.Builder getInjectEntry(String name, int weight) {
+    private static LootPoolEntryContainer.Builder getInjectEntry(String name, int weight) {
         ResourceLocation table = new ResourceLocation("mystictools", "inject/" + name);
-        return TableLootEntry.builder(table)
-                .weight(weight);
+        return LootTableReference.lootTableReference(table).setWeight(weight);
     }
 
 }

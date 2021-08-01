@@ -3,9 +3,10 @@ package binary404.mystictools.common.core.util;
 import binary404.mystictools.common.loot.LootSet;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.command.ISuggestionProvider;
+import net.minecraft.commands.SharedSuggestionProvider;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
@@ -44,7 +45,7 @@ public class LootSetParser {
     }
 
     private CompletableFuture<Suggestions> suggestType(SuggestionsBuilder builder, Collection<LootSet.LootSetType> list) {
-        return ISuggestionProvider.suggest(LootSet.LootSetType.getIds(), builder);
+        return SharedSuggestionProvider.suggest(LootSet.LootSetType.getIds(), builder);
     }
 
     public CompletableFuture<Suggestions> fillSuggestions(SuggestionsBuilder builder, Collection<LootSet.LootSetType> list) {

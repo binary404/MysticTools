@@ -1,8 +1,9 @@
 package binary404.mystictools.common.loot;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 
 public class LootNbtHelper {
 
@@ -32,30 +33,30 @@ public class LootNbtHelper {
 
     public static void setLootBooleanValue(ItemStack stack, String key, boolean value) {
         if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
 
         if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).putBoolean(key, value);
     }
 
     public static void setLootIntValue(ItemStack stack, String key, int value) {
         if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
 
         if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).putInt(key, value);
     }
 
     public static void setLootFloatValue(ItemStack stack, String key, float value) {
         if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
 
         if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).putFloat(key, value);
     }
@@ -71,8 +72,8 @@ public class LootNbtHelper {
         return value;
     }
 
-    public static ListNBT getLootTagList(ItemStack stack, String key) {
-        ListNBT list = new ListNBT();
+    public static ListTag getLootTagList(ItemStack stack, String key) {
+        ListTag list = new ListTag();
 
         if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
             if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
@@ -83,8 +84,8 @@ public class LootNbtHelper {
         return list;
     }
 
-    public static CompoundNBT getLootCompound(ItemStack stack, String key) {
-        CompoundNBT compound = new CompoundNBT();
+    public static CompoundTag getLootCompound(ItemStack stack, String key) {
+        CompoundTag compound = new CompoundTag();
 
         if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
             if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
@@ -95,12 +96,12 @@ public class LootNbtHelper {
         return compound;
     }
 
-    public static void setLootTagList(ItemStack stack, String key, ListNBT value) {
+    public static void setLootTagList(ItemStack stack, String key, ListTag value) {
         if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
 
         if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).put(key, value);
     }
@@ -119,10 +120,10 @@ public class LootNbtHelper {
 
     public static void setLootStringValue(ItemStack stack, String key, String value) {
         if (!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
 
         if (!stack.getTag().contains(LootTags.LOOT_TAG))
-            stack.getTag().put(LootTags.LOOT_TAG, new CompoundNBT());
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).putString(key, value);
     }

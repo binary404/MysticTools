@@ -1,9 +1,8 @@
 package binary404.mystictools.common.loot.modifiers;
 
-import binary404.mystictools.MysticTools;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,8 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = "mystictools", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModLootModifiers {
 
-    public static final LootConditionType AUTOSMELT = new LootConditionType(new AutoSmeltCondition.Serializer());
-    public static final LootConditionType VOID = new LootConditionType(new VoidCondition.Serializer());
+    public static final LootItemConditionType AUTOSMELT = new LootItemConditionType(new AutoSmeltCondition.AutoSmeltSerializer());
+    public static final LootItemConditionType VOID = new LootItemConditionType(new VoidCondition.VoidSerializer());
 
     public static void init() {
         Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation("mystictools", "autosmelt"), AUTOSMELT);

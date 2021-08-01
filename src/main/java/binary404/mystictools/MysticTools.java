@@ -2,7 +2,6 @@ package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.core.GenerateLootCommand;
-import binary404.mystictools.common.core.UniqueCommand;
 import binary404.mystictools.common.core.VillagerHandler;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
@@ -15,10 +14,8 @@ import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.DeferredWorkQueue;
@@ -39,9 +36,9 @@ public class MysticTools {
 
     public static final Logger LOGGER = LogManager.getLogger("mystictools");
 
-    public static ItemGroup tab = new ItemGroup("mystictools") {
+    public static CreativeModeTab tab = new CreativeModeTab("mystictools") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(ModItems.loot_case);
         }
     };
@@ -60,7 +57,6 @@ public class MysticTools {
     }
 
     private void registerCommands(RegisterCommandsEvent event) {
-        UniqueCommand.register(event.getDispatcher());
         GenerateLootCommand.register(event.getDispatcher());
     }
 
@@ -73,7 +69,7 @@ public class MysticTools {
 
         NetworkHandler.init();
 
-        DeferredWorkQueue.runLater(() -> {
+        event.enqueueWork(() -> {
             ItemTypeRegistry.register(ModItems.loot_sword, LootSet.LootSetType.SWORD);
             ItemTypeRegistry.register(ModItems.loot_axe, LootSet.LootSetType.AXE);
             ItemTypeRegistry.register(ModItems.loot_pickaxe, LootSet.LootSetType.PICKAXE);
@@ -84,8 +80,6 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_chestplate, LootSet.LootSetType.ARMOR_CHESTPLATE);
             ItemTypeRegistry.register(ModItems.loot_helmet, LootSet.LootSetType.ARMOR_HELMET);
         });
-
-        VillagerHandler.init();
     }
 
 }

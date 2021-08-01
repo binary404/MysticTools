@@ -7,13 +7,13 @@ import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
@@ -22,24 +22,24 @@ public class ItemSelectRarityCase extends Item {
      public LootRarity lootRarity;
 
     public ItemSelectRarityCase(@Nonnull LootRarity item) {
-        super(new Properties().group(MysticTools.tab));
+        super(new Properties().tab(MysticTools.tab));
         this.lootRarity = item;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if (worldIn.isClientSide)
+            return super.use(worldIn, playerIn, handIn);
 
-        ServerWorld world = (ServerWorld) worldIn;
-        ItemStack stack = playerIn.getHeldItem(handIn);
+        ServerLevel world = (ServerLevel) worldIn;
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
         ItemStack loot;
 
         if (this.lootRarity == LootRarity.UNIQUE) {
             loot = UniqueHandler.getRandomUniqueItem(world, playerIn);
         } else {
-            loot = LootItemHelper.getRandomLoot(random);
+            loot = LootItemHelper.getRandomLoot(worldIn.random);
 
             LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 
@@ -48,9 +48,9 @@ public class ItemSelectRarityCase extends Item {
 
             loot = LootItemHelper.generateLoot(this.lootRarity, type, loot);
         }
-        playerIn.dropItem(loot, false, true);
+        playerIn.drop(loot, false, true);
         stack.shrink(1);
-        NetworkHandler.sendToNearby(worldIn, playerIn, new PacketFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), 0));
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        NetworkHandler.sendToNearby(worldIn, playerIn, new PacketFX(playerIn.getX(), playerIn.getY(), playerIn.getZ(), 0));
+        return super.use(worldIn, playerIn, handIn);
     }
 }

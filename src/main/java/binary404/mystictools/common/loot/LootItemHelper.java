@@ -11,36 +11,37 @@ import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.Multimap;
-import com.sun.javafx.geom.Vec3d;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.play.server.SChangeBlockPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.ForgeMod;
@@ -101,11 +102,11 @@ public class LootItemHelper {
         return maxDamage;
     }
 
-    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlotType slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
-        return modifiersForStack(slot, EquipmentSlotType.MAINHAND, stack, initial, modifierKey);
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
+        return modifiersForStack(slot, EquipmentSlot.MAINHAND, stack, initial, modifierKey);
     }
 
-    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlotType slot, EquipmentSlotType effectiveSlot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, EquipmentSlot effectiveSlot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
         Multimap<Attribute, AttributeModifier> modifiers = initial;
 
         if (slot == effectiveSlot) {
@@ -184,8 +185,8 @@ public class LootItemHelper {
         }
     }
 
-    public static void handleBreak(ItemStack stack, PlayerEntity player, BlockPos pos) {
-        if (player.world.rand.nextInt(10) <= 5) {
+    public static void handleBreak(ItemStack stack, Player player, BlockPos pos) {
+        if (player.level.random.nextInt(10) <= 5) {
             int xp = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
             xp++;
             int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL);
@@ -200,8 +201,8 @@ public class LootItemHelper {
         }
     }
 
-    public static ActionResult<ItemStack> use(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public static InteractionResultHolder<ItemStack> use(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
 
         List<LootEffect> effects = LootEffect.getEffectList(stack);
 
@@ -286,8 +287,8 @@ public class LootItemHelper {
         for (ToolType type : stack.getItem().getToolTypes(stack)) {
             Material material = state.getMaterial();
             if (state.getBlock().isToolEffective(state, type)
-                    || (type == ToolType.PICKAXE && (material == Material.IRON || material == Material.ANVIL || material == Material.ROCK))
-                    || (type == ToolType.AXE && (material == Material.WOOD || material == Material.PLANTS || material == Material.LEAVES))) {
+                    || (type == ToolType.PICKAXE && (material == Material.METAL || material == Material.HEAVY_METAL || material == Material.STONE))
+                    || (type == ToolType.AXE && (material == Material.WOOD || material == Material.PLANT || material == Material.LEAVES))) {
                 return speed;
             }
         }
@@ -295,19 +296,19 @@ public class LootItemHelper {
         return 1.0f;
     }
 
-    public static void addInformation(ItemStack stack, List<ITextComponent> tooltip) {
+    public static void addInformation(ItemStack stack, List<Component> tooltip) {
         addInformation(stack, tooltip, true);
     }
 
-    public static void addInformation(ItemStack stack, List<ITextComponent> tooltip, boolean show_durability) {
+    public static void addInformation(ItemStack stack, List<Component> tooltip, boolean show_durability) {
         int durability = stack.getMaxDamage();
 
         List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
         for (PotionEffect effect : effects) {
-            tooltip.add(new StringTextComponent(
-                    TextFormatting.RESET
+            tooltip.add(new TextComponent(
+                    ChatFormatting.RESET
                             + "- " + effect.getType().getColor()
-                            + I18n.format("weaponeffect." + effect.getId() + ".description",
+                            + I18n.get("weaponeffect." + effect.getId() + ".description",
                             new Object[]{
                                     effect.getDurationString(stack, effect.getId()),
                                     effect.getAmplifierString(stack, effect.getId()),
@@ -315,8 +316,8 @@ public class LootItemHelper {
         }
         List<LootEffect> effects1 = LootEffect.getEffectList(stack);
         for (LootEffect effect : effects1) {
-            tooltip.add(new StringTextComponent(
-                    TextFormatting.RESET + "- " + effect.getType().getColor() + I18n.format("weaponeffect." + effect.getId() + ".description", new Object[]{
+            tooltip.add(new TextComponent(
+                    ChatFormatting.RESET + "- " + effect.getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
                             effect.getAmplifierString(stack, effect.getId()),
                             effect.getAmplifierString(stack, effect.getId(), 1)
                     })
@@ -326,24 +327,24 @@ public class LootItemHelper {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         if (rarity == LootRarity.UNIQUE) {
-            String effect = I18n.format(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
+            String effect = I18n.get(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
 
-            tooltip.add(new StringTextComponent("+ " + TextFormatting.ITALIC + "" + TextFormatting.DARK_PURPLE + "" + effect));
+            tooltip.add(new TextComponent("+ " + ChatFormatting.ITALIC + "" + ChatFormatting.DARK_PURPLE + "" + effect));
         }
 
         if (rarity != null)
-            tooltip.add(new StringTextComponent("Rarity: " + rarity.getColor() + I18n.format(rarity.getId())));
+            tooltip.add(new TextComponent("Rarity: " + rarity.getColor() + I18n.get(rarity.getId())));
 
         if (show_durability)
-            tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + durability + "" + TextFormatting.GRAY + " Durability"));
+            tooltip.add(new TextComponent(ChatFormatting.RESET + "" + durability + "" + ChatFormatting.GRAY + " Durability"));
 
         int xp = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
         if (xp > 0)
-            tooltip.add(new StringTextComponent(TextFormatting.RED + "" + xp + " Xp/" + LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL)));
+            tooltip.add(new TextComponent(ChatFormatting.RED + "" + xp + " Xp/" + LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL)));
 
         int modifiers = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
         if (modifiers > 0)
-            tooltip.add(new StringTextComponent(TextFormatting.BOLD + "" + TextFormatting.GOLD + "" + modifiers + " Modifiers"));
+            tooltip.add(new TextComponent(ChatFormatting.BOLD + "" + ChatFormatting.GOLD + "" + modifiers + " Modifiers"));
     }
 
     @Nullable
@@ -399,9 +400,9 @@ public class LootItemHelper {
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
         Random random = new Random();
 
-        CompoundNBT tag = new CompoundNBT();
+        CompoundTag tag = new CompoundTag();
         tag.putInt("HideFlags", 2);
-        CompoundNBT lootTag = new CompoundNBT();
+        CompoundTag lootTag = new CompoundTag();
 
         int model = 1 + random.nextInt(type.models);
 
@@ -434,7 +435,7 @@ public class LootItemHelper {
 
         if (modifierCount > 0) {
             List<PotionEffect> appliedEffects = new ArrayList<>();
-            ListNBT effectList = new ListNBT();
+            ListTag effectList = new ListTag();
 
             for (int m = 0; m < modifierCount; m++) {
                 PotionEffect effect = LootItemHelper.getRandomPotionExcluding(random, type, appliedEffects);
@@ -455,7 +456,7 @@ public class LootItemHelper {
 
         if (modifierCount > 0) {
             List<LootEffect> appliedEffects = new ArrayList<>();
-            ListNBT effectList = new ListNBT();
+            ListTag effectList = new ListTag();
 
             for (int m = 0; m < modifierCount; ++m) {
                 LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, appliedEffects);
@@ -484,31 +485,31 @@ public class LootItemHelper {
         return loot;
     }
 
-    public static RayTraceResult getBlockOnReach(World world, PlayerEntity player) {
+    public static HitResult getBlockOnReach(Level world, Player player) {
         double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
 
-        float pitch = player.rotationPitch;
-        float yaw = player.rotationYaw;
-        double x = player.getPosX();
-        double y = player.getPosY() + (double) player.getEyeHeight();
-        double z = player.getPosZ();
+        float pitch = player.xRotO;
+        float yaw = player.yRotO;
+        double x = player.getX();
+        double y = player.getY() + (double) player.getEyeHeight();
+        double z = player.getZ();
 
-        Vector3d vec3 = new Vector3d(x, y, z);
+        Vec3 vec3 = new Vec3(x, y, z);
 
-        float f2 = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-        float f3 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        float f4 = -MathHelper.cos(-pitch * 0.017453292F);
-        float f5 = MathHelper.sin(-pitch * 0.017453292F);
+        float f2 = Mth.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float f3 = Mth.sin(-yaw * 0.017453292F - (float) Math.PI);
+        float f4 = -Mth.cos(-pitch * 0.017453292F);
+        float f5 = Mth.sin(-pitch * 0.017453292F);
         float f6 = f3 * f4;
         float f7 = f2 * f4;
 
-        Vector3d vec31 = vec3.add((double) f6 * distance, (double) f5 * distance, (double) f7 * distance);
+        Vec3 vec31 = new Vec3((double) f6 * distance + vec3.x, (double) f5 * distance + vec3.y, (double) f7 * distance + vec3.z);
 
 
-        return world.rayTraceBlocks(new RayTraceContext(vec3, vec31, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, player));
+        return world.clip(new ClipContext(vec3, vec31, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
     }
 
-    public static boolean breakBlocks(ItemStack stack, int level, World world, BlockPos aPos, Direction side, PlayerEntity player) {
+    public static boolean breakBlocks(ItemStack stack, int level, Level world, BlockPos aPos, Direction side, Player player) {
         int xradN = 0;
         int xradP = 0;
         int yradN = 0;
@@ -574,16 +575,16 @@ public class LootItemHelper {
         }
 
         BlockState state = world.getBlockState(aPos);
-        float mainHardness = state.getBlockHardness(world, aPos);
+        float mainHardness = state.getDestroySpeed(world, aPos);
 
         if (!tryHarvestBlock(world, aPos, false, stack, player)) {
             return false;
         }
 
         if (level == 4 && side.getAxis() != Direction.Axis.Y) {
-            aPos = aPos.up();
+            aPos = aPos.above();
             BlockState theState = world.getBlockState(aPos);
-            if (theState.getBlockHardness(world, aPos) <= mainHardness + 5.0F) {
+            if (theState.getDestroySpeed(world, aPos) <= mainHardness + 5.0F) {
                 tryHarvestBlock(world, aPos, true, stack, player);
             }
         }
@@ -595,7 +596,7 @@ public class LootItemHelper {
                         if (!(aPos.getX() == xPos && aPos.getY() == yPos && aPos.getZ() == zPos)) {
                             BlockPos thePos = new BlockPos(xPos, yPos, zPos);
                             BlockState theState = world.getBlockState(thePos);
-                            if (theState.getBlockHardness(world, thePos) <= mainHardness + 5.0F) {
+                            if (theState.getDestroySpeed(world, thePos) <= mainHardness + 5.0F) {
                                 tryHarvestBlock(world, thePos, true, stack, player);
                             }
                         }
@@ -606,63 +607,51 @@ public class LootItemHelper {
         return true;
     }
 
-    public static boolean tryHarvestBlock(World world, BlockPos pos, boolean isExtra, ItemStack stack, PlayerEntity player) {
+    public static boolean tryHarvestBlock(Level world, BlockPos pos, boolean isExtra, ItemStack stack, Player player) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-        float hardness = state.getBlockHardness(world, pos);
+        float hardness = state.getDestroySpeed(world, pos);
 
         boolean canHarvest =
-                (ForgeHooks.canHarvestBlock(state, player, world, pos) || stack.getItem().canHarvestBlock(state))
+                (ForgeHooks.canHarvestBlock(state, player, world, pos) || stack.getItem().isCorrectToolForDrops(state))
                         && (!isExtra || stack.getItem().getDestroySpeed(stack, world.getBlockState(pos)) > 1.0F);
 
-        if (hardness >= 0.0F && (!isExtra || (canHarvest && !block.hasTileEntity(world.getBlockState(pos))))) {
+        if (hardness >= 0.0F && (!isExtra || (canHarvest))) {
             return breakExtraBlock(stack, world, player, pos);
         }
         return false;
     }
 
-    public static boolean breakExtraBlock(ItemStack stack, World world, PlayerEntity player, BlockPos pos) {
+    public static boolean breakExtraBlock(ItemStack stack, Level world, Player player, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (player.abilities.isCreativeMode) {
-            if (block.removedByPlayer(state, world, pos, player, false, world.getFluidState(pos))) {
-                block.onPlayerDestroy(world, pos, state);
-            }
+        stack.mineBlock(world, state, pos, player);
 
-            if (!world.isRemote) {
-                ((ServerPlayerEntity) player).connection.sendPacket(new SChangeBlockPacket(world, pos));
-            }
-
-            return true;
-        }
-
-        stack.onBlockDestroyed(world, state, pos, player);
-
-        if (!world.isRemote) {
-            int xp = ForgeHooks.onBlockBreakEvent(world, ((ServerPlayerEntity) player).interactionManager.getGameType(), (ServerPlayerEntity) player, pos);
+        if (!world.isClientSide) {
+            int xp = ForgeHooks.onBlockBreakEvent(world, ((ServerPlayer) player).gameMode.getGameModeForPlayer(), (ServerPlayer) player, pos);
             if (xp == -1)
                 return false;
 
-            TileEntity tileEntity = world.getTileEntity(pos);
+            BlockEntity tileEntity = world.getBlockEntity(pos);
 
             if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
-                block.onPlayerDestroy(world, pos, state);
-                block.harvestBlock(world, player, pos, state, tileEntity, stack);
-                if (world instanceof ServerWorld)
-                    block.dropXpOnBlockBreak((ServerWorld) world, pos, xp);
+                block.destroy(world, pos, state);
+                block.playerDestroy(world, player, pos, state, tileEntity, stack);
+                if (world instanceof ServerLevel)
+                    block.popExperience((ServerLevel) world, pos, xp);
             }
 
-            ((ServerPlayerEntity) player).connection.sendPacket(new SChangeBlockPacket(world, pos));
+            ((ServerPlayer) player).connection.send(new ClientboundBlockUpdatePacket(world, pos));
             return true;
         } else {
-            world.playEvent(2001, pos, Block.getStateId(state));
+            world.levelEvent(2001, pos, Block.getId(state));
 
             if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
-                block.onPlayerDestroy(world, pos, state);
+                block.destroy(world, pos, state);
             }
 
-            stack.onBlockDestroyed(world, state, pos, player);
+            stack.mineBlock(world, state, pos, player);
 
             return true;
         }

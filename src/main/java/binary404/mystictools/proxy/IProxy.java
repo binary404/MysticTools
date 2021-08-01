@@ -1,7 +1,7 @@
 package binary404.mystictools.proxy;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public interface IProxy {
@@ -19,7 +19,7 @@ public interface IProxy {
 
     }
 
-    default World getWorld() {
+    default Level getWorld() {
         return null;
     }
 

@@ -2,35 +2,35 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.core.util.MathUtils;
 import binary404.mystictools.common.loot.effects.IEffectAction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class LootEffectDash implements IEffectAction {
 
     @Override
-    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+    public boolean hasResponseMessage(Player player, ItemStack stack) {
         return false;
     }
 
     @Override
-    public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
-        if (player.isSneaking()) {
+    public InteractionResultHolder<ItemStack> handleUse(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
+        if (player.isShiftKeyDown()) {
             return defaultAction;
         }
 
-        Vector3d lookVector = player.getLookVec();
+        Vec3 lookVector = player.getLookAngle();
 
         double magnitude = 18 * 0.15;
         double extraPitch = 10;
 
-        Vector3d dashVector = new Vector3d(
-                lookVector.getX(),
-                lookVector.getY(),
-                lookVector.getZ());
+        Vec3 dashVector = new Vec3(
+                lookVector.x(),
+                lookVector.y(),
+                lookVector.z());
 
         float initialYaw = (float) MathUtils.extractYaw(dashVector);
 
@@ -39,7 +39,7 @@ public class LootEffectDash implements IEffectAction {
         double dashPitch = Math.toDegrees(MathUtils.extractPitch(dashVector));
 
         if (dashPitch + extraPitch > 90) {
-            dashVector = new Vector3d(0, 1, 0);
+            dashVector = new Vec3(0, 1, 0);
             dashPitch = 90;
         } else {
             dashVector = MathUtils.rotateRoll(dashVector, (float) Math.toRadians(-extraPitch));
@@ -53,12 +53,12 @@ public class LootEffectDash implements IEffectAction {
 
         dashVector = dashVector.scale(magnitude * coef);
 
-        player.addVelocity(dashVector.getX(), dashVector.getY(), dashVector.getZ());
+        player.push(dashVector.x(), dashVector.y(), dashVector.z());
 
-        player.velocityChanged = true;
+        player.hurtMarked = true;
 
-        player.getCooldownTracker().setCooldown(player.getHeldItem(hand).getItem(), 70);
+        player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 70);
 
-        return ActionResult.resultPass(player.getHeldItem(hand));
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 }

@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[32,)"
+loaderVersion="[37,)"
 license="All Rights Reserved"
 issueTrackerURL="https://github.com/binary404/MysticTools-2.0/issues" #optional
 [[mods]] #mandatory
@@ -20,14 +20,8 @@ description='''
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[31,)" #mandatory
+    versionRange="[36,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
-    side="BOTH"
-[[dependencies.mystictools]]
-    modId="fx_lib"
-    mandatory=false
-    versionRange="[1.4,)"
-    ordering="NONE"
     side="BOTH"

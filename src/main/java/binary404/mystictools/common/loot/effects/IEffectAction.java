@@ -1,28 +1,30 @@
 package binary404.mystictools.common.loot.effects;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
 public interface IEffectAction {
-    default public void toggleAction(PlayerEntity player, ItemStack stack) {
+    default public void toggleAction(Player player, ItemStack stack) {
 
     }
 
-    default public void handleHarvest(PlayerEntity player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
+    default public void handleHarvest(Player player, ItemStack stack, List<ItemStack> drops, BlockPos pos) {
 
     }
 
-    default public void handleUpdate(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+    default public void handleUpdate(ItemStack stack, Level world, Entity entity, int itemSlot, boolean isSelected) {
 
     }
 
@@ -30,15 +32,15 @@ public interface IEffectAction {
 
     }
 
-    default public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
+    default public InteractionResultHolder<ItemStack> handleUse(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
         return defaultAction;
     }
 
-    default public ITextComponent modificationResponseMessage(PlayerEntity player, ItemStack stack) {
-        return new StringTextComponent("");
+    default public Component modificationResponseMessage(Player player, ItemStack stack) {
+        return new TextComponent("");
     }
 
-    default public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+    default public boolean hasResponseMessage(Player player, ItemStack stack) {
         return true;
     }
 

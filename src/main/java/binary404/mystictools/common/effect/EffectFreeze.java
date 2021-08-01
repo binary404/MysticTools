@@ -1,10 +1,10 @@
 package binary404.mystictools.common.effect;
 
-import binary404.mystictools.MysticTools;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
@@ -15,10 +15,10 @@ import net.minecraftforge.fml.common.Mod;
 import java.awt.*;
 
 @Mod.EventBusSubscriber(modid = "mystictools")
-public class EffectFreeze extends Effect {
+public class EffectFreeze extends MobEffect {
 
     protected EffectFreeze() {
-        super(EffectType.HARMFUL, Color.CYAN.getRGB());
+        super(MobEffectCategory.HARMFUL, Color.CYAN.getRGB());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -47,30 +47,30 @@ public class EffectFreeze extends Effect {
         if (entity.hurtTime > 0) {
             --entity.hurtTime;
         }
-        if (entity.hurtResistantTime > 0) {
-            --entity.hurtResistantTime;
+        if (entity.invulnerableTime > 0) {
+            --entity.invulnerableTime;
         }
-        entity.prevPosX = entity.getPosX();
-        entity.prevPosY = entity.getPosY();
-        entity.prevPosZ = entity.getPosZ();
-        entity.prevLimbSwingAmount = entity.limbSwingAmount;
-        entity.prevRenderYawOffset = entity.renderYawOffset;
-        entity.prevRotationPitch = entity.rotationPitch;
-        entity.prevRotationYaw = entity.rotationYaw;
-        entity.prevRotationYawHead = entity.rotationYawHead;
-        entity.prevSwingProgress = entity.swingProgress;
-        entity.prevDistanceWalkedModified = entity.distanceWalkedModified;
+        entity.xo = entity.getX();
+        entity.yo = entity.getY();
+        entity.zo = entity.getZ();
+        entity.animationSpeedOld = entity.animationSpeed;
+        entity.yBodyRotO = entity.yBodyRot;
+        entity.xRotO = entity.getXRot();
+        entity.yRotO = entity.getYRot();
+        entity.yHeadRotO = entity.yHeadRot;
+        entity.oAttackAnim = entity.attackAnim;
+        entity.walkDistO = entity.walkDist;
 
-        if (entity.isPotionActive(ModPotions.FREEZE)) {
-            EffectInstance e = entity.getActivePotionEffect(ModPotions.FREEZE);
+        if (entity.hasEffect(ModPotions.FREEZE)) {
+            MobEffectInstance e = entity.getEffect(ModPotions.FREEZE);
             if (!e.tick(entity, () -> {
             })) {
-                entity.removePotionEffect(ModPotions.FREEZE);
+                entity.removeEffect(ModPotions.FREEZE);
             }
         }
     }
 
     public static boolean shouldFreeze(LivingEntity entity) {
-        return entity.isPotionActive(ModPotions.FREEZE);
+        return entity.hasEffect(ModPotions.FREEZE);
     }
 }

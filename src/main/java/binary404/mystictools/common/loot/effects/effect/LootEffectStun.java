@@ -2,32 +2,33 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.effect.ModPotions;
 import binary404.mystictools.common.loot.effects.IEffectAction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
 public class LootEffectStun implements IEffectAction {
 
     @Override
-    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+    public boolean hasResponseMessage(Player player, ItemStack stack) {
         return false;
     }
 
     @Override
-    public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
-        List<LivingEntity> livingEntities = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(player.getPosition()).grow(5.0D, 5.0D, 5.0D));
+    public InteractionResultHolder<ItemStack> handleUse(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
+        List<LivingEntity> livingEntities = world.getEntitiesOfClass(LivingEntity.class, new AABB(player.blockPosition()).inflate(5.0D, 5.0D, 5.0D));
         livingEntities.remove(player);
         for(LivingEntity entity : livingEntities) {
-            entity.addPotionEffect(new EffectInstance(ModPotions.FREEZE, 50));
+            entity.addEffect(new MobEffectInstance(ModPotions.FREEZE, 50));
         }
-        player.getCooldownTracker().setCooldown(player.getHeldItem(hand).getItem(), 200);
-        return ActionResult.resultPass(player.getHeldItem(hand));
+        player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 200);
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 }

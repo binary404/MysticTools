@@ -1,12 +1,11 @@
 package binary404.mystictools.common.blocks;
 
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.items.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,27 +20,22 @@ public class ModBlocks {
     @ObjectHolder("mystictools:cauldron")
     public static Block cauldron;
 
-    @ObjectHolder("mystictools:upgrader")
-    public static Block upgrader;
-
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
 
-        Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(3.5F).sound(SoundType.ANVIL);
+        Block.Properties builder = Block.Properties.of(Material.STONE).strength(3.5F).sound(SoundType.ANVIL);
 
         register(r, new BlockCauldron(builder), "cauldron");
-        register(r, new BlockUpgrader(builder.notSolid()), "upgrader");
     }
 
     @SubscribeEvent
     public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
 
-        Item.Properties props = new Item.Properties().group(MysticTools.tab);
+        Item.Properties props = new Item.Properties().tab(MysticTools.tab);
 
         register(r, new BlockItem(cauldron, props), "cauldron");
-        register(r, new BlockItem(upgrader, props), "upgrader");
     }
 
 }

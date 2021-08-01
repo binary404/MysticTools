@@ -2,49 +2,47 @@ package binary404.mystictools.common.world;
 
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.DimensionSavedDataManager;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class UniqueSave extends WorldSavedData {
+public class UniqueSave extends SavedData {
 
     public List<UniqueInfo> uniques = new ArrayList<>();
 
     public UniqueSave() {
-        super("mystictools_unique");
     }
 
-    @Override
-    public void read(CompoundNBT nbt) {
+    public UniqueSave load(CompoundTag nbt) {
         uniques.clear();
         List<UniqueInfo> info = new ArrayList<>();
-        ListNBT list = nbt.getList("list", 10);
+        ListTag list = nbt.getList("list", 10);
         for (int i = 0; i < list.size(); i++) {
-            CompoundNBT cmp = list.getCompound(i);
+            CompoundTag cmp = list.getCompound(i);
             Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(cmp.getString("item")));
             UniqueEffect effect = UniqueEffect.getById(cmp.getString("effect"));
             boolean found = cmp.getBoolean("found");
             info.add(new UniqueInfo(item, effect, found));
         }
-        uniques = info;
+        this.uniques = info;
+        return this;
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        CompoundNBT nbt = new CompoundNBT();
-        ListNBT list = new ListNBT();
+    public CompoundTag save(CompoundTag compound) {
+        CompoundTag nbt = new CompoundTag();
+        ListTag list = new ListTag();
         for (UniqueInfo info : uniques) {
-            CompoundNBT cmp = new CompoundNBT();
+            CompoundTag cmp = new CompoundTag();
             cmp.putString("item", info.item.getRegistryName().toString());
             cmp.putString("effect", info.effect.getId());
             cmp.putBoolean("found", info.found);
@@ -54,16 +52,24 @@ public class UniqueSave extends WorldSavedData {
         return nbt;
     }
 
-    public static UniqueSave forWorld(ServerWorld world) {
-        DimensionSavedDataManager storage = world.getSavedData();
-        Supplier<UniqueSave> sup = () -> new UniqueSave();
-        UniqueSave saver = (UniqueSave) storage.getOrCreate(sup, "mystictools_unique");
+    public static UniqueSave forWorld(ServerLevel world) {
+        DimensionDataStorage storage = world.getDataStorage();
+        UniqueSave save = new UniqueSave();
+        save = (UniqueSave) storage.computeIfAbsent(save::createData, save::createData, "mystictools_unique");
 
-        if (saver == null) {
-            saver = new UniqueSave();
-            storage.set(saver);
+        if (save == null) {
+            save = new UniqueSave();
+            storage.set("mystictools_unique", save);
         }
-        return saver;
+        return save;
+    }
+
+    public UniqueSave createData() {
+        return new UniqueSave();
+    }
+
+    public UniqueSave createData(CompoundTag tag) {
+        return createData().load(tag);
     }
 
     public static class UniqueInfo {

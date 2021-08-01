@@ -1,8 +1,8 @@
 package binary404.mystictools.common.network;
 
 import binary404.mystictools.client.fx.FXHelper;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -21,7 +21,7 @@ public class PacketSparkle {
         this.b = b;
     }
 
-    public static void encode(PacketSparkle msg, PacketBuffer buffer) {
+    public static void encode(PacketSparkle msg, FriendlyByteBuf buffer) {
         buffer.writeDouble(msg.x);
         buffer.writeDouble(msg.y);
         buffer.writeDouble(msg.z);
@@ -30,7 +30,7 @@ public class PacketSparkle {
         buffer.writeFloat(msg.b);
     }
 
-    public static PacketSparkle decode(PacketBuffer buffer) {
+    public static PacketSparkle decode(FriendlyByteBuf buffer) {
         return new PacketSparkle(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
     }
 

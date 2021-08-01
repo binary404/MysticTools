@@ -2,8 +2,7 @@ package binary404.mystictools.common.world;
 
 import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.core.UniqueHandler;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -13,18 +12,18 @@ public class WorldHandler {
 
     @SubscribeEvent
     public static void worldLoad(WorldEvent.Load event) {
-        if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
-            UniqueSave save = UniqueSave.forWorld((ServerWorld) event.getWorld());
+        if (!event.getWorld().isClientSide() && event.getWorld() instanceof ServerLevel) {
+            UniqueSave save = UniqueSave.forWorld((ServerLevel) event.getWorld());
             if (save.uniques.isEmpty() || save.uniques.size() < ConfigHandler.COMMON.uniqueCount.get())
-                UniqueHandler.generateUniqueItems((ServerWorld) event.getWorld());
+                UniqueHandler.generateUniqueItems((ServerLevel) event.getWorld());
         }
     }
 
     @SubscribeEvent
     public static void worldSave(WorldEvent.Save event) {
-        if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld) {
-            UniqueSave save = UniqueSave.forWorld((ServerWorld) event.getWorld());
-            save.markDirty();
+        if (!event.getWorld().isClientSide() && event.getWorld() instanceof ServerLevel) {
+            UniqueSave save = UniqueSave.forWorld((ServerLevel) event.getWorld());
+            save.setDirty();
         }
     }
 

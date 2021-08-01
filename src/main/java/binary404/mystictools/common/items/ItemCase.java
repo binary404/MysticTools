@@ -2,64 +2,41 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
-import binary404.mystictools.common.gamestages.GameStageHandler;
 import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
-import net.darkhax.gamestages.GameStageHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.fmllegacy.server.ServerLifecycleHooks;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class ItemCase extends Item {
 
     public ItemCase() {
-        super(new Properties().group(MysticTools.tab));
+        super(new Properties().tab(MysticTools.tab));
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
-        ServerWorld serverWorld = ServerLifecycleHooks.getCurrentServer().getWorld(worldIn.getDimensionKey());
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if (worldIn.isClientSide)
+            return super.use(worldIn, playerIn, handIn);
+        ServerLevel serverWorld = ServerLifecycleHooks.getCurrentServer().getLevel(worldIn.dimension());
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
-        LootRarity lootRarity = LootRarity.generateRandomRarity(worldIn.rand, playerIn);
-
-        if (ModList.get().isLoaded("gamestages")) {
-            if (!GameStageHandler.RARITY_MAP.isEmpty()) {
-                for (LootRarity rarity : GameStageHandler.RARITY_MAP.keySet()) {
-                    if (lootRarity == rarity && GameStageHandler.isRarityAllowed(playerIn, lootRarity)) {
-                        break;
-                    } else if (GameStageHandler.isRarityAllowed(playerIn, rarity) && random.nextInt(2) == 0) {
-                        lootRarity = rarity;
-                        break;
-                    } else {
-                        lootRarity = LootRarity.generateRandomRarity(worldIn.rand, playerIn);
-                    }
-                }
-            }
-            if (!GameStageHandler.isRarityAllowed(playerIn, lootRarity)) {
-                lootRarity = null;
-            }
-        }
+        LootRarity lootRarity = LootRarity.generateRandomRarity(worldIn.random, playerIn);
 
         ItemStack loot;
         if (lootRarity != null) {
             if (lootRarity == LootRarity.UNIQUE) {
                 loot = UniqueHandler.getRandomUniqueItem(serverWorld, playerIn);
             } else {
-                loot = LootItemHelper.getRandomLoot(random);
+                loot = LootItemHelper.getRandomLoot(worldIn.random);
 
                 LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 
@@ -68,11 +45,11 @@ public class ItemCase extends Item {
 
                 loot = LootItemHelper.generateLoot(lootRarity, type, loot);
             }
-            playerIn.dropItem(loot, false, true);
+            playerIn.drop(loot, false, true);
             stack.shrink(1);
-            NetworkHandler.sendToNearby(worldIn, playerIn.getPosition(), new PacketFX(playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), 0));
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+            NetworkHandler.sendToNearby(worldIn, playerIn.blockPosition(), new PacketFX(playerIn.getX(), playerIn.getY(), playerIn.getZ(), 0));
+            return super.use(worldIn, playerIn, handIn);
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 }

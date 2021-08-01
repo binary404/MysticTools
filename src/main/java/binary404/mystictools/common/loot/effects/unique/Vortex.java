@@ -1,12 +1,12 @@
 package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
@@ -14,16 +14,16 @@ public class Vortex implements IUniqueEffect {
 
     @Override
     public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
-        List<MobEntity> entities = target.world.getEntitiesWithinAABB(MobEntity.class, new AxisAlignedBB(target.getPosition()).grow(15, 15, 15));
+        List<Mob> entities = target.level.getEntitiesOfClass(Mob.class, new AABB(target.blockPosition()).inflate(15, 15, 15));
         entities.remove(attacker);
-        for (MobEntity entity : entities) {
-            Vector3d current = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ());
-            Vector3d targetVec = new Vector3d(attacker.getPosX(), entity.getPosY(), entity.getPosZ());
+        for (Mob entity : entities) {
+            Vec3 current = new Vec3(entity.getX(), entity.getY(), entity.getZ());
+            Vec3 targetVec = new Vec3(attacker.getX(), entity.getY(), entity.getZ());
 
-            Vector3d motion = targetVec.subtract(current).mul(0.6F, 0.6F, 0.6F);
-            entity.setMotion(motion);
+            Vec3 motion = targetVec.subtract(current).multiply(0.6F, 0.6F, 0.6F);
+            entity.setDeltaMovement(motion);
 
-            entity.attackEntityFrom(DamageSource.FALL, 6.0F);
+            entity.hurt(DamageSource.FALL, 6.0F);
         }
     }
 }

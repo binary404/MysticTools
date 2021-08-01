@@ -4,15 +4,13 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.unique.*;
-import binary404.mystictools.common.world.UniqueSave;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,8 +65,8 @@ public class UniqueEffect {
         return this.id;
     }
 
-    public CompoundNBT getNbt() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag getNbt() {
+        CompoundTag tag = new CompoundTag();
 
         tag.putString("id", this.getId());
         tag.putInt("lvl", 1);
@@ -77,7 +75,7 @@ public class UniqueEffect {
     }
 
     public static UniqueEffect getUniqueEffect(ItemStack stack) {
-        CompoundNBT tag = LootNbtHelper.getLootCompound(stack, LootTags.LOOT_TAG_UNIQUE);
+        CompoundTag tag = LootNbtHelper.getLootCompound(stack, LootTags.LOOT_TAG_UNIQUE);
         return UniqueEffect.getById(tag.getString("id"));
     }
 
@@ -89,7 +87,7 @@ public class UniqueEffect {
         this.effect.hit(target, attacker, stack);
     }
 
-    public void breakBlock(BlockPos pos, World world, PlayerEntity player, ItemStack stack) {
+    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {
         this.effect.breakBlock(pos, world, player, stack);
     }
 

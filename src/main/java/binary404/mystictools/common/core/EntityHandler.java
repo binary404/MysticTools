@@ -8,19 +8,16 @@ import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -37,22 +34,24 @@ import java.util.List;
 public class EntityHandler {
 
     @SubscribeEvent
-    public static void arrowHit(ProjectileImpactEvent.Arrow event) {
-        if (event.getArrow().getPersistentData().contains("unique")) {
-            CompoundNBT compound = event.getArrow().getPersistentData().getCompound("unique");
-            String id = compound.getString("id");
-            UniqueEffect effect = UniqueEffect.getById(id);
-            if (effect != null) {
-                Entity entity = event.getArrow().world.getEntityByID(event.getArrow().field_234610_c_);
-                effect.arrowImpact(entity, event.getArrow());
+    public static void arrowHit(ProjectileImpactEvent event) {
+        if (event.getProjectile() instanceof Arrow) {
+            if (event.getProjectile().getPersistentData().contains("unique")) {
+                CompoundTag compound = event.getProjectile().getPersistentData().getCompound("unique");
+                String id = compound.getString("id");
+                UniqueEffect effect = UniqueEffect.getById(id);
+                if (effect != null) {
+                    Entity entity = event.getProjectile().getOwner();
+                    effect.arrowImpact(entity, event.getProjectile());
+                }
             }
         }
     }
 
     @SubscribeEvent
     public static void sleepingCheck(SleepingLocationCheckEvent event) {
-        if (event.getEntityLiving().isSleeping() && !event.getEntityLiving().world.isDaytime()) {
-            ItemStack stack = event.getEntityLiving().getHeldItemMainhand();
+        if (event.getEntityLiving().isSleeping() && !event.getEntityLiving().level.isDay()) {
+            ItemStack stack = event.getEntityLiving().getMainHandItem();
             if (LootItemHelper.hasEffect(stack, LootEffect.SLEEP)) {
                 event.setResult(Event.Result.ALLOW);
             }
@@ -61,14 +60,14 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingDamageEvent event) {
-        Entity sourceEntity = event.getSource().getTrueSource();
+        Entity sourceEntity = event.getSource().getEntity();
 
-        if (sourceEntity != null && !sourceEntity.world.isRemote) {
-            if (sourceEntity instanceof PlayerEntity) {
-                PlayerEntity player = (PlayerEntity) sourceEntity;
+        if (sourceEntity != null && !sourceEntity.level.isClientSide) {
+            if (sourceEntity instanceof Player) {
+                Player player = (Player) sourceEntity;
 
-                if (player.getHeldItemMainhand().getItem() == ModItems.loot_sword) {
-                    ItemStack stack = player.getHeldItemMainhand();
+                if (player.getMainHandItem().getItem() == ModItems.loot_sword) {
+                    ItemStack stack = player.getMainHandItem();
 
                     List<LootEffect> effects = LootEffect.getEffectList(stack);
 
@@ -77,38 +76,38 @@ public class EntityHandler {
                         int amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
                         float leech = damageInflicted * ((float) amplifier / 100.0F);
                         player.heal(leech);
-                        NetworkHandler.sendToNearby(player.world, player, new PacketSparkle(event.getEntityLiving().getPosX() + 0.5, event.getEntityLiving().getPosY() + 0.5, event.getEntityLiving().getPosZ() + 0.5, 0.92F, 0.0F, 0.08F));
+                        NetworkHandler.sendToNearby(player.level, player, new PacketSparkle(event.getEntityLiving().getX() + 0.5, event.getEntityLiving().getY() + 0.5, event.getEntityLiving().getZ() + 0.5, 0.92F, 0.0F, 0.08F));
                     }
                 }
             }
-            if (event.getEntityLiving() instanceof PlayerEntity && event.getSource().getTrueSource() instanceof LivingEntity) {
-                PlayerEntity player = (PlayerEntity) event.getEntityLiving();
-                for (ItemStack stack : player.inventory.armorInventory) {
+            if (event.getEntityLiving() instanceof Player && event.getSource().getEntity() instanceof LivingEntity) {
+                Player player = (Player) event.getEntityLiving();
+                for (ItemStack stack : player.getInventory().armor) {
                     List<LootEffect> effects = LootEffect.getEffectList(stack);
                     for (LootEffect effect : effects) {
                         if (effect.getAction() != null)
-                            effect.getAction().handleArmorHit(stack, player, (LivingEntity) event.getSource().getTrueSource());
+                            effect.getAction().handleArmorHit(stack, player, (LivingEntity) event.getSource().getEntity());
                     }
                 }
             }
 
-            if (event.getEntityLiving() instanceof PlayerEntity) {
-                PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-                for (ItemStack stack : playerEntity.inventory.armorInventory) {
+            if (event.getEntityLiving() instanceof Player) {
+                Player playerEntity = (Player) event.getEntityLiving();
+                for (ItemStack stack : playerEntity.getInventory().armor) {
                     List<LootEffect> effects = LootEffect.getEffectList(stack);
                     if (effects.contains(LootEffect.REFLECT)) {
                         float damage = event.getAmount() / 2;
                         event.setAmount(damage);
-                        if (event.getSource().getTrueSource() != null) {
-                            event.getSource().getTrueSource().attackEntityFrom(new DamageSource("reflect"), damage);
+                        if (event.getSource().getEntity() != null) {
+                            event.getSource().getEntity().hurt(new DamageSource("reflect"), damage);
                         }
                     }
                     if (effects.contains(LootEffect.PARRY)) {
                         int chance = LootEffect.getAmplifierFromStack(stack, LootEffect.PARRY.getId());
-                        if (playerEntity.world.rand.nextInt(100) <= chance) {
-                            playerEntity.world.playSound(null, playerEntity.getPosX(), playerEntity.getPosY(), playerEntity.getPosZ(),
-                                    SoundEvents.ITEM_SHIELD_BLOCK,
-                                    SoundCategory.MASTER,
+                        if (playerEntity.level.random.nextInt(100) <= chance) {
+                            playerEntity.level.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(),
+                                    SoundEvents.SHIELD_BLOCK,
+                                    SoundSource.MASTER,
                                     1F, 1F);
                             event.setCanceled(true);
                         }
@@ -120,13 +119,13 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void onOrbPickup(PlayerXpEvent.PickupXp event) {
-        PlayerEntity player = event.getPlayer();
-        for (ItemStack stack : player.inventory.armorInventory) {
+        Player player = event.getPlayer();
+        for (ItemStack stack : player.getInventory().armor) {
             List<LootEffect> effects = LootEffect.getEffectList(stack);
             if (effects.contains(LootEffect.INSIGHT)) {
                 int level = LootEffect.getAmplifierFromStack(stack, LootEffect.INSIGHT.getId());
-                ExperienceOrbEntity orb = event.getOrb();
-                orb.xpValue *= (1 + level);
+                ExperienceOrb orb = event.getOrb();
+                orb.value *= (1 + level);
             }
         }
     }

@@ -4,12 +4,11 @@ import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -17,19 +16,19 @@ public class LootEffectShockwave implements IEffectAction {
 
     @Override
     public void handleArmorHit(ItemStack stack, LivingEntity wearer, LivingEntity attacker) {
-        NetworkHandler.sendToNearby(wearer.world, wearer, new PacketFX(wearer.getPosX(), wearer.getPosY(), wearer.getPosZ(), 1));
-        List<LivingEntity> entities = wearer.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(wearer.getPosition()).grow(20.0D, 20.0D, 20.0D));
+        NetworkHandler.sendToNearby(wearer.level, wearer, new PacketFX(wearer.getX(), wearer.getY(), wearer.getZ(), 1));
+        List<LivingEntity> entities = wearer.level.getEntitiesOfClass(LivingEntity.class, new AABB(wearer.blockPosition()).inflate(20.0D, 20.0D, 20.0D));
         for (LivingEntity entity : entities) {
             if (wearer == entity) {
                 break;
             }
-            Vector3d playerPos = new Vector3d(wearer.getPosX(), wearer.getPosY() + 2.5, wearer.getPosZ());
-            Vector3d entityPos = new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+            Vec3 playerPos = new Vec3(wearer.getX(), wearer.getY() + 2.5, wearer.getZ());
+            Vec3 entityPos = new Vec3(entity.getX(), entity.getY(), entity.getZ());
 
-            Vector3d motion = playerPos.subtract(entityPos).mul(-1.5F, -1.5F, -1.5F);
+            Vec3 motion = playerPos.subtract(entityPos).multiply(-1.5F, -1.5F, -1.5F);
 
-            entity.setMotion(motion);
-            entity.attackEntityFrom(new DamageSource("shockwave").setDamageBypassesArmor().setMagicDamage(), 8F);
+            entity.setDeltaMovement(motion);
+            entity.hurt(new DamageSource("shockwave").bypassArmor().setMagic(), 8F);
         }
     }
 }

@@ -1,7 +1,8 @@
 package binary404.mystictools.common.core.util;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class MathUtils {
 
@@ -9,30 +10,30 @@ public class MathUtils {
         return x1 + (y1 - x1) * ((value - x0) / (y0 - x0));
     }
 
-    public static double extractYaw(Vector3d vec) {
-        return Math.atan2(vec.getZ(), vec.getX());
+    public static double extractYaw(Vec3 vec) {
+        return Math.atan2(vec.z, vec.x);
     }
 
-    public static double extractPitch(Vector3d vec) {
-        return Math.asin(vec.getY() / vec.length());
+    public static double extractPitch(Vec3 vec) {
+        return Math.asin(vec.y / vec.length());
     }
 
-    public static Vector3d rotateYaw(Vector3d vec, float yaw) {
-        float f = MathHelper.cos(yaw);
-        float f1 = MathHelper.sin(yaw);
-        double d0 = vec.getX() * (double) f + vec.getZ() * (double) f1;
-        double d1 = vec.getY();
-        double d2 = vec.getZ() * (double) f - vec.getX() * (double) f1;
-        return new Vector3d(d0, d1, d2);
+    public static Vec3 rotateYaw(Vec3 vec, float yaw) {
+        float f = Mth.cos(yaw);
+        float f1 = Mth.sin(yaw);
+        double d0 = vec.x * (double) f + vec.z * (double) f1;
+        double d1 = vec.y;
+        double d2 = vec.z * (double) f - vec.x * (double) f1;
+        return new Vec3(d0, d1, d2);
     }
 
-    public static Vector3d rotateRoll(Vector3d vec, float roll) {
-        float f = MathHelper.cos(roll);
-        float f1 = MathHelper.sin(roll);
-        double d0 = vec.getX() * (double) f + vec.getY() * (double) f1;
-        double d1 = vec.getY() * (double) f - vec.getX() * (double) f1;
-        double d2 = vec.getZ();
-        return new Vector3d(d0, d1, d2);
+    public static Vec3 rotateRoll(Vec3 vec, float roll) {
+        float f = Mth.cos(roll);
+        float f1 = Mth.sin(roll);
+        double d0 = vec.x * (double) f + vec.y * (double) f1;
+        double d1 = vec.y * (double) f - vec.x * (double) f1;
+        double d2 = vec.z;
+        return new Vec3(d0, d1, d2);
     }
 
 }

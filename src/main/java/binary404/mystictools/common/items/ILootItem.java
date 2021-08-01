@@ -2,7 +2,7 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ILootItem {
 

@@ -1,13 +1,7 @@
 package binary404.mystictools.client.fx;
 
-import binary404.fx_lib.fx.EffectRegistry;
-import binary404.fx_lib.fx.effects.function.ColorFunction;
-import binary404.fx_lib.fx.effects.handler.EffectHelper;
-import binary404.fx_lib.fx.particles.ParticleDispatcher;
-import binary404.fx_lib.util.Vector3;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 
 import java.util.Random;
@@ -16,8 +10,8 @@ public class FXHelper {
 
     public static Random rand = new Random();
 
-    public static World getWorld() {
-        return Minecraft.getInstance().world;
+    public static Level getWorld() {
+        return Minecraft.getInstance().level;
     }
 
     public static boolean fxlibLoaded() {
@@ -25,6 +19,7 @@ public class FXHelper {
     }
 
     public static void sparkle(double x, double y, double z, double mx, double my, double mz, float r, float g, float b, float scale, float grav, int age) {
+        /*
         if (fxlibLoaded()) {
             ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
             int finalAge = age * 4 + rand.nextInt(age);
@@ -44,9 +39,11 @@ public class FXHelper {
             part.grav = grav;
             ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
         }
+         */
     }
 
     public static void shockwave(double x, double y, double z) {
+        /*
         if (fxlibLoaded()) {
             EffectHelper.createEffect(EffectRegistry.SPRITE_PLANE)
                     .spawn(new Vector3(x, y + 0.2F, z))
@@ -55,9 +52,11 @@ public class FXHelper {
                     .setNoRotation(0)
                     .setScaleMultiplier(12F);
         }
+         */
     }
 
     public static void arc(double x, double y, double z, double tx, double ty, double tz) {
+        /*
         if (fxlibLoaded()) {
             EffectHelper.createEffect(EffectRegistry.LIGHTBEAM)
                     .spawn(new Vector3(x, y, z))
@@ -65,6 +64,7 @@ public class FXHelper {
                     .color(ColorFunction.WHITE)
                     .setMaxAge(10);
         }
+         */
     }
 
 }

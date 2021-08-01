@@ -2,26 +2,27 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import com.mojang.datafixers.util.Either;
+import com.mojang.math.Vector3d;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Unit;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -30,48 +31,48 @@ import java.util.Optional;
 public class LootEffectActionSleep implements IEffectAction {
 
     @Override
-    public boolean hasResponseMessage(PlayerEntity player, ItemStack stack) {
+    public boolean hasResponseMessage(Player player, ItemStack stack) {
         return false;
     }
 
     @Override
-    public ActionResult<ItemStack> handleUse(ActionResult<ItemStack> defaultAction, World world, PlayerEntity player, Hand hand) {
-        if (player.isSneaking() || player.world.isRemote) {
+    public InteractionResultHolder<ItemStack> handleUse(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
+        if (player.isShiftKeyDown() || player.level.isClientSide) {
             return defaultAction;
         }
 
-        BlockPos pos = player.getPosition();
-        trySleep((ServerPlayerEntity) player);
+        BlockPos pos = player.blockPosition();
+        trySleep((ServerPlayer) player);
 
         return defaultAction;
     }
 
-    public Either<PlayerEntity.SleepResult, Unit> trySleep(ServerPlayerEntity player) {
-        PlayerEntity.SleepResult ret = ForgeEventFactory.onPlayerSleepInBed((PlayerEntity) player, Optional.empty());
+    public Either<Player.BedSleepingProblem, Unit> trySleep(ServerPlayer player) {
+        Player.BedSleepingProblem ret = ForgeEventFactory.onPlayerSleepInBed((Player) player, Optional.empty());
         if (ret != null) {
             return Either.left(ret);
         }
 
         if (player.isSleeping() || !player.isAlive()) {
-            return Either.left(PlayerEntity.SleepResult.OTHER_PROBLEM);
+            return Either.left(Player.BedSleepingProblem.OTHER_PROBLEM);
         }
-        if (player.world.isDaytime()) {
-            return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
+        if (player.level.isDay()) {
+            return Either.left(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
         }
 
-        if (!ForgeEventFactory.fireSleepingTimeCheck((PlayerEntity) player, Optional.empty())) {
-            return Either.left(PlayerEntity.SleepResult.NOT_POSSIBLE_NOW);
+        if (!ForgeEventFactory.fireSleepingTimeCheck((Player) player, Optional.empty())) {
+            return Either.left(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
         }
 
         if (!player.isCreative()) {
-            Vector3d vector3d = player.getPositionVec();
-            List<MonsterEntity> list = player.world.getEntitiesWithinAABB(MonsterEntity.class, new AxisAlignedBB(vector3d.getX() - 8.0D, vector3d.getY() - 5.0D, vector3d.getZ() - 8.0D, vector3d.getX() + 8.0D, vector3d.getY() + 5.0D, vector3d.getZ() + 8.0D), entity -> entity.func_230292_f_((PlayerEntity) player));
+            Vec3 vector3d = player.position();
+            List<Monster> list = player.level.getEntitiesOfClass(Monster.class, new AABB(vector3d.x() - 8.0D, vector3d.y() - 5.0D, vector3d.z() - 8.0D, vector3d.x() + 8.0D, vector3d.y() + 5.0D, vector3d.z() + 8.0D), entity -> entity.isPreventingPlayerRest((Player) player));
             if (!list.isEmpty()) {
-                return Either.left(PlayerEntity.SleepResult.NOT_SAFE);
+                return Either.left(Player.BedSleepingProblem.NOT_SAFE);
             }
         }
 
-        player.takeStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
+        player.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
         if (player.isPassenger()) {
             player.stopRiding();
         }
@@ -82,32 +83,32 @@ public class LootEffectActionSleep implements IEffectAction {
         } catch (Exception exception) {
         }
 
-        player.setBedPosition(player.getPosition());
-        player.setMotion(Vector3d.ZERO);
-        player.isAirBorne = true;
+        player.setSleepingPos(player.blockPosition());
+        player.setDeltaMovement(Vec3.ZERO);
+        player.hasImpulse = true;
 
 
         try {
-            ObfuscationReflectionHelper.setPrivateValue(PlayerEntity.class, player, Integer.valueOf(0), "sleepTimer");
-        } catch (net.minecraftforge.fml.common.ObfuscationReflectionHelper.UnableToFindFieldException unableToFindFieldException) {
+            ObfuscationReflectionHelper.setPrivateValue(Player.class, player, Integer.valueOf(0), "sleepCounter");
+        } catch (ObfuscationReflectionHelper.UnableToFindFieldException unableToFindFieldException) {
         }
 
 
-        if (player.world instanceof ServerWorld) {
-            ((ServerWorld) player.world).updateAllPlayersSleepingFlag();
+        if (player.level instanceof ServerLevel) {
+            ((ServerLevel) player.level).updateSleepingPlayerList();
         }
 
 
-        player.addStat(Stats.SLEEP_IN_BED);
+        player.awardStat(Stats.SLEEP_IN_BED);
         CriteriaTriggers.SLEPT_IN_BED.trigger(player);
 
-        ((ServerWorld) player.world).updateAllPlayersSleepingFlag();
+        ((ServerLevel) player.level).updateSleepingPlayerList();
         return Either.right(Unit.INSTANCE);
     }
 
     @Override
-    public ITextComponent modificationResponseMessage(PlayerEntity player, ItemStack stack) {
-        return new StringTextComponent("");
+    public Component modificationResponseMessage(Player player, ItemStack stack) {
+        return new TextComponent("");
     }
 
     @Override

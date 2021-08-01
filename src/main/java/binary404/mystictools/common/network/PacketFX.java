@@ -2,10 +2,11 @@ package binary404.mystictools.common.network;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXHelper;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+
 
 import java.util.function.Supplier;
 
@@ -21,14 +22,14 @@ public class PacketFX {
         this.id = id;
     }
 
-    public static void encode(PacketFX msg, PacketBuffer buffer) {
+    public static void encode(PacketFX msg, FriendlyByteBuf buffer) {
         buffer.writeDouble(msg.x);
         buffer.writeDouble(msg.y);
         buffer.writeDouble(msg.z);
         buffer.writeInt(msg.id);
     }
 
-    public static PacketFX decode(PacketBuffer buffer) {
+    public static PacketFX decode(FriendlyByteBuf buffer) {
         return new PacketFX(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readInt());
     }
 
@@ -41,13 +42,13 @@ public class PacketFX {
             switch (msg.id) {
                 case 0: {
                     int count = 50;
-                    World world = MysticTools.proxy.getWorld();
+                    Level world = MysticTools.proxy.getWorld();
                     for (int a = 0; a < 50; a++) {
                         boolean floaty = (a < count / 3);
-                        float r = MathHelper.nextInt(world.rand, 255, 255) / 255.0F;
-                        float g = MathHelper.nextInt(world.rand, 64, 255) / 255.0F;
-                        float b = MathHelper.nextInt(world.rand, 189, 255) / 255.0F;
-                        FXHelper.sparkle(msg.x + world.rand.nextGaussian() * 0.4, msg.y + world.rand.nextGaussian() * 0.4, msg.z + world.rand.nextGaussian() * 0.4, world.rand.nextGaussian() * 0.06, world.rand.nextGaussian() * 0.06 + (floaty ? 0.05D : 0.15D), world.rand.nextGaussian() * 0.06, r, g, b, 0.15F, floaty ? 0.04F : 0.8F, 16);
+                        float r = Mth.nextInt(world.random, 255, 255) / 255.0F;
+                        float g = Mth.nextInt(world.random, 64, 255) / 255.0F;
+                        float b = Mth.nextInt(world.random, 189, 255) / 255.0F;
+                        FXHelper.sparkle(msg.x + world.random.nextGaussian() * 0.4, msg.y + world.random.nextGaussian() * 0.4, msg.z + world.random.nextGaussian() * 0.4, world.random.nextGaussian() * 0.06, world.random.nextGaussian() * 0.06 + (floaty ? 0.05D : 0.15D), world.random.nextGaussian() * 0.06, r, g, b, 0.15F, floaty ? 0.04F : 0.8F, 16);
                     }
                     break;
                 }

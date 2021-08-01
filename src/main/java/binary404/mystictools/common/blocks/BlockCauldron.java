@@ -9,76 +9,72 @@ import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
 import binary404.mystictools.common.tile.TileEntityCauldron;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public class BlockCauldron extends Block {
+public class BlockCauldron extends Block implements EntityBlock {
 
-    private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 8.0D, 2.0D, 14.0D, 16.0D, 14.0D);
-    protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(VoxelShapes.fullCube(), VoxelShapes.or(makeCuboidShape(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D), makeCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), INSIDE), IBooleanFunction.ONLY_FIRST);
+    private static final VoxelShape INSIDE = box(2.0D, 8.0D, 2.0D, 14.0D, 16.0D, 14.0D);
+    protected static final VoxelShape SHAPE = Shapes.join(Shapes.block(), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 3.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), INSIDE), BooleanOp.ONLY_FIRST);
 
     public BlockCauldron(Properties properties) {
         super(properties);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
         return SHAPE;
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (!worldIn.isRemote && entityIn instanceof ItemEntity) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        if (!worldIn.isClientSide && entityIn instanceof ItemEntity) {
             ItemEntity itemEntity = (ItemEntity) entityIn;
             Item item = itemEntity.getItem().getItem();
             if (item instanceof ILootItem) {
                 ItemStack stack;
                 LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(itemEntity.getItem(), LootTags.LOOT_TAG_RARITY));
                 if (rarity == LootRarity.COMMON) {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 3, 7));
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 3, 7));
                 } else if (rarity == LootRarity.UNCOMMON) {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 6, 10));
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 6, 10));
                 } else if (rarity == LootRarity.RARE) {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 9, 13));
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 9, 13));
                 } else if (rarity == LootRarity.EPIC) {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 12, 15));
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 12, 15));
                 } else if (rarity == LootRarity.UNIQUE) {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 15, 18));
-                    if (worldIn instanceof ServerWorld)
-                        UniqueHandler.resetUniqueItems((ServerWorld) worldIn);
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 15, 18));
+                    if (worldIn instanceof ServerLevel)
+                        UniqueHandler.resetUniqueItems((ServerLevel) worldIn);
                 } else {
-                    stack = new ItemStack(ModItems.shard, MathHelper.nextInt(worldIn.rand, 3, 7));
+                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 3, 7));
                 }
-                NetworkHandler.sendToNearby(worldIn, entityIn, new PacketFX(entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), 0));
+                NetworkHandler.sendToNearby(worldIn, entityIn, new PacketFX(entityIn.getX(), entityIn.getY(), entityIn.getZ(), 0));
                 itemEntity.setItem(stack);
             }
         }
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TileEntityCauldron();
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new TileEntityCauldron(p_153215_, p_153216_);
     }
 }

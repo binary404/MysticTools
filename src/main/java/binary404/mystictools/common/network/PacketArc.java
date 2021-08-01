@@ -1,8 +1,8 @@
 package binary404.mystictools.common.network;
 
 import binary404.mystictools.client.fx.FXHelper;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -20,7 +20,7 @@ public class PacketArc {
         this.tz = tz;
     }
 
-    public static void encode(PacketArc msg, PacketBuffer buffer) {
+    public static void encode(PacketArc msg, FriendlyByteBuf buffer) {
         buffer.writeDouble(msg.x);
         buffer.writeDouble(msg.y);
         buffer.writeDouble(msg.z);
@@ -29,7 +29,7 @@ public class PacketArc {
         buffer.writeDouble(msg.tz);
     }
 
-    public static PacketArc decode(PacketBuffer buffer) {
+    public static PacketArc decode(FriendlyByteBuf buffer) {
         return new PacketArc(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
     }
 

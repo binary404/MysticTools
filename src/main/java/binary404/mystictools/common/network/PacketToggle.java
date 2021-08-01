@@ -4,11 +4,11 @@ import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import com.google.common.collect.Sets;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.List;
 import java.util.Set;
@@ -23,19 +23,19 @@ public class PacketToggle {
 
     }
 
-    public static PacketToggle decode(PacketBuffer buffer) {
+    public static PacketToggle decode(FriendlyByteBuf buffer) {
         return new PacketToggle();
     }
 
-    public static void encode(PacketToggle msg, PacketBuffer buffer) {
+    public static void encode(PacketToggle msg, FriendlyByteBuf buffer) {
 
     }
 
     public static void handle(PacketToggle msg, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide().isServer()) {
             ctx.get().enqueueWork(() -> {
-                ServerPlayerEntity player = ctx.get().getSender();
-                ItemStack tool = player.getHeldItemMainhand();
+                ServerPlayer player = ctx.get().getSender();
+                ItemStack tool = player.getMainHandItem();
 
                 if (tools.contains(tool.getItem())) {
                     List<LootEffect> effects = LootEffect.getEffectList(tool);
@@ -44,7 +44,7 @@ public class PacketToggle {
                         IEffectAction action = effect.getAction();
                         if(action != null && action.hasResponseMessage(player, tool)) {
                             action.toggleAction(player, tool);
-                            player.sendMessage(action.modificationResponseMessage(player, tool), player.getUniqueID());
+                            player.sendMessage(action.modificationResponseMessage(player, tool), player.getUUID());
                         }
                     }
                 }

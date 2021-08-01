@@ -1,21 +1,21 @@
 package binary404.mystictools.common.core.util;
 
-import com.sun.javafx.geom.Vec3d;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
-import net.minecraft.entity.Entity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,15 +31,15 @@ import java.util.function.Predicate;
 public class Utils {
 
     @Nonnull
-    public static Optional<ItemStack> findSmeltingResult(World world, ItemStack input) {
+    public static Optional<ItemStack> findSmeltingResult(Level world, ItemStack input) {
         RecipeManager mgr = world.getRecipeManager();
-        IInventory inv = new Inventory(input);
-        Optional<IRecipe<IInventory>> optRecipe = (Optional<IRecipe<IInventory>>) ObjectUtils.firstNonNull(
-                mgr.getRecipe(IRecipeType.SMELTING, inv, world),
-                mgr.getRecipe(IRecipeType.CAMPFIRE_COOKING, inv, world),
-                mgr.getRecipe(IRecipeType.SMOKING, inv, world),
+        Container inv = new SimpleContainer(input);
+        Optional<Recipe<Container>> optRecipe = (Optional<Recipe<Container>>) ObjectUtils.firstNonNull(
+                mgr.getRecipeFor(RecipeType.SMELTING, inv, world),
+                mgr.getRecipeFor(RecipeType.CAMPFIRE_COOKING, inv, world),
+                mgr.getRecipeFor(RecipeType.SMOKING, inv, world),
                 Optional.empty());
-        return optRecipe.map(recipe -> recipe.getCraftingResult(inv).copy());
+        return optRecipe.map(recipe -> recipe.assemble(inv).copy());
     }
 
     public static Predicate<? super Entity> selectEntities(Class<? extends Entity>... entities) {
@@ -69,7 +69,7 @@ public class Utils {
         return closestElement;
     }
 
-    public static void writeCompoundNBTToBuffer(PacketBuffer bb, CompoundNBT nbt) {
+    public static void writeCompoundNBTToBuffer(FriendlyByteBuf bb, CompoundTag nbt) {
         if (nbt == null) {
 
             bb.writeByte(0);
@@ -77,7 +77,7 @@ public class Utils {
 
             try {
 
-                CompressedStreamTools.write(nbt, (DataOutput) new ByteBufOutputStream(bb));
+                NbtIo.write(nbt, (DataOutput) new ByteBufOutputStream(bb));
             } catch (IOException ioexception) {
 
                 throw new EncoderException(ioexception);
@@ -93,7 +93,7 @@ public class Utils {
         return s2;
     }
 
-    public static CompoundNBT readCompoundNBTFromBuffer(PacketBuffer bb) {
+    public static CompoundTag readCompoundNBTFromBuffer(FriendlyByteBuf bb) {
         int i = bb.readerIndex();
         byte b0 = bb.readByte();
 
@@ -103,7 +103,7 @@ public class Utils {
 
         bb.readerIndex(i);
         try {
-            return CompressedStreamTools.read((DataInput) new ByteBufInputStream(bb), new NBTSizeTracker(2097152L));
+            return NbtIo.read((DataInput) new ByteBufInputStream(bb), new NbtAccounter(2097152L));
         } catch (IOException iOException) {
 
             return null;

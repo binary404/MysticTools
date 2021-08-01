@@ -10,26 +10,27 @@ import binary404.mystictools.common.loot.effects.UniqueEffect;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.*;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
@@ -39,7 +40,7 @@ import java.util.Set;
 public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     public ItemLootPickaxe() {
-        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties().group(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties().tab(MysticTools.tab));
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
@@ -55,22 +56,22 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new StringTextComponent(LootItemHelper.getLootName(stack, super.getDisplayName(stack).getString()));
+    public Component getName(ItemStack stack) {
+        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, PlayerEntity player) {
+    public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.world, player, stack);
+            UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.level, player, stack);
         }
 
         boolean onBreak = super.onBlockStartBreak(stack, pos, player);
@@ -78,10 +79,10 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
         LootItemHelper.handleBreak(stack, player, pos);
 
         if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
-            RayTraceResult raytrace = LootItemHelper.getBlockOnReach(player.world, player);
+            HitResult raytrace = LootItemHelper.getBlockOnReach(player.level, player);
             if (raytrace != null) {
                 int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
-                onBreak = LootItemHelper.breakBlocks(stack, level, player.world, pos, ((BlockRayTraceResult) raytrace).getFace(), player);
+                onBreak = LootItemHelper.breakBlocks(stack, level, player.level, pos, ((BlockHitResult) raytrace).getDirection(), player);
             }
         }
 
@@ -89,7 +90,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if (entityIn instanceof LivingEntity && isSelected)
             LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) entityIn);
 
@@ -101,18 +102,18 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
 
-        return LootItemHelper.use(super.onItemRightClick(worldIn, playerIn, handIn), worldIn, playerIn, handIn);
+        return LootItemHelper.use(super.use(worldIn, playerIn, handIn), worldIn, playerIn, handIn);
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType slot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
 
         Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
 
@@ -134,7 +135,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     }
 
     @Override
-    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
         if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
             return 4;
         }
@@ -147,19 +148,19 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
         if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
             return true;
         }
-        return super.canHarvestBlock(state);
+        return super.canHarvestBlock(stack, state);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + "Pickaxe"));
+        tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Pickaxe"));
 
         float efficiency = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY);
-        tooltip.add(new StringTextComponent(TextFormatting.GRAY + "" + ItemStack.DECIMALFORMAT.format(efficiency) + " Mining Speed"));
+        tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(efficiency) + " Mining Speed"));
     }
 
     @Override

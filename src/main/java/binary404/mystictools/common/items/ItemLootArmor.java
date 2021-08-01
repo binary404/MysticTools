@@ -7,66 +7,63 @@ import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketJump;
-import com.blamejared.crafttweaker.impl.network.PacketHandler;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ItemLootArmor extends ArmorItem implements ILootItem {
 
     String type;
 
-    public ItemLootArmor(EquipmentSlotType type, String pieceType) {
-        super(ArmorMaterial.DIAMOND, type, new Item.Properties().group(MysticTools.tab));
+    public ItemLootArmor(EquipmentSlot type, String pieceType) {
+        super(ArmorMaterials.DIAMOND, type, new Item.Properties().tab(MysticTools.tab));
         this.type = pieceType;
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = LootItemHelper.modifiersForStack(slot, this.slot, stack, HashMultimap.create(), "Armor modifier");
 
         return modifiers;
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new StringTextComponent(LootItemHelper.getLootName(stack, super.getDisplayName(stack).getString()));
+    public Component getName(ItemStack stack) {
+        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip, false);
         } else {
-            EquipmentSlotType type = this.slot;
-            tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + this.type));
+            EquipmentSlot type = this.slot;
+            tooltip.add(new TextComponent(ChatFormatting.RESET + "" + this.type));
             Multimap<Attribute, AttributeModifier> multimap = stack.getAttributeModifiers(type);
-            if (!multimap.isEmpty() && type != EquipmentSlotType.MAINHAND) {
+            if (!multimap.isEmpty() && type != EquipmentSlot.MAINHAND) {
                 for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                     if (entry.getKey().equals(Attributes.ARMOR_TOUGHNESS) || entry.getKey().equals(Attributes.ARMOR)) {
                         AttributeModifier modifier = entry.getValue();
@@ -80,10 +77,10 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
                             d1 = d0 * 100.0D;
 
                         if (d0 > 0.0D) {
-                            tooltip.add(new StringTextComponent(TextFormatting.BLUE + " " + I18n.format("attribute.modifier.plus." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().getAttributeName()))));
+                            tooltip.add(new TextComponent(ChatFormatting.BLUE + " " + I18n.get("attribute.modifier.plus." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
                         } else if (d0 < 0.0D) {
                             d1 = d1 * -1.0D;
-                            tooltip.add(new StringTextComponent(TextFormatting.RED + " " + I18n.format("attribute.modifier.take." + modifier.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), I18n.format(entry.getKey().getAttributeName()))));
+                            tooltip.add(new TextComponent(ChatFormatting.RED + " " + I18n.get("attribute.modifier.take." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
                         }
                     }
                 }
@@ -96,22 +93,22 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     private static boolean jumpDown;
 
     @Override
-    public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
+    public void onArmorTick(ItemStack stack, Level world, Player player) {
         LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) player);
 
         List<LootEffect> effects = LootEffect.getEffectList(stack);
 
         if (effects.contains(LootEffect.getById("jump"))) {
-            DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 if (player == Minecraft.getInstance().player) {
-                    ClientPlayerEntity playerSp = (ClientPlayerEntity) player;
+                    LocalPlayer playerSp = (LocalPlayer) player;
 
                     if (playerSp.isOnGround()) {
                         timesJumped = 0;
                     } else {
-                        if (playerSp.movementInput.jump) {
+                        if (playerSp.input.jumping) {
                             if (!jumpDown && timesJumped < LootEffect.getAmplifierFromStack(stack, "jump")) {
-                                playerSp.jump();
+                                playerSp.jumpFromGround();
                                 NetworkHandler.sendToServer(new PacketJump());
                                 timesJumped++;
                             }
@@ -124,8 +121,8 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
             });
         }
 
-        for(LootEffect effect : effects) {
-            if(effect.getAction() != null) {
+        for (LootEffect effect : effects) {
+            if (effect.getAction() != null) {
                 effect.getAction().handleUpdate(stack, world, player, 0, false);
             }
         }
@@ -133,7 +130,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
 
     @Nullable
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type) {
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
         int id = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_MODEL);
         String texture = "mystictools:textures/models/armor/1.png";
 

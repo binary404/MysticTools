@@ -6,22 +6,26 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.PotionEffect;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.EffectInstance;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,7 +33,7 @@ import java.util.List;
 public class ItemLootBow extends BowItem implements ILootItem {
 
     public ItemLootBow() {
-        super(new Item.Properties().group(MysticTools.tab));
+        super(new Item.Properties().tab(MysticTools.tab));
         /*
         this.addPropertyOverride(new ResourceLocation("ml_pull"), new IItemPropertyGetter() {
             public float call(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) {
@@ -54,38 +58,38 @@ public class ItemLootBow extends BowItem implements ILootItem {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
 
         return rarity == LootRarity.UNIQUE;
     }
 
-    public float getPull(ItemStack stack, World world, LivingEntity entity) {
+    public float getPull(ItemStack stack, Level world, LivingEntity entity) {
         float pull = 0.0F;
 
         if (entity == null) {
             return pull;
         } else {
-            ItemStack itemstack = entity.getActiveItemStack();
-            pull = itemstack != null && itemstack.getItem() == ModItems.loot_bow ? (float) (stack.getUseDuration() - entity.getItemInUseCount()) / 20.0F : 0.0F;
+            ItemStack itemstack = entity.getUseItem();
+            pull = itemstack != null && itemstack.getItem() == ModItems.loot_bow ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F : 0.0F;
 
             return pull;
         }
     }
 
-    public float getPulling(ItemStack stack, World world, LivingEntity entity) {
-        return entity != null && entity.isHandActive() && entity.getActiveItemStack() == stack ? 1.0F : 0.0F;
+    public float getPulling(ItemStack stack, Level world, LivingEntity entity) {
+        return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F;
     }
 
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
         return true;
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        return new StringTextComponent(LootItemHelper.getLootName(stack, super.getDisplayName(stack).getString()));
+    public Component getName(ItemStack stack) {
+        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
@@ -94,28 +98,28 @@ public class ItemLootBow extends BowItem implements ILootItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack itemStack = player.getHeldItem(hand);
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
 
-        boolean flag = !player.findAmmo(itemStack).isEmpty();
+        boolean flag = !player.getProjectile(itemStack).isEmpty();
 
-        ActionResult<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemStack, world, player, hand, flag);
+        InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemStack, world, player, hand, flag);
         if (ret != null) return ret;
 
-        if (!player.abilities.isCreativeMode && !flag) {
-            return !flag ? ActionResult.resultFail(itemStack) : ActionResult.resultPass(itemStack);
+        if (!player.getAbilities().instabuild && !flag) {
+            return !flag ? InteractionResultHolder.fail(itemStack) : InteractionResultHolder.pass(itemStack);
         } else {
-            player.setActiveHand(hand);
-            return ActionResult.resultSuccess(itemStack);
+            player.startUsingItem(hand);
+            return InteractionResultHolder.success(itemStack);
         }
     }
 
     @Override
-    public void onPlayerStoppedUsing(ItemStack stack, World world, LivingEntity entityLiving, int timeLeft) {
-        if (entityLiving instanceof PlayerEntity) {
-            PlayerEntity entityplayer = (PlayerEntity) entityLiving;
-            boolean flag = entityplayer.abilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
-            ItemStack itemstack = entityplayer.findAmmo(stack);
+    public void releaseUsing(ItemStack stack, Level world, LivingEntity entityLiving, int timeLeft) {
+        if (entityLiving instanceof Player) {
+            Player entityplayer = (Player) entityLiving;
+            boolean flag = entityplayer.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, stack) > 0;
+            ItemStack itemstack = entityplayer.getProjectile(stack);
 
             int time = this.getUseDuration(stack) - timeLeft;
             time = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, world, entityplayer, time, itemstack != null || flag);
@@ -126,7 +130,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                     itemstack = new ItemStack(Items.ARROW);
                 }
 
-                float f = getArrowVelocity(time);
+                float f = getPowerForTime(time);
                 float draw_factor = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED);
                 if (draw_factor > 0)
                     f *= draw_factor;
@@ -139,80 +143,80 @@ public class ItemLootBow extends BowItem implements ILootItem {
                     f = 1.0F;
                 }
 
-                int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
-                int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack);
-                int m = EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack);
+                int j = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+                int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+                int m = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack);
 
                 List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
 
                 int s = 1;
 
-                boolean flag1 = entityplayer.abilities.isCreativeMode || (itemstack.getItem() instanceof ArrowItem ? ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer) : false);
+                boolean flag1 = entityplayer.getAbilities().instabuild || (itemstack.getItem() instanceof ArrowItem ? ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, stack, entityplayer) : false);
                 ArrowItem itemarrow = ((ArrowItem) (itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW));
-                AbstractArrowEntity entityarrow = itemarrow.createArrow(world, itemstack, entityplayer);
+                AbstractArrow entityarrow = itemarrow.createArrow(world, itemstack, entityplayer);
 
 
                 if (effects.size() > 0) {
                     for (PotionEffect effect : effects) {
-                        EffectInstance potionEffect = effect.getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
-                        if (potionEffect != null && entityarrow instanceof ArrowEntity) {
-                            ((ArrowEntity) entityarrow).addEffect(potionEffect);
+                        MobEffectInstance potionEffect = effect.getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
+                        if (potionEffect != null && entityarrow instanceof Arrow) {
+                            ((Arrow) entityarrow).addEffect(potionEffect);
                         }
                     }
 
-                    entityarrow.pickupStatus = ArrowEntity.PickupStatus.CREATIVE_ONLY;
+                    entityarrow.pickup = Arrow.Pickup.CREATIVE_ONLY;
                 }
 
-                entityarrow.func_234612_a_(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                entityarrow.shootFromRotation(entityplayer, entityplayer.getXRot(), entityplayer.getYRot(), 0.0F, f * 3.0F, 1.0F);
 
                 if (f == 1.0F)
-                    entityarrow.setIsCritical(true);
+                    entityarrow.setCritArrow(true);
                 if (j > 0)
-                    entityarrow.setDamage(entityarrow.getDamage() + (double) j * 0.5D + 0.5D);
+                    entityarrow.setBaseDamage(entityarrow.getBaseDamage() + (double) j * 0.5D + 0.5D);
                 if (k > 0)
-                    entityarrow.setKnockbackStrength(k);
+                    entityarrow.setKnockback(k);
                 if (m > 0)
-                    entityarrow.setFire(100);
+                    entityarrow.setSecondsOnFire(100);
 
-                entityarrow.setDamage(entityarrow.getDamage() * LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER));
+                entityarrow.setBaseDamage(entityarrow.getBaseDamage() * LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER));
 
-                stack.damageItem(1, entityplayer, (p_220009_1_) -> {
-                    p_220009_1_.sendBreakAnimation(entityplayer.getActiveHand());
+                stack.hurtAndBreak(1, entityplayer, (p_220009_1_) -> {
+                    p_220009_1_.broadcastBreakEvent(entityplayer.getUsedItemHand());
                 });
 
-                CompoundNBT nbt = stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE);
+                CompoundTag nbt = stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE);
                 if (nbt != null)
                     entityarrow.getPersistentData().put("unique", nbt);
 
-                world.addEntity(entityarrow);
+                world.addFreshEntity(entityarrow);
 
                 world.playSound(null,
-                        entityplayer.getPosX(),
-                        entityplayer.getPosY(),
-                        entityplayer.getPosZ(),
-                        SoundEvents.ENTITY_ARROW_SHOOT,
-                        SoundCategory.NEUTRAL,
+                        entityplayer.getX(),
+                        entityplayer.getY(),
+                        entityplayer.getZ(),
+                        SoundEvents.ARROW_SHOOT,
+                        SoundSource.NEUTRAL,
                         1.0F,
-                        1.0F / (entityplayer.world.rand.nextFloat() * 0.4F + 1.2F) * 0.5F);
+                        1.0F / (entityplayer.level.random.nextFloat() * 0.4F + 1.2F) * 0.5F);
                 if (!flag1)
                     itemstack.shrink(1);
 
                 if (itemstack.isEmpty()) {
-                    entityplayer.inventory.deleteStack(itemstack);
+                    entityplayer.getInventory().removeItem(itemstack);
                 }
             }
         }
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new StringTextComponent(TextFormatting.RESET + "" + "Bow"));
+        tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Bow"));
 
-        tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Draw speed modifier " + TextFormatting.BOLD + "" + ItemStack.DECIMALFORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED))));
-        tooltip.add(new StringTextComponent("Power multiplier " + TextFormatting.BOLD + "" + ItemStack.DECIMALFORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER))));
+        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED))));
+        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER))));
     }
 }

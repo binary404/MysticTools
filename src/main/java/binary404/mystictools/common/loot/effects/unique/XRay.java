@@ -3,16 +3,15 @@ package binary404.mystictools.common.loot.effects.unique;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXBlock;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.OreBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.Tags;
 
 import java.util.ArrayList;
@@ -24,9 +23,9 @@ public class XRay implements IUniqueEffect {
 
     @Override
     public void rightClick(LivingEntity entity, ItemStack stack) {
-        if (entity instanceof PlayerEntity) {
+        if (entity instanceof Player) {
             Thread tr = new Thread(() -> {
-                List<BlockPos> blocks = startSearch(entity.world, entity.getPosition(), 32);
+                List<BlockPos> blocks = startSearch(entity.level, entity.blockPosition(), 32);
                 for (BlockPos pos : blocks) {
                     MysticTools.proxy.blockFX(pos);
                 }
@@ -37,15 +36,15 @@ public class XRay implements IUniqueEffect {
         }
     }
 
-    public List<BlockPos> startSearch(World world, BlockPos pos, int xzrange) {
+    public List<BlockPos> startSearch(Level world, BlockPos pos, int xzrange) {
         BlockPos orgin = pos;
         List<BlockPos> successful = new ArrayList<>();
-        BlockPos.Mutable pooled = new BlockPos.Mutable(orgin.getX(), orgin.getY(), orgin.getZ());
+        BlockPos.MutableBlockPos pooled = new BlockPos.MutableBlockPos(orgin.getX(), orgin.getY(), orgin.getZ());
         for (int xx = -xzrange; xx <= xzrange; xx++) {
             for (int zz = -xzrange; zz <= xzrange; zz++) {
-                pooled.setPos(orgin.getX() + xx, 0, orgin.getZ() + zz);
-                Chunk c = world.getChunkAt(pooled);
-                int highest = (c.getTopFilledSegment() + 1) * 16;
+                pooled.set(orgin.getX() + xx, 0, orgin.getZ() + zz);
+                LevelChunk c = world.getChunkAt(pooled);
+                int highest = (c.getHighestSectionPosition() + 1) * 16;
                 for (int y = 0; y < highest; y++) {
                     pooled.setY(y);
                     BlockState at = c.getBlockState(pooled);

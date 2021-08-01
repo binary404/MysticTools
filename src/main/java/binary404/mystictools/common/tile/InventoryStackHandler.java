@@ -1,18 +1,17 @@
 package binary404.mystictools.common.tile;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
 public class InventoryStackHandler extends ItemStackHandler {
 
-    private final TileEntity inventoryTile;
+    private final BlockEntity inventoryTile;
     private boolean allowInput, allowOutput;
 
-    public InventoryStackHandler(TileEntity tile, boolean allowInput, boolean allowOutput, int size) {
+    public InventoryStackHandler(BlockEntity tile, boolean allowInput, boolean allowOutput, int size) {
         super(size);
         this.inventoryTile = tile;
         this.allowInput = allowInput;
@@ -38,6 +37,6 @@ public class InventoryStackHandler extends ItemStackHandler {
 
     @Override
     protected void onContentsChanged(int slot) {
-        this.inventoryTile.markDirty();
+        this.inventoryTile.setChanged();
     }
 }

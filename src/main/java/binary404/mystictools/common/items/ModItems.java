@@ -1,15 +1,9 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.core.RegistryHelper;
-import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootRarity;
-import binary404.mystictools.common.loot.LootSet;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -70,10 +64,10 @@ public class ModItems {
         loot_pickaxe = register(r, new ItemLootPickaxe(), "loot_pickaxe");
         loot_bow = register(r, new ItemLootBow(), "weaponbow");
 
-        loot_boots = register(r, new ItemLootArmor(EquipmentSlotType.FEET, "Boots"), "loot_boots");
-        loot_leggings = register(r, new ItemLootArmor(EquipmentSlotType.LEGS, "Leggings"), "loot_leggings");
-        loot_chestplate = register(r, new ItemLootArmor(EquipmentSlotType.CHEST, "Chestplate"), "loot_chestplate");
-        loot_helmet = register(r, new ItemLootArmor(EquipmentSlotType.HEAD, "Helmet"), "loot_helmet");
+        loot_boots = register(r, new ItemLootArmor(EquipmentSlot.FEET, "Boots"), "loot_boots");
+        loot_leggings = register(r, new ItemLootArmor(EquipmentSlot.LEGS, "Leggings"), "loot_leggings");
+        loot_chestplate = register(r, new ItemLootArmor(EquipmentSlot.CHEST, "Chestplate"), "loot_chestplate");
+        loot_helmet = register(r, new ItemLootArmor(EquipmentSlot.HEAD, "Helmet"), "loot_helmet");
 
         register(r, new ItemCase(), "loot_case");
 
@@ -89,9 +83,9 @@ public class ModItems {
         epic_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.EPIC), "epic_case");
         unique_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNIQUE), "unique_case");
 
-        register(r, new Item(new Item.Properties().group(MysticTools.tab)), "shard");
-        register(r, new Item(new Item.Properties().group(MysticTools.tab)), "dice");
-        register(r, new Item(new Item.Properties().group(MysticTools.tab)), "charm");
+        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "shard");
+        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");
+        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "charm");
 
     }
 

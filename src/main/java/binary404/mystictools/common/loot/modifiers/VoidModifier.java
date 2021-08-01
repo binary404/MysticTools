@@ -1,10 +1,10 @@
 package binary404.mystictools.common.loot.modifiers;
 
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class VoidModifier extends LootModifier {
 
-    protected VoidModifier(ILootCondition[] conditionsIn) {
+    protected VoidModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
@@ -27,7 +27,7 @@ public class VoidModifier extends LootModifier {
 
     public static class Serializer extends GlobalLootModifierSerializer<VoidModifier> {
         @Override
-        public VoidModifier read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition) {
+        public VoidModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
             return new VoidModifier(ailootcondition);
         }
 

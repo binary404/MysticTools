@@ -7,23 +7,23 @@ import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoidCondition implements ILootCondition {
+public class VoidCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
         if (lootContext != null) {
-            ItemStack tool = lootContext.get(LootParameters.TOOL);
+            ItemStack tool = lootContext.getParamOrNull(LootContextParams.TOOL);
             List<Item> tools = new ArrayList<Item>();
             tools.add(ModItems.loot_axe);
             tools.add(ModItems.loot_pickaxe);
@@ -44,11 +44,12 @@ public class VoidCondition implements ILootCondition {
     }
 
     @Override
-    public LootConditionType func_230419_b_() {
+    public LootItemConditionType getType() {
         return ModLootModifiers.VOID;
     }
 
-    public static class Serializer implements ILootSerializer<VoidCondition> {
+
+    public static class VoidSerializer implements Serializer<VoidCondition> {
         @Override
         public void serialize(JsonObject p_230424_1_, VoidCondition p_230424_2_, JsonSerializationContext p_230424_3_) {
 

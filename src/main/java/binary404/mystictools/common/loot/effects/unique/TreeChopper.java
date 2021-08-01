@@ -4,18 +4,20 @@ import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -29,20 +31,20 @@ public class TreeChopper implements IUniqueEffect {
     private static final int BLOCK_SWAP_RATE = 3;
     private static final int LEAF_BLOCK_RANGE = 5;
 
-    private static final Map<DimensionType, Set<BlockSwapper>> blockSwappers = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Set<BlockSwapper>> blockSwappers = new HashMap<>();
 
-    public static final List<Material> materialsAxe = Arrays.asList(Material.CORAL, Material.LEAVES, Material.PLANTS, Material.WOOD, Material.GOURD);
+    public static final List<Material> materialsAxe = Arrays.asList(Material.LEAVES, Material.PLANT, Material.WOOD, Material.VEGETABLE);
 
     public TreeChopper() {
         MinecraftForge.EVENT_BUS.addListener(this::tickEnd);
     }
 
     private void tickEnd(TickEvent.WorldTickEvent event) {
-        if (event.world.isRemote) {
+        if (event.world.isClientSide) {
             return;
         }
         if (event.phase == TickEvent.Phase.END && event.world.getGameTime() % 5 == 0) {
-            DimensionType dim = event.world.getDimensionType();
+            ResourceKey<Level> dim = event.world.dimension();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
                 swappers.removeIf(next -> next == null || !next.tick());
@@ -51,47 +53,47 @@ public class TreeChopper implements IUniqueEffect {
     }
 
     @Override
-    public void breakBlock(BlockPos pos, World world, PlayerEntity player, ItemStack stack) {
+    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {
         addBlockSwapper(world, player, stack, pos, 32, true);
     }
 
-    private static void addBlockSwapper(World world, PlayerEntity player, ItemStack stack, BlockPos origCoords, int steps, boolean leaves) {
+    private static void addBlockSwapper(Level world, Player player, ItemStack stack, BlockPos origCoords, int steps, boolean leaves) {
         BlockSwapper swapper = new BlockSwapper(world, player, stack, origCoords, steps, leaves);
 
-        if (world.isRemote) {
+        if (world.isClientSide) {
             return;
         }
-        DimensionType dim = world.getDimensionType();
+        ResourceKey<Level> dim = world.dimension();
         blockSwappers.computeIfAbsent(dim, d -> new HashSet<>()).add(swapper);
     }
 
-    public static void removeBlockWithDrops(PlayerEntity player, ItemStack stack, World world, BlockPos pos,
+    public static void removeBlockWithDrops(Player player, ItemStack stack, Level world, BlockPos pos,
                                             Predicate<BlockState> filter,
                                             boolean dispose, boolean particles) {
-        if (!world.isBlockLoaded(pos)) {
+        if (!world.hasChunkAt(pos)) {
             return;
         }
 
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
 
-        if (!world.isRemote && filter.test(state)
-                && !block.isAir(state, world, pos) && state.getPlayerRelativeBlockHardness(player, world, pos) > 0
-                && state.canHarvestBlock(player.world, pos, player)) {
-            int exp = ForgeHooks.onBlockBreakEvent(world, ((ServerPlayerEntity) player).interactionManager.getGameType(), (ServerPlayerEntity) player, pos);
+        if (!world.isClientSide && filter.test(state)
+                && !(block instanceof AirBlock) && state.getDestroyProgress(player, world, pos) > 0
+                && state.canHarvestBlock(player.level, pos, player)) {
+            int exp = ForgeHooks.onBlockBreakEvent(world, ((ServerPlayer) player).gameMode.getGameModeForPlayer(), (ServerPlayer) player, pos);
             if (exp == -1) {
                 return;
             }
 
-            if (!player.abilities.isCreativeMode) {
-                TileEntity tile = world.getTileEntity(pos);
+            if (!player.getAbilities().instabuild) {
+                BlockEntity tile = world.getBlockEntity(pos);
 
                 if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
-                    block.onPlayerDestroy(world, pos, state);
+                    block.destroy(world, pos, state);
                     if (!dispose) {
-                        block.harvestBlock(world, player, pos, state, tile, stack);
-                        if (world instanceof ServerWorld)
-                            block.dropXpOnBlockBreak((ServerWorld) world, pos, exp);
+                        block.playerDestroy(world, player, pos, state, tile, stack);
+                        if (world instanceof ServerLevel)
+                            block.popExperience((ServerLevel) world, pos, exp);
                     }
                 }
             } else {
@@ -100,15 +102,15 @@ public class TreeChopper implements IUniqueEffect {
 
             if (particles) {
                 NetworkHandler.sendToNearby(world, player, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.1F, 0.96F, 0.1F));
-                world.playEvent(2001, pos, Block.getStateId(state));
+                world.levelEvent(2001, pos, Block.getId(state));
             }
         }
     }
 
     private static class BlockSwapper {
         public static final int SINGLE_BLOCK_RADIUS = 1;
-        private final World world;
-        private final PlayerEntity player;
+        private final Level world;
+        private final Player player;
 
         private final ItemStack stack;
 
@@ -122,7 +124,7 @@ public class TreeChopper implements IUniqueEffect {
 
         private final Set<BlockPos> completedCoords;
 
-        public BlockSwapper(World world, PlayerEntity player, ItemStack truncator, BlockPos origCoords, int range, boolean leaves) {
+        public BlockSwapper(Level world, Player player, ItemStack truncator, BlockPos origCoords, int range, boolean leaves) {
             this.world = world;
             this.player = player;
             this.stack = truncator;
@@ -204,7 +206,7 @@ public class TreeChopper implements IUniqueEffect {
                             continue;
                         }
 
-                        coords.add(original.add(dx, dy, dz));
+                        coords.add(original.offset(dx, dy, dz));
                     }
                 }
             }

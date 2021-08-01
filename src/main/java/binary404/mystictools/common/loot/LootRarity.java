@@ -5,9 +5,9 @@ import binary404.mystictools.common.items.ModItems;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class LootRarity {
         return REGISTRY;
     }
 
-    public static LootRarity generateRandomRarity(Random random, PlayerEntity entity) {
+    public static LootRarity generateRandomRarity(Random random, Player entity) {
         int rarity = random.nextInt(100) + 1;
         LootRarity lootRarity;
         int commonRarity = ConfigHandler.COMMON.commonRarity.get();
@@ -47,7 +47,7 @@ public class LootRarity {
     }
 
     public static void init() {
-        COMMON = get("common", TextFormatting.WHITE)
+        COMMON = get("common", ChatFormatting.WHITE)
                 .setDamage(ConfigHandler.COMMON.commonDamageMin.get(), ConfigHandler.COMMON.commonDamageMax.get())
                 .setSpeed(-3.1F, -2.399F)
                 .setArmor(1, 3)
@@ -57,7 +57,7 @@ public class LootRarity {
                 .setPotionCount(ConfigHandler.COMMON.commonPotionMin.get(), ConfigHandler.COMMON.commonPotionMax.get())
                 .setEffectCount(ConfigHandler.COMMON.commonEffectMin.get(), ConfigHandler.COMMON.commonEffectMax.get());
 
-        UNCOMMON = get("uncommon", TextFormatting.GRAY)
+        UNCOMMON = get("uncommon", ChatFormatting.GRAY)
                 .setDamage(ConfigHandler.COMMON.uncommonDamageMin.get(), ConfigHandler.COMMON.uncommonDamageMax.get())
                 .setSpeed(-2.8F, -2.3F)
                 .setArmor(2, 5)
@@ -67,7 +67,7 @@ public class LootRarity {
                 .setPotionCount(ConfigHandler.COMMON.uncommonPotionMin.get(), ConfigHandler.COMMON.uncommonPotionMax.get())
                 .setEffectCount(ConfigHandler.COMMON.uncommonEffectMin.get(), ConfigHandler.COMMON.uncommonEffectMax.get());
 
-        RARE = get("rare", TextFormatting.YELLOW)
+        RARE = get("rare", ChatFormatting.YELLOW)
                 .setDamage(ConfigHandler.COMMON.rareDamageMin.get(), ConfigHandler.COMMON.rareDamageMax.get())
                 .setSpeed(-2.6999F, -2.1F)
                 .setArmor(3, 6)
@@ -77,7 +77,7 @@ public class LootRarity {
                 .setPotionCount(ConfigHandler.COMMON.rarePotionMin.get(), ConfigHandler.COMMON.rarePotionMax.get())
                 .setEffectCount(ConfigHandler.COMMON.rareEffectMin.get(), ConfigHandler.COMMON.rareEffectMax.get());
 
-        EPIC = get("epic", TextFormatting.BLUE)
+        EPIC = get("epic", ChatFormatting.BLUE)
                 .setDamage(ConfigHandler.COMMON.epicDamageMin.get(), ConfigHandler.COMMON.epicDamageMax.get())
                 .setSpeed(-2.39999F, -1.8F)
                 .setArmor(4, 8)
@@ -87,7 +87,7 @@ public class LootRarity {
                 .setPotionCount(ConfigHandler.COMMON.epicPotionMin.get(), ConfigHandler.COMMON.epicPotionMax.get())
                 .setEffectCount(ConfigHandler.COMMON.epicEffectMin.get(), ConfigHandler.COMMON.epicEffectMax.get());
 
-        UNIQUE = get("unique", TextFormatting.DARK_PURPLE)
+        UNIQUE = get("unique", ChatFormatting.DARK_PURPLE)
                 .setDamage(ConfigHandler.COMMON.uniqueDamageMin.get(), ConfigHandler.COMMON.uniqueDamageMax.get())
                 .setSpeed(-2.0F, -1.5F)
                 .setArmor(5, 10)
@@ -114,7 +114,7 @@ public class LootRarity {
 
     public static LootRarity UNIQUE;
 
-    private TextFormatting color = TextFormatting.WHITE;
+    private ChatFormatting color = ChatFormatting.WHITE;
     private int damageMin = 0;
     private int damageMax = 7;
     private float speedMin = 0.0F;
@@ -137,7 +137,7 @@ public class LootRarity {
     }
 
 
-    public TextFormatting getColor() {
+    public ChatFormatting getColor() {
         return this.color;
     }
 
@@ -169,7 +169,7 @@ public class LootRarity {
             return LootRarity.fromId(s);
         } catch (Exception e) {
             reader.setCursor(i);
-            throw new SimpleCommandExceptionType(new TranslationTextComponent("argument.id.invalid")).createWithContext(reader);
+            throw new SimpleCommandExceptionType(new TranslatableComponent("argument.id.invalid")).createWithContext(reader);
         }
     }
 
@@ -295,7 +295,7 @@ public class LootRarity {
         return efficiency;
     }
 
-    protected static LootRarity get(String id, TextFormatting color) {
+    protected static LootRarity get(String id, ChatFormatting color) {
         LootRarity r = new LootRarity();
 
         r.id = id;

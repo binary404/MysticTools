@@ -1,43 +1,4 @@
 package binary404.mystictools.common.core;
-
-import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.blocks.ModBlocks;
-import binary404.mystictools.common.core.util.Utils;
-import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.mixin.HeroGiftTaskAccess;
-import binary404.mystictools.mixin.PoITypeAccess;
-import binary404.mystictools.mixin.SingleJigsawAccess;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.village.PointOfInterestType;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
-import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
-import net.minecraft.world.gen.feature.structure.*;
-import net.minecraft.world.gen.feature.template.ProcessorLists;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
@@ -52,7 +13,8 @@ import static binary404.mystictools.common.core.RegistryHelper.register;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VillagerHandler {
 
-    public static PointOfInterestType POI_CORROSION_CAULDRON;
+    /*
+    public static PoiType POI_CORROSION_CAULDRON;
 
     public static VillagerProfession MERCHANT;
 
@@ -285,4 +247,5 @@ public class VillagerHandler {
         }
     }
 
+    */
 }

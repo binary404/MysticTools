@@ -4,8 +4,8 @@ import binary404.mystictools.common.items.ModItems;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 
 import java.util.*;
 
@@ -212,7 +212,7 @@ public class LootSet {
                 return LootSetType.fromString(s);
             } catch (Exception e) {
                 reader.setCursor(i);
-                throw new SimpleCommandExceptionType(new TranslationTextComponent("argument.id.invalid")).createWithContext(reader);
+                throw new SimpleCommandExceptionType(new TranslatableComponent("argument.id.invalid")).createWithContext(reader);
             }
         }
 
