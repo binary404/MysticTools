@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot.effects;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
@@ -121,14 +122,11 @@ public class PotionEffect implements IEffect {
     public static int getDurationFromStack(ItemStack stack, String effectId) {
         int duration = 0;
 
-        ListTag effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_POTIONLIST);
+        List<PotionEffectInstance> effects = ModAttributes.LOOT_POTION_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
-        int count = effectTagList.size();
-
-        for (int i = 0; i < count; ++i) {
-            CompoundTag e = effectTagList.getCompound(i);
-            if (e.getString("id").contains(effectId)) {
-                duration = e.getInt("duration");
+        for (PotionEffectInstance instance : effects) {
+            if (instance.getId().contains(effectId)) {
+                duration = instance.getDuration();
             }
         }
 
@@ -138,31 +136,19 @@ public class PotionEffect implements IEffect {
     public static int getAmplifierFromStack(ItemStack stack, String effectId) {
         int amplifier = 0;
 
-        ListTag effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        List<PotionEffectInstance> effects = ModAttributes.LOOT_POTION_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
-        int count = effectTagList.size();
-
-        for (int i = 0; i < count; ++i) {
-            CompoundTag e = effectTagList.getCompound(i);
-            if (e.getString("id").contains(effectId)) {
-                amplifier = e.getInt("amplifier");
+        for (PotionEffectInstance instance : effects) {
+            if (instance.getId().contains(effectId)) {
+                amplifier = instance.getAmplifier();
             }
         }
 
         return amplifier;
     }
 
-    public static List<PotionEffect> getPotionlist(ItemStack stack) {
-        List<PotionEffect> list = new ArrayList<PotionEffect>();
-
-        ListTag effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_POTIONLIST);
-
-        int count = effectTagList.size();
-
-        for (int i = 0; i < count; ++i) {
-            CompoundTag e = effectTagList.getCompound(i);
-            list.add(PotionEffect.getById(e.getString("id")));
-        }
+    public static List<PotionEffectInstance> getPotionlist(ItemStack stack) {
+        List<PotionEffectInstance> list = ModAttributes.LOOT_POTION_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
         return list;
     }
@@ -190,7 +176,7 @@ public class PotionEffect implements IEffect {
         return this;
     }
 
-    private int getDuration(Random rand) {
+    public int getDuration(Random rand) {
         int duration = this.durationMin;
 
         if (duration < this.durationMax)
@@ -199,7 +185,7 @@ public class PotionEffect implements IEffect {
         return duration;
     }
 
-    private int getAmplifier(Random rand) {
+    public int getAmplifier(Random rand) {
         int amplifier = this.amplifierMin;
 
         if (amplifier < this.amplifierMax)

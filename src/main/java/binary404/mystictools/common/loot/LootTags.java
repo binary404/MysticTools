@@ -17,9 +17,9 @@ public class LootTags {
     public static final String LOOT_TAG_LEVEL = "level";
     public static final String LOOT_TAG_UPGRADE = "upgrade";
 
-    public static final String LOOT_TAG_POTIONLIST = "potionList";
+    public static final String LOOT_TAG_POTIONLIST = "potioneffects";
     public static final String LOOT_TAG_UNIQUE = "unique";
-    public static final String LOOT_TAG_EFFECTLIST = "effectList";
+    public static final String LOOT_TAG_EFFECTLIST = "effects";
 
     public static final String LOOT_TAG_DRAWSPEED = "drawspeed";
     public static final String LOOT_TAG_MULTISHOT = "miltishot";

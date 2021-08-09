@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot.modifiers;
 
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
 import com.google.gson.JsonDeserializationContext;
@@ -30,12 +31,8 @@ public class AutoSmeltCondition implements LootItemCondition {
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
-                    List<LootEffect> effects = LootEffect.getEffectList(tool);
-
-                    for (LootEffect effect : effects) {
-                        if (effect == LootEffect.AUTO_SMELT) {
-                            return ((LootEffectAutoSmelt) effect.getAction()).active(tool);
-                        }
+                    if (LootItemHelper.hasEffect(tool, LootEffect.AUTO_SMELT)) {
+                        return ((LootEffectAutoSmelt) LootEffect.AUTO_SMELT.getAction()).active(tool);
                     }
                 }
         }

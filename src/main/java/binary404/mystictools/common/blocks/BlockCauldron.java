@@ -3,6 +3,7 @@ package binary404.mystictools.common.blocks;
 import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
@@ -50,7 +51,7 @@ public class BlockCauldron extends Block implements EntityBlock {
             Item item = itemEntity.getItem().getItem();
             if (item instanceof ILootItem) {
                 ItemStack stack;
-                LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(itemEntity.getItem(), LootTags.LOOT_TAG_RARITY));
+                LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(itemEntity.getItem(), "common").getValue(itemEntity.getItem()));
                 if (rarity == LootRarity.COMMON) {
                     stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 3, 7));
                 } else if (rarity == LootRarity.UNCOMMON) {

@@ -1,11 +1,13 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.PotionEffect;
+import binary404.mystictools.common.loot.effects.PotionEffectInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.EffectInstance;
@@ -59,7 +61,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
         return rarity == LootRarity.UNIQUE;
     }
@@ -80,7 +82,6 @@ public class ItemLootBow extends BowItem implements ILootItem {
     public float getPulling(ItemStack stack, Level world, LivingEntity entity) {
         return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F;
     }
-
 
     @Override
     public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
@@ -131,7 +132,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 }
 
                 float f = getPowerForTime(time);
-                float draw_factor = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED);
+                float draw_factor = ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1F).getValue(stack);
                 if (draw_factor > 0)
                     f *= draw_factor;
 
@@ -147,7 +148,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 int k = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
                 int m = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, stack);
 
-                List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
+                List<PotionEffectInstance> effects = PotionEffect.getPotionlist(stack);
 
                 int s = 1;
 
@@ -157,8 +158,8 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
 
                 if (effects.size() > 0) {
-                    for (PotionEffect effect : effects) {
-                        MobEffectInstance potionEffect = effect.getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
+                    for (PotionEffectInstance effect : effects) {
+                        MobEffectInstance potionEffect = effect.getEffect().getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
                         if (potionEffect != null && entityarrow instanceof Arrow) {
                             ((Arrow) entityarrow).addEffect(potionEffect);
                         }
@@ -178,7 +179,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 if (m > 0)
                     entityarrow.setSecondsOnFire(100);
 
-                entityarrow.setBaseDamage(entityarrow.getBaseDamage() * LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER));
+                entityarrow.setBaseDamage(entityarrow.getBaseDamage() * ModAttributes.LOOT_POWER.getOrDefault(stack, 1F).getValue(stack));
 
                 stack.hurtAndBreak(1, entityplayer, (p_220009_1_) -> {
                     p_220009_1_.broadcastBreakEvent(entityplayer.getUsedItemHand());
@@ -216,7 +217,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Bow"));
 
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED))));
-        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_POWER))));
+        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1F).getValue(stack))));
+        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_POWER.getOrDefault(stack, 1F).getValue(stack))));
     }
 }

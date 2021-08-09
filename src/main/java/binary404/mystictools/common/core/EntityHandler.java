@@ -5,6 +5,7 @@ import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
+import binary404.mystictools.common.loot.effects.LootEffectInstance;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
@@ -69,9 +70,7 @@ public class EntityHandler {
                 if (player.getMainHandItem().getItem() == ModItems.loot_sword) {
                     ItemStack stack = player.getMainHandItem();
 
-                    List<LootEffect> effects = LootEffect.getEffectList(stack);
-
-                    if (effects.contains(LootEffect.getById("leech"))) {
+                    if (LootItemHelper.hasEffect(stack, LootEffect.LEECH)) {
                         float damageInflicted = Math.min(event.getAmount(), event.getEntityLiving().getHealth());
                         int amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
                         float leech = damageInflicted * ((float) amplifier / 100.0F);
@@ -83,10 +82,10 @@ public class EntityHandler {
             if (event.getEntityLiving() instanceof Player && event.getSource().getEntity() instanceof LivingEntity) {
                 Player player = (Player) event.getEntityLiving();
                 for (ItemStack stack : player.getInventory().armor) {
-                    List<LootEffect> effects = LootEffect.getEffectList(stack);
-                    for (LootEffect effect : effects) {
-                        if (effect.getAction() != null)
-                            effect.getAction().handleArmorHit(stack, player, (LivingEntity) event.getSource().getEntity());
+                    List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
+                    for (LootEffectInstance effect : effects) {
+                        if (effect.getEffect().getAction() != null)
+                            effect.getEffect().getAction().handleArmorHit(stack, player, (LivingEntity) event.getSource().getEntity());
                     }
                 }
             }
@@ -94,15 +93,14 @@ public class EntityHandler {
             if (event.getEntityLiving() instanceof Player) {
                 Player playerEntity = (Player) event.getEntityLiving();
                 for (ItemStack stack : playerEntity.getInventory().armor) {
-                    List<LootEffect> effects = LootEffect.getEffectList(stack);
-                    if (effects.contains(LootEffect.REFLECT)) {
+                    if (LootItemHelper.hasEffect(stack, LootEffect.REFLECT)) {
                         float damage = event.getAmount() / 2;
                         event.setAmount(damage);
                         if (event.getSource().getEntity() != null) {
                             event.getSource().getEntity().hurt(new DamageSource("reflect"), damage);
                         }
                     }
-                    if (effects.contains(LootEffect.PARRY)) {
+                    if (LootItemHelper.hasEffect(stack, LootEffect.PARRY)) {
                         int chance = LootEffect.getAmplifierFromStack(stack, LootEffect.PARRY.getId());
                         if (playerEntity.level.random.nextInt(100) <= chance) {
                             playerEntity.level.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(),
@@ -121,8 +119,7 @@ public class EntityHandler {
     public static void onOrbPickup(PlayerXpEvent.PickupXp event) {
         Player player = event.getPlayer();
         for (ItemStack stack : player.getInventory().armor) {
-            List<LootEffect> effects = LootEffect.getEffectList(stack);
-            if (effects.contains(LootEffect.INSIGHT)) {
+            if (LootItemHelper.hasEffect(stack, LootEffect.INSIGHT)) {
                 int level = LootEffect.getAmplifierFromStack(stack, LootEffect.INSIGHT.getId());
                 ExperienceOrb orb = event.getOrb();
                 orb.value *= (1 + level);

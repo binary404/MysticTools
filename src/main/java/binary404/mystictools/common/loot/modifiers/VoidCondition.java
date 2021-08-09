@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot.modifiers;
 
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
 import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
@@ -31,13 +32,9 @@ public class VoidCondition implements LootItemCondition {
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
-                    List<LootEffect> effects = LootEffect.getEffectList(tool);
-
-                    for (LootEffect effect : effects) {
-                        if (effect == LootEffect.VOID) {
-                            return ((LootEffectVoid) effect.getAction()).active(tool);
+                        if (LootItemHelper.hasEffect(tool, LootEffect.VOID)) {
+                            return ((LootEffectVoid) LootEffect.VOID.getAction()).active(tool);
                         }
-                    }
                 }
         }
         return false;

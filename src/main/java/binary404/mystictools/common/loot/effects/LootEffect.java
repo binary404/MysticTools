@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot.effects;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
@@ -158,31 +159,19 @@ public class LootEffect implements IEffect {
     public static int getAmplifierFromStack(ItemStack stack, String effectId) {
         int amplifier = 0;
 
-        ListTag effectTagList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
+        List<LootEffectInstance> effects = ModAttributes.LOOT_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
-        int count = effectTagList.size();
-
-        for (int i = 0; i < count; ++i) {
-            CompoundTag e = effectTagList.getCompound(i);
-            if (e.getString("id").contains(effectId)) {
-                amplifier = e.getInt("amplifier");
+        for(LootEffectInstance instance : effects) {
+            if(instance.getId().contains(effectId)) {
+                amplifier = instance.getAmplifier();
             }
         }
 
         return amplifier;
     }
 
-    public static List<LootEffect> getEffectList(ItemStack stack) {
-        List<LootEffect> list = new ArrayList<>();
-
-        ListTag effectList = LootNbtHelper.getLootTagList(stack, LootTags.LOOT_TAG_EFFECTLIST);
-
-        int count = effectList.size();
-
-        for (int i = 0; i < count; ++i) {
-            CompoundTag e = effectList.getCompound(i);
-            list.add(LootEffect.getById(e.getString("id")));
-        }
+    public static List<LootEffectInstance> getEffectList(ItemStack stack) {
+        List<LootEffectInstance> list = ModAttributes.LOOT_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
         return list;
     }
@@ -211,7 +200,7 @@ public class LootEffect implements IEffect {
         return this;
     }
 
-    private int getAmplifier(Random rand) {
+    public int getAmplifier(Random rand) {
         return Mth.nextInt(rand, this.amplifierMin, this.amplifierMax);
     }
 

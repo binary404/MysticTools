@@ -3,6 +3,7 @@ package binary404.mystictools.common.network;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
+import binary404.mystictools.common.loot.effects.LootEffectInstance;
 import com.google.common.collect.Sets;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,10 +39,10 @@ public class PacketToggle {
                 ItemStack tool = player.getMainHandItem();
 
                 if (tools.contains(tool.getItem())) {
-                    List<LootEffect> effects = LootEffect.getEffectList(tool);
+                    List<LootEffectInstance> effects = LootEffect.getEffectList(tool);
 
-                    for (LootEffect effect : effects) {
-                        IEffectAction action = effect.getAction();
+                    for (LootEffectInstance effect : effects) {
+                        IEffectAction action = effect.getEffect().getAction();
                         if(action != null && action.hasResponseMessage(player, tool)) {
                             action.toggleAction(player, tool);
                             player.sendMessage(action.modificationResponseMessage(player, tool), player.getUUID());

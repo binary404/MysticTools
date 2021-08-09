@@ -2,6 +2,7 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
@@ -50,7 +51,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
         return rarity == LootRarity.UNIQUE || super.isFoil(stack);
     }
@@ -72,7 +73,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         LootItemHelper.handlePotionEffects(stack, target, attacker);
         LootItemHelper.handleHit(stack, target, attacker);
 
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack);
         }
@@ -82,7 +83,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
         }
@@ -92,7 +93,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
     @Override
     public InteractionResultHolder<ItemStack> use (Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
@@ -110,7 +111,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        int attackDamage = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE);
+        int attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1).getValue(stack);
 
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip);

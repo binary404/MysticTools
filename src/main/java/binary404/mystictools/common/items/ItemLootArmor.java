@@ -5,6 +5,7 @@ import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.LootEffect;
+import binary404.mystictools.common.loot.effects.LootEffectInstance;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketJump;
 import com.google.common.collect.HashMultimap;
@@ -96,9 +97,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     public void onArmorTick(ItemStack stack, Level world, Player player) {
         LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) player);
 
-        List<LootEffect> effects = LootEffect.getEffectList(stack);
-
-        if (effects.contains(LootEffect.getById("jump"))) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.JUMP)) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 if (player == Minecraft.getInstance().player) {
                     LocalPlayer playerSp = (LocalPlayer) player;
@@ -121,9 +120,11 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
             });
         }
 
-        for (LootEffect effect : effects) {
-            if (effect.getAction() != null) {
-                effect.getAction().handleUpdate(stack, world, player, 0, false);
+        List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
+
+        for (LootEffectInstance effect : effects) {
+            if (effect.getEffect().getAction() != null) {
+                effect.getEffect().getAction().handleUpdate(stack, world, player, 0, false);
             }
         }
     }

@@ -1,6 +1,7 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
@@ -57,7 +58,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
         return rarity == LootRarity.UNIQUE;
     }
@@ -69,7 +70,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     @Override
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.level, player, stack);
         }
@@ -94,7 +95,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
         if (entityIn instanceof LivingEntity && isSelected)
             LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) entityIn);
 
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
         }
@@ -104,7 +105,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
@@ -131,7 +132,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
             return Sets.newHashSet(ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL);
         }
 
-        return super.getToolTypes(stack);
+        return Sets.newHashSet(ToolType.PICKAXE);
     }
 
     @Override
@@ -159,7 +160,7 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Pickaxe"));
 
-        float efficiency = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY);
+        float efficiency = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, -1F).getValue(stack);
         tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(efficiency) + " Mining Speed"));
     }
 

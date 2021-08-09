@@ -1,16 +1,16 @@
 package binary404.mystictools.common.loot;
 
-import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.util.RandomCollection;
 import binary404.mystictools.common.items.ItemLootArmor;
-import binary404.mystictools.common.items.ItemLootAxe;
 import binary404.mystictools.common.items.ItemLootSword;
 import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.common.loot.effects.IEffectAction;
-import binary404.mystictools.common.loot.effects.LootEffect;
-import binary404.mystictools.common.loot.effects.PotionEffect;
-import binary404.mystictools.common.loot.effects.UniqueEffect;
+import binary404.mystictools.common.items.attribute.DoubleAttribute;
+import binary404.mystictools.common.items.attribute.FloatAttribute;
+import binary404.mystictools.common.items.attribute.IntegerAttribute;
+import binary404.mystictools.common.items.attribute.ModAttributes;
+import binary404.mystictools.common.loot.effects.*;
 import com.google.common.collect.Multimap;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -43,7 +43,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.ToolType;
 
@@ -58,7 +57,7 @@ public class LootItemHelper {
     protected static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
     public static ItemStack getRandomLoot(Random rand) {
-        RandomCollection<Item> col = new RandomCollection<Item>(rand);
+        RandomCollection<Item> col = new RandomCollection<>(rand);
 
         col.add(2, ModItems.loot_sword);
         col.add(3, ModItems.loot_axe);
@@ -82,7 +81,7 @@ public class LootItemHelper {
     public static String getLootName(ItemStack stack, String current) {
         String displayName = current;
 
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         String name = LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_NAME);
 
         displayName = name;
@@ -94,7 +93,7 @@ public class LootItemHelper {
     }
 
     public static int getMaxDamage(ItemStack stack) {
-        int maxDamage = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_DURABILITY);
+        int maxDamage = ModAttributes.LOOT_DURABILITY.getOrDefault(stack, 0).getValue(stack);
 
         if (maxDamage == 0)
             maxDamage = 100;
@@ -110,8 +109,8 @@ public class LootItemHelper {
         Multimap<Attribute, AttributeModifier> modifiers = initial;
 
         if (slot == effectiveSlot) {
-            int attackDamage = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE);
-            float attackSpeed = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_SPEED);
+            int attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1).getValue(stack);
+            float attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1F).getValue(stack);
             float armorPoints = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_ARMOR);
             float armorToughness = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_TOUGHNESS);
 
@@ -119,7 +118,7 @@ public class LootItemHelper {
                 applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
 
             if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
-                applyAttributeModifier(modifiers, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, (double) attackSpeed);
+                applyAttributeModifier(modifiers, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, attackSpeed);
 
             if (armorPoints > 0 && stack.getItem() instanceof ItemLootArmor)
                 applyAttributeModifier(modifiers, Attributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorPoints);
@@ -127,15 +126,15 @@ public class LootItemHelper {
             if (armorToughness > 0 && stack.getItem() instanceof ItemLootArmor)
                 applyAttributeModifier(modifiers, Attributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
 
-            List<LootEffect> effects = LootEffect.getEffectList(stack);
+            List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
-            String uuid_string = LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_UUID);
+            String uuid_string = ModAttributes.LOOT_UUID.getOrDefault(stack, "").getValue(stack);
 
             if (uuid_string.length() > 0) {
-                for(LootEffect effect : effects) {
-                    if(effect != null) {
-                        if(effect.getAttribute() != null) {
-                            modifiers.put(effect.getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
+                for (LootEffectInstance effect : effects) {
+                    if (effect != null) {
+                        if (effect.getEffect().getAttribute() != null) {
+                            modifiers.put(effect.getEffect().getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
                         }
                     }
                 }
@@ -160,28 +159,31 @@ public class LootItemHelper {
     }
 
     public static void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (target != null && target.getHealth() <= 0.0) {
+        if (target != null) {
 
-            List<LootEffect> effects = LootEffect.getEffectList(stack);
+            List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
             if (effects.size() > 0) {
-                for (LootEffect effect : effects) {
-                    if (effect.getAction() != null)
-                        effect.getAction().handleHit(stack, target, attacker);
+                for (LootEffectInstance effect : effects) {
+                    if (effect.getEffect().getAction() != null)
+                        effect.getEffect().getAction().handleHit(stack, target, attacker);
                 }
             }
 
-            int kills = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
-            kills++;
-            int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL);
-            if (kills >= level) {
-                level *= 1.5;
-                kills = 0;
-                int upgrades = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
-                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_LEVEL, level);
-                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE, (upgrades + 1));
+            if (target.getHealth() <= 0.0) {
+                //Only level up on kill
+                int kills = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
+                kills++;
+                int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL);
+                if (kills >= level) {
+                    level *= 1.5;
+                    kills = 0;
+                    int upgrades = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
+                    LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_LEVEL, level);
+                    LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE, (upgrades + 1));
+                }
+                LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_XP, kills);
             }
-            LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_XP, kills);
         }
     }
 
@@ -204,12 +206,12 @@ public class LootItemHelper {
     public static InteractionResultHolder<ItemStack> use(InteractionResultHolder<ItemStack> defaultAction, Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        List<LootEffect> effects = LootEffect.getEffectList(stack);
+        List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
         if (effects != null) {
-            for (LootEffect effect : effects) {
+            for (LootEffectInstance effect : effects) {
                 if (effect != null) {
-                    IEffectAction action = effect.getAction();
+                    IEffectAction action = effect.getEffect().getAction();
 
                     if (action != null) {
                         defaultAction = action.handleUse(defaultAction, world, player, hand);
@@ -224,11 +226,11 @@ public class LootItemHelper {
     public static boolean hasEffect(ItemStack stack, LootEffect effect) {
         boolean hasEffect = false;
 
-        List<LootEffect> effects = LootEffect.getEffectList(stack);
+        List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
         effect_check:
-        for (LootEffect e : effects) {
-            if (e == effect) {
+        for (LootEffectInstance e : effects) {
+            if (e.getEffect() == effect) {
                 hasEffect = true;
                 break effect_check;
             }
@@ -238,11 +240,11 @@ public class LootItemHelper {
     }
 
     public static void handlePotionEffects(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
+        List<PotionEffectInstance> effects = PotionEffect.getPotionlist(stack);
 
         if (effects.size() > 0) {
-            for (PotionEffect effect : effects) {
-                effect.onHit(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()), target, attacker);
+            for (PotionEffectInstance effect : effects) {
+                effect.getEffect().onHit(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()), target, attacker);
             }
         }
     }
@@ -282,13 +284,14 @@ public class LootItemHelper {
     }
 
     public static float getEfficiency(ItemStack stack, BlockState state) {
-        float speed = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY);
+        float speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, -1F).getValue(stack);
 
         for (ToolType type : stack.getItem().getToolTypes(stack)) {
             Material material = state.getMaterial();
             if (state.getBlock().isToolEffective(state, type)
-                    || (type == ToolType.PICKAXE && (material == Material.METAL || material == Material.HEAVY_METAL || material == Material.STONE))
-                    || (type == ToolType.AXE && (material == Material.WOOD || material == Material.PLANT || material == Material.LEAVES))) {
+                    || (type == ToolType.SHOVEL && (BlockTags.MINEABLE_WITH_SHOVEL.contains(state.getBlock())))
+                    || (type == ToolType.PICKAXE && (BlockTags.MINEABLE_WITH_PICKAXE.contains(state.getBlock())))
+                    || (type == ToolType.AXE && (BlockTags.MINEABLE_WITH_AXE.contains(state.getBlock())))) {
                 return speed;
             }
         }
@@ -303,28 +306,28 @@ public class LootItemHelper {
     public static void addInformation(ItemStack stack, List<Component> tooltip, boolean show_durability) {
         int durability = stack.getMaxDamage();
 
-        List<PotionEffect> effects = PotionEffect.getPotionlist(stack);
-        for (PotionEffect effect : effects) {
+        List<PotionEffectInstance> effects = PotionEffect.getPotionlist(stack);
+        for (PotionEffectInstance effect : effects) {
             tooltip.add(new TextComponent(
                     ChatFormatting.RESET
-                            + "- " + effect.getType().getColor()
+                            + "- " + effect.getEffect().getType().getColor()
                             + I18n.get("weaponeffect." + effect.getId() + ".description",
                             new Object[]{
-                                    effect.getDurationString(stack, effect.getId()),
-                                    effect.getAmplifierString(stack, effect.getId()),
-                                    effect.getAmplifierString(stack, effect.getId(), 1)})));
+                                    effect.getEffect().getDurationString(stack, effect.getId()),
+                                    effect.getEffect().getAmplifierString(stack, effect.getId()),
+                                    effect.getEffect().getAmplifierString(stack, effect.getId(), 1)})));
         }
-        List<LootEffect> effects1 = LootEffect.getEffectList(stack);
-        for (LootEffect effect : effects1) {
+        List<LootEffectInstance> effects1 = LootEffect.getEffectList(stack);
+        for (LootEffectInstance effect : effects1) {
             tooltip.add(new TextComponent(
-                    ChatFormatting.RESET + "- " + effect.getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
-                            effect.getAmplifierString(stack, effect.getId()),
-                            effect.getAmplifierString(stack, effect.getId(), 1)
+                    ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
+                            effect.getEffect().getAmplifierString(stack, effect.getId()),
+                            effect.getEffect().getAmplifierString(stack, effect.getId(), 1)
                     })
             ));
         }
 
-        LootRarity rarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
         if (rarity == LootRarity.UNIQUE) {
             String effect = I18n.get(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
@@ -384,15 +387,15 @@ public class LootItemHelper {
     public static ItemStack rerollStats(ItemStack stack) {
         Random random = new Random();
 
-        LootRarity lootRarity = LootRarity.fromId(LootNbtHelper.getLootStringValue(stack, LootTags.LOOT_TAG_RARITY));
+        LootRarity lootRarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
-        LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_DAMAGE, lootRarity.getDamage(random));
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_SPEED, lootRarity.getSpeed(random));
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_EFFICIENCY, lootRarity.getEfficiency(random));
-        LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_DURABILITY, lootRarity.getDurability(random));
+        ModAttributes.LOOT_DAMAGE.create(stack, lootRarity.getDamage(random));
+        ModAttributes.LOOT_SPEED.create(stack, lootRarity.getSpeed(random));
+        ModAttributes.LOOT_EFFICIENCY.create(stack, lootRarity.getEfficiency(random));
+        ModAttributes.LOOT_DURABILITY.create(stack, lootRarity.getDurability(random));
 
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
-        LootNbtHelper.setLootFloatValue(stack, LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
+        ModAttributes.LOOT_DRAWSPEED.create(stack, lootRarity.getSpeed(random) + 4.0F);
+        ModAttributes.LOOT_POWER.create(stack, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
 
         return stack;
     }
@@ -400,30 +403,23 @@ public class LootItemHelper {
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
         Random random = new Random();
 
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("HideFlags", 2);
-        CompoundTag lootTag = new CompoundTag();
-
         int model = 1 + random.nextInt(type.models);
 
-        lootTag.putInt(LootTags.LOOT_TAG_MODEL, model);
+        ModAttributes.LOOT_MODEL.create(loot, model);
+        ModAttributes.LOOT_UUID.create(loot, UUID.randomUUID().toString());
 
-        lootTag.putString(LootTags.LOOT_TAG_UUID, UUID.randomUUID().toString());
+        ModAttributes.LOOT_RARITY.create(loot, lootRarity.getId());
+        ModAttributes.LOOT_DAMAGE.create(loot, lootRarity.getDamage(random));
+        ModAttributes.LOOT_SPEED.create(loot, lootRarity.getSpeed(random));
+        ModAttributes.LOOT_EFFICIENCY.create(loot, lootRarity.getEfficiency(random));
+        ModAttributes.LOOT_DURABILITY.create(loot, lootRarity.getDurability(random));
 
-        lootTag.putString(LootTags.LOOT_TAG_RARITY, lootRarity.getId());
-        lootTag.putInt(LootTags.LOOT_TAG_DAMAGE, lootRarity.getDamage(random));
-        lootTag.putFloat(LootTags.LOOT_TAG_SPEED, lootRarity.getSpeed(random));
-        lootTag.putFloat(LootTags.LOOT_TAG_EFFICIENCY, lootRarity.getEfficiency(random));
-        lootTag.putInt(LootTags.LOOT_TAG_DURABILITY, lootRarity.getDurability(random));
-        lootTag.putInt(LootTags.LOOT_TAG_LEVEL, 10);
-        lootTag.putInt(LootTags.LOOT_TAG_UPGRADE, 0);
-
-        lootTag.putFloat(LootTags.LOOT_TAG_DRAWSPEED, lootRarity.getSpeed(random) + 4.0F);
-        lootTag.putFloat(LootTags.LOOT_TAG_POWER, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
+        ModAttributes.LOOT_DRAWSPEED.create(loot, lootRarity.getSpeed(random) + 4.0F);
+        ModAttributes.LOOT_POWER.create(loot, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
 
         if (loot.getItem() instanceof ItemLootArmor) {
-            lootTag.putFloat(LootTags.LOOT_TAG_ARMOR, lootRarity.getArmor(random));
-            lootTag.putFloat(LootTags.LOOT_TAG_TOUGHNESS, lootRarity.getToughness(random));
+            ModAttributes.LOOT_ARMOR.create(loot, lootRarity.getArmor(random));
+            ModAttributes.LOOT_TOUGHNESS.create(loot, lootRarity.getToughness(random));
         }
 
         int modifierCount = lootRarity.getPotionCount(random);
@@ -435,41 +431,45 @@ public class LootItemHelper {
 
         if (modifierCount > 0) {
             List<PotionEffect> appliedEffects = new ArrayList<>();
-            ListTag effectList = new ListTag();
+            List<PotionEffectInstance> instances = new ArrayList<>();
 
             for (int m = 0; m < modifierCount; m++) {
                 PotionEffect effect = LootItemHelper.getRandomPotionExcluding(random, type, appliedEffects);
 
                 if (effect != null) {
-                    effectList.add(effect.getNbt(random));
+                    instances.add(new PotionEffectInstance(effect));
                     appliedEffects.add(effect);
                 } else {
                 }
             }
-            if (lootRarity != LootRarity.COMMON)
-                if (random.nextInt(100) > 90)
-                    unbreakable = true;
-            lootTag.put(LootTags.LOOT_TAG_POTIONLIST, effectList);
+            ModAttributes.LOOT_POTION_EFFECTS.create(loot, instances);
         }
 
         modifierCount = lootRarity.getEffectCount(random);
 
         if (modifierCount > 0) {
             List<LootEffect> appliedEffects = new ArrayList<>();
-            ListTag effectList = new ListTag();
+            List<LootEffectInstance> instances = new ArrayList<>();
 
             for (int m = 0; m < modifierCount; ++m) {
                 LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, appliedEffects);
 
                 if (me != null) {
-                    effectList.add(me.getNbt(random));
+                    instances.add(new LootEffectInstance(me));
                     appliedEffects.add(me);
                 }
             }
-            lootTag.put(LootTags.LOOT_TAG_EFFECTLIST, effectList);
+            ModAttributes.LOOT_EFFECTS.create(loot, instances);
         }
 
-        tag.put(LootTags.LOOT_TAG, lootTag);
+        if (lootRarity != LootRarity.COMMON)
+            if (random.nextInt(100) > 90)
+                unbreakable = true;
+
+        //tag.put(LootTags.LOOT_TAG, lootTag);
+
+        CompoundTag tag = loot.getTag();
+        tag.putInt("HideFlags", 2);
 
         if (unbreakable) {
             tag.putBoolean("Unbreakable", true);
