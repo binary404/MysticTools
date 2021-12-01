@@ -1,4 +1,4 @@
-package binary404.mystictools.common.loot.modifiers;
+package binary404.mystictools.common.loot.serializer;
 
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;

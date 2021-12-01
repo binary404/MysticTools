@@ -117,14 +117,14 @@ public class LootRarity {
     private ChatFormatting color = ChatFormatting.WHITE;
     private int damageMin = 0;
     private int damageMax = 7;
-    private float speedMin = 0.0F;
-    private float speedMax = 1.0F;
-    private float armorMin = 3.0F;
-    private float armorMax = 10.0F;
-    private float toughnessMin = 3.0F;
-    private float tougnessMax = 10.0F;
-    private float efficiencyMin = 1.0F;
-    private float efficiencyMax = 1.0F;
+    private double speedMin = 0.0;
+    private double speedMax = 1.0;
+    private double armorMin = 3.0;
+    private double armorMax = 10.0;
+    private double toughnessMin = 3.0;
+    private double toughnessMax = 10.0;
+    private double efficiencyMin = 1.0;
+    private double efficiencyMax = 1.0;
     private int durabilityMin = 0;
     private int durabilityMax = 0;
     private int potionMin = 0;
@@ -215,7 +215,7 @@ public class LootRarity {
 
     protected LootRarity setToughness(float min, float max) {
         this.toughnessMin = min;
-        this.tougnessMax = max;
+        this.toughnessMax = max;
         return this;
     }
 
@@ -252,7 +252,7 @@ public class LootRarity {
         return durability;
     }
 
-    public int getDamage(Random rand) {
+    public double getDamage(Random rand) {
         int damage = this.damageMin;
 
         if (damage < this.damageMax)
@@ -261,36 +261,36 @@ public class LootRarity {
         return damage;
     }
 
-    public float getSpeed(Random rand) {
-        float speed = this.speedMin;
+    public double getSpeed(Random rand) {
+        double speed = this.speedMin;
 
-        speed += (this.speedMax - speed) * rand.nextFloat();
+        speed += (this.speedMax - speed) * rand.nextDouble();
 
         return speed;
     }
 
-    public float getArmor(Random rand) {
-        float armor = this.armorMin;
+    public double getArmor(Random rand) {
+        double armor = this.armorMin;
 
-        armor += (this.armorMax - armor) * rand.nextFloat();
+        armor += (this.armorMax - armor) * rand.nextDouble();
         armor = (float) Math.round(armor * 100.0F) / 100.0F;
 
         return armor;
     }
 
-    public float getToughness(Random rand) {
-        float toughness = this.toughnessMin;
+    public double getToughness(Random rand) {
+        double toughness = this.toughnessMin;
 
-        toughness += (this.tougnessMax - toughness) * rand.nextFloat();
+        toughness += (this.toughnessMax - toughness) * rand.nextDouble();
         toughness = (float) Math.round(toughness * 100.0F) / 100.0F;
 
         return toughness;
     }
 
-    public float getEfficiency(Random rand) {
-        float efficiency = this.efficiencyMin;
+    public double getEfficiency(Random rand) {
+        double efficiency = this.efficiencyMin;
 
-        efficiency += (this.efficiencyMax - efficiency) * rand.nextFloat();
+        efficiency += (this.efficiencyMax - efficiency) * rand.nextDouble();
 
         return efficiency;
     }

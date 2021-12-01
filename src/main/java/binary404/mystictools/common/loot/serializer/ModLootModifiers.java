@@ -1,4 +1,4 @@
-package binary404.mystictools.common.loot.modifiers;
+package binary404.mystictools.common.loot.serializer;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

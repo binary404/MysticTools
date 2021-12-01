@@ -20,37 +20,51 @@ public class ModAttributes {
 
     public static Map<ResourceLocation, ItemNBTAttribute<?, ?>> REGISTRY = new HashMap<>();
 
-    public static ItemNBTAttribute<Integer, IntegerAttribute> ADD_DAMAGE;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_DAMAGE;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_SPEED;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_EFFICIENCY;
+    public static ItemNBTAttribute<Integer, IntegerAttribute> ADD_DURABILITY;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_DRAWSPEED;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_POWER;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_ARMOR;
+    public static ItemNBTAttribute<Double, DoubleAttribute> ADD_TOUGHNESS;
 
     public static ItemNBTAttribute<Integer, IntegerAttribute> LOOT_MODEL;
     public static ItemNBTAttribute<String, StringAttribute> LOOT_UUID;
     public static ItemNBTAttribute<String, StringAttribute> LOOT_RARITY;
-    public static ItemNBTAttribute<Integer, IntegerAttribute> LOOT_DAMAGE;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_SPEED;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_EFFICIENCY;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_DAMAGE;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_SPEED;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_EFFICIENCY;
     public static ItemNBTAttribute<Integer, IntegerAttribute> LOOT_DURABILITY;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_DRAWSPEED;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_POWER;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_ARMOR;
-    public static ItemNBTAttribute<Float, FloatAttribute> LOOT_TOUGHNESS;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_DRAWSPEED;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_POWER;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_ARMOR;
+    public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_TOUGHNESS;
     public static ItemNBTAttribute<List<PotionEffectInstance>, PotionEffectAttribute> LOOT_POTION_EFFECTS;
     public static ItemNBTAttribute<List<LootEffectInstance>, LootEffectAttribute> LOOT_EFFECTS;
 
     @SubscribeEvent
     public static void register(RegistryEvent.Register<Attribute> event) {
-        ADD_DAMAGE = register(new ResourceLocation("mystictools", "add_damage"), () -> new IntegerAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_DAMAGE = register(new ResourceLocation("mystictools", "add_damage"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_SPEED = register(new ResourceLocation("mystictools", "add_speed"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_EFFICIENCY = register(new ResourceLocation("mystictools", "add_efficiency"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_DURABILITY = register(new ResourceLocation("mystictools", "add_durability"), () -> new IntegerAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_DRAWSPEED = register(new ResourceLocation("mystictools", "add_drawspeed"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_POWER = register(new ResourceLocation("mystictools", "add_power"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_ARMOR = register(new ResourceLocation("mystictools", "add_armor"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
+        ADD_TOUGHNESS = register(new ResourceLocation("mystictools", "add_toughness"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
 
         LOOT_MODEL = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_MODEL), IntegerAttribute::new);
         LOOT_UUID = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_UUID), StringAttribute::new);
         LOOT_RARITY = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_RARITY), StringAttribute::new);
-        LOOT_DAMAGE = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_DAMAGE), IntegerAttribute::new, ADD_DAMAGE);
-        LOOT_SPEED = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_SPEED), FloatAttribute::new);
-        LOOT_EFFICIENCY = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_EFFICIENCY), FloatAttribute::new);
-        LOOT_DURABILITY = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_DURABILITY), IntegerAttribute::new);
-        LOOT_DRAWSPEED = register(new ResourceLocation("mystcictools", LootTags.LOOT_TAG_DRAWSPEED), FloatAttribute::new);
-        LOOT_POWER = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_POWER), FloatAttribute::new);
-        LOOT_ARMOR = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_ARMOR), FloatAttribute::new);
-        LOOT_TOUGHNESS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_TOUGHNESS), FloatAttribute::new);
+        LOOT_DAMAGE = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_DAMAGE), DoubleAttribute::new, ADD_DAMAGE);
+        LOOT_SPEED = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_SPEED), DoubleAttribute::new, ADD_SPEED);
+        LOOT_EFFICIENCY = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_EFFICIENCY), DoubleAttribute::new, ADD_EFFICIENCY);
+        LOOT_DURABILITY = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_DURABILITY), IntegerAttribute::new, ADD_DURABILITY);
+        LOOT_DRAWSPEED = register(new ResourceLocation("mystcictools", LootTags.LOOT_TAG_DRAWSPEED), DoubleAttribute::new, ADD_DRAWSPEED);
+        LOOT_POWER = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_POWER), DoubleAttribute::new, ADD_POWER);
+        LOOT_ARMOR = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_ARMOR), DoubleAttribute::new, ADD_ARMOR);
+        LOOT_TOUGHNESS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_TOUGHNESS), DoubleAttribute::new, ADD_TOUGHNESS);
         LOOT_POTION_EFFECTS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_POTIONLIST), PotionEffectAttribute::new);
         LOOT_EFFECTS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_EFFECTLIST), LootEffectAttribute::new);
     }

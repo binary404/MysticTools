@@ -132,7 +132,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 }
 
                 float f = getPowerForTime(time);
-                float draw_factor = ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1F).getValue(stack);
+                double draw_factor = ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1.0).getValue(stack);
                 if (draw_factor > 0)
                     f *= draw_factor;
 
@@ -179,7 +179,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
                 if (m > 0)
                     entityarrow.setSecondsOnFire(100);
 
-                entityarrow.setBaseDamage(entityarrow.getBaseDamage() * ModAttributes.LOOT_POWER.getOrDefault(stack, 1F).getValue(stack));
+                entityarrow.setBaseDamage(entityarrow.getBaseDamage() * ModAttributes.LOOT_POWER.getOrDefault(stack, 1.0).getValue(stack));
 
                 stack.hurtAndBreak(1, entityplayer, (p_220009_1_) -> {
                     p_220009_1_.broadcastBreakEvent(entityplayer.getUsedItemHand());
@@ -217,7 +217,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Bow"));
 
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1F).getValue(stack))));
-        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_POWER.getOrDefault(stack, 1F).getValue(stack))));
+        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1.0).getValue(stack))));
+        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_POWER.getOrDefault(stack, 1.0).getValue(stack))));
     }
 }

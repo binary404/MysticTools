@@ -54,6 +54,8 @@ public class ModItems {
     public static Item loot_chestplate;
     public static Item loot_helmet;
 
+    public static Item artifact;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -82,6 +84,8 @@ public class ModItems {
         rare_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.RARE), "rare_case");
         epic_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.EPIC), "epic_case");
         unique_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNIQUE), "unique_case");
+
+        artifact = register(r, new ItemArtifact(new Item.Properties().tab(MysticTools.tab)), "artifact");
 
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "shard");
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");

@@ -123,7 +123,7 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return LootItemHelper.getEfficiency(stack, state);
+        return (float) LootItemHelper.getEfficiency(stack, state);
     }
 
     @Override
@@ -165,7 +165,7 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
 
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Shovel"));
 
-        float efficiency = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, -1F).getValue(stack);
+        double efficiency = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
         tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(efficiency) + " Mining Speed"));
     }
 

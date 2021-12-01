@@ -2,14 +2,14 @@ package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.core.GenerateLootCommand;
-import binary404.mystictools.common.core.VillagerHandler;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.PotionEffect;
-import binary404.mystictools.common.loot.modifiers.ModLootModifiers;
+import binary404.mystictools.common.loot.modifiers.LootModifiers;
+import binary404.mystictools.common.loot.serializer.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -66,6 +65,7 @@ public class MysticTools {
         LootRarity.init();
         PotionEffect.init();
         LootEffect.init();
+        LootModifiers.ArtifactModifiers.init();
 
         NetworkHandler.init();
 

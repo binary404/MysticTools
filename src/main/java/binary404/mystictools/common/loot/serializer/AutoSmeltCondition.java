@@ -1,10 +1,9 @@
-package binary404.mystictools.common.loot.modifiers;
+package binary404.mystictools.common.loot.serializer;
 
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.effect.LootEffectAutoSmelt;
-import binary404.mystictools.common.loot.effects.effect.LootEffectVoid;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
@@ -19,7 +18,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoidCondition implements LootItemCondition {
+public class AutoSmeltCondition implements LootItemCondition {
 
     @Override
     public boolean test(LootContext lootContext) {
@@ -32,9 +31,9 @@ public class VoidCondition implements LootItemCondition {
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
-                        if (LootItemHelper.hasEffect(tool, LootEffect.VOID)) {
-                            return ((LootEffectVoid) LootEffect.VOID.getAction()).active(tool);
-                        }
+                    if (LootItemHelper.hasEffect(tool, LootEffect.AUTO_SMELT)) {
+                        return ((LootEffectAutoSmelt) LootEffect.AUTO_SMELT.getAction()).active(tool);
+                    }
                 }
         }
         return false;
@@ -42,19 +41,20 @@ public class VoidCondition implements LootItemCondition {
 
     @Override
     public LootItemConditionType getType() {
-        return ModLootModifiers.VOID;
+        return ModLootModifiers.AUTOSMELT;
     }
 
 
-    public static class VoidSerializer implements Serializer<VoidCondition> {
+    public static class AutoSmeltSerializer implements Serializer<AutoSmeltCondition> {
+
         @Override
-        public void serialize(JsonObject p_230424_1_, VoidCondition p_230424_2_, JsonSerializationContext p_230424_3_) {
+        public void serialize(JsonObject p_230424_1_, AutoSmeltCondition p_230424_2_, JsonSerializationContext p_230424_3_) {
 
         }
 
         @Override
-        public VoidCondition deserialize(JsonObject p_230423_1_, JsonDeserializationContext p_230423_2_) {
-            return new VoidCondition();
+        public AutoSmeltCondition deserialize(JsonObject p_230423_1_, JsonDeserializationContext p_230423_2_) {
+            return new AutoSmeltCondition();
         }
     }
 }

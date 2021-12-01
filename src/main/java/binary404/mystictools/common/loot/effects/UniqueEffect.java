@@ -27,7 +27,6 @@ public class UniqueEffect {
     public static final UniqueEffect explode = create("explode", new ExplodingArrow()).setItemTypes(LootSet.LootSetType.BOW);
 
     public static final UniqueEffect vortex = create("vortex", new Vortex()).setItemTypes(LootSet.LootSetType.SWORD);
-    public static final UniqueEffect brainwash = create("brainwash", new Brainwash()).setItemTypes(LootSet.LootSetType.SWORD);
 
     public static final UniqueEffect treeChopper = create("treeChopper", new TreeChopper()).setItemTypes(LootSet.LootSetType.AXE);
     public static final UniqueEffect growthAura = create("growthAura", new GrowthAura()).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);

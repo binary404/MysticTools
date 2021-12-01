@@ -1,6 +1,7 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
@@ -132,8 +133,9 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     @Nullable
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-        int id = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_MODEL);
-        String texture = "mystictools:textures/models/armor/1.png";
+        int id = ModAttributes.LOOT_MODEL.getOrDefault(stack, 0).getValue(stack);
+
+        String texture = "mystictools:textures/models/armor/1";
 
         if (id > 0)
             texture = "mystictools:textures/models/armor/" + id;

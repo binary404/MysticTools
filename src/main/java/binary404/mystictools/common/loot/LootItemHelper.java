@@ -109,10 +109,10 @@ public class LootItemHelper {
         Multimap<Attribute, AttributeModifier> modifiers = initial;
 
         if (slot == effectiveSlot) {
-            int attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1).getValue(stack);
-            float attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1F).getValue(stack);
-            float armorPoints = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_ARMOR);
-            float armorToughness = LootNbtHelper.getLootFloatValue(stack, LootTags.LOOT_TAG_TOUGHNESS);
+            double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack);
+            double attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0).getValue(stack);
+            double armorPoints = ModAttributes.LOOT_ARMOR.getOrDefault(stack, 1.0).getValue(stack);
+            double armorToughness = ModAttributes.LOOT_TOUGHNESS.getOrDefault(stack, 1.0).getValue(stack);
 
             if (attackDamage > 0 && stack.getItem() instanceof ItemLootSword)
                 applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
@@ -283,8 +283,8 @@ public class LootItemHelper {
         return effect;
     }
 
-    public static float getEfficiency(ItemStack stack, BlockState state) {
-        float speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, -1F).getValue(stack);
+    public static double getEfficiency(ItemStack stack, BlockState state) {
+        double speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
 
         for (ToolType type : stack.getItem().getToolTypes(stack)) {
             Material material = state.getMaterial();
@@ -296,7 +296,7 @@ public class LootItemHelper {
             }
         }
 
-        return 1.0f;
+        return 1.0;
     }
 
     public static void addInformation(ItemStack stack, List<Component> tooltip) {
@@ -341,13 +341,15 @@ public class LootItemHelper {
         if (show_durability)
             tooltip.add(new TextComponent(ChatFormatting.RESET + "" + durability + "" + ChatFormatting.GRAY + " Durability"));
 
-        int xp = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_XP);
-        if (xp > 0)
-            tooltip.add(new TextComponent(ChatFormatting.RED + "" + xp + " Xp/" + LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_LEVEL)));
 
-        int modifiers = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_UPGRADE);
-        if (modifiers > 0)
-            tooltip.add(new TextComponent(ChatFormatting.BOLD + "" + ChatFormatting.GOLD + "" + modifiers + " Modifiers"));
+    }
+
+    static Component toolTipDots(int amount, ChatFormatting formatting) {
+        StringBuilder text = new StringBuilder();
+        for (int i = 0; i < amount; i++) {
+            text.append("\u2b22 ");
+        }
+        return new TextComponent(text.toString()).withStyle(formatting);
     }
 
     @Nullable
@@ -394,8 +396,8 @@ public class LootItemHelper {
         ModAttributes.LOOT_EFFICIENCY.create(stack, lootRarity.getEfficiency(random));
         ModAttributes.LOOT_DURABILITY.create(stack, lootRarity.getDurability(random));
 
-        ModAttributes.LOOT_DRAWSPEED.create(stack, lootRarity.getSpeed(random) + 4.0F);
-        ModAttributes.LOOT_POWER.create(stack, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
+        ModAttributes.LOOT_DRAWSPEED.create(stack, lootRarity.getSpeed(random) + 4.0);
+        ModAttributes.LOOT_POWER.create(stack, 1.0 + ((float) lootRarity.getDamage(random) / 20.0));
 
         return stack;
     }
@@ -414,8 +416,8 @@ public class LootItemHelper {
         ModAttributes.LOOT_EFFICIENCY.create(loot, lootRarity.getEfficiency(random));
         ModAttributes.LOOT_DURABILITY.create(loot, lootRarity.getDurability(random));
 
-        ModAttributes.LOOT_DRAWSPEED.create(loot, lootRarity.getSpeed(random) + 4.0F);
-        ModAttributes.LOOT_POWER.create(loot, 1.0F + ((float) lootRarity.getDamage(random) / 20.0F));
+        ModAttributes.LOOT_DRAWSPEED.create(loot, lootRarity.getSpeed(random) + 4.0);
+        ModAttributes.LOOT_POWER.create(loot, 1.0 + ((float) lootRarity.getDamage(random) / 20.0));
 
         if (loot.getItem() instanceof ItemLootArmor) {
             ModAttributes.LOOT_ARMOR.create(loot, lootRarity.getArmor(random));

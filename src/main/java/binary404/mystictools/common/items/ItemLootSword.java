@@ -111,7 +111,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        int attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1).getValue(stack);
+        double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack);
 
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip);
