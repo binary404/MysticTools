@@ -88,7 +88,7 @@ public class TreeChopper implements IUniqueEffect {
             if (!player.getAbilities().instabuild) {
                 BlockEntity tile = world.getBlockEntity(pos);
 
-                if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+                if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                     block.destroy(world, pos, state);
                     if (!dispose) {
                         block.playerDestroy(world, player, pos, state, tile, stack);

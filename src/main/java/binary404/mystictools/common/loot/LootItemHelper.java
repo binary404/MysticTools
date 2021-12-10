@@ -617,7 +617,7 @@ public class LootItemHelper {
 
             BlockEntity tileEntity = world.getBlockEntity(pos);
 
-            if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
                 block.playerDestroy(world, player, pos, state, tileEntity, stack);
                 if (world instanceof ServerLevel)
@@ -629,7 +629,7 @@ public class LootItemHelper {
         } else {
             world.levelEvent(2001, pos, Block.getId(state));
 
-            if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
             }
 

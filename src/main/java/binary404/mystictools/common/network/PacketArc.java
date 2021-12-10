@@ -2,7 +2,7 @@ package binary404.mystictools.common.network;
 
 import binary404.mystictools.client.fx.FXHelper;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
