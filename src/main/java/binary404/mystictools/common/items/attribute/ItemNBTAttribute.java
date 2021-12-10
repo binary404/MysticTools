@@ -5,7 +5,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.*;
@@ -33,10 +32,10 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
 
     public Optional<I> get(ItemStack stack) {
         CompoundTag nbt = stack.getTagElement("MysticTools");
-        if (nbt == null || !nbt.contains(this.getTagKey(), Constants.NBT.TAG_LIST))
+        if (nbt == null || !nbt.contains(this.getTagKey(), 9))
             return Optional.empty();
 
-        ListTag attributes = nbt.getList(this.getTagKey(), Constants.NBT.TAG_COMPOUND);
+        ListTag attributes = nbt.getList(this.getTagKey(), 10);
 
         for (Tag element : attributes) {
             CompoundTag tag = (CompoundTag) element;
@@ -91,9 +90,9 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
 
     public I create(ItemStack stack, Supplier<T> value) {
         CompoundTag nbt = stack.getOrCreateTagElement("MysticTools");
-        if (!nbt.contains(this.getTagKey(), Constants.NBT.TAG_LIST))
+        if (!nbt.contains(this.getTagKey(), Tag.TAG_LIST))
             nbt.put(this.getTagKey(), new ListTag());
-        ListTag attributesList = nbt.getList(this.getTagKey(), Constants.NBT.TAG_COMPOUND);
+        ListTag attributesList = nbt.getList(this.getTagKey(), Tag.TAG_COMPOUND);
 
         CompoundTag attributeNBT = attributesList.stream()
                 .map(element -> (CompoundTag) element)

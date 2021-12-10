@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum MysticTier implements Tier {
-    MYSTIC_TIER(3, 1561, 8.0F, 3.0F, 10, () -> {
+    MYSTIC_TIER(5, 1561, 8.0F, 3.0F, 10, () -> {
         return Ingredient.of(ModItems.shard);
     });
 

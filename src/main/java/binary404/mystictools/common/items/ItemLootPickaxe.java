@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +33,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.TierSortingRegistry;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -79,10 +82,10 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
         LootItemHelper.handleBreak(stack, player, pos);
 
-        if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL) > 1) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootItemHelper.getEffectLevel(stack) >= 1) {
             HitResult raytrace = LootItemHelper.getBlockOnReach(player.level, player);
             if (raytrace != null) {
-                int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+                int level = LootItemHelper.getEffectLevel(stack);
                 onBreak = LootItemHelper.breakBlocks(stack, level, player.level, pos, ((BlockHitResult) raytrace).getDirection(), player);
             }
         }
@@ -123,33 +126,36 @@ public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        return (float) LootItemHelper.getEfficiency(stack, state);
-    }
-
-    @Override
-    public Set<ToolType> getToolTypes(ItemStack stack) {
+        double speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
         if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
-            return Sets.newHashSet(ToolType.PICKAXE, ToolType.AXE, ToolType.SHOVEL);
+            if (state.is(BlockTags.MINEABLE_WITH_AXE) || state.is(BlockTags.MINEABLE_WITH_HOE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
+                return (float) speed;
+            }
         }
 
-        return Sets.newHashSet(ToolType.PICKAXE);
+        if (state.is(BlockTags.MINEABLE_WITH_PICKAXE))
+            return (float) speed;
+        return super.getDestroySpeed(stack, state);
     }
 
     @Override
-    public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
-        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
-            return 4;
-        }
-
-        return super.getHarvestLevel(stack, tool, player, blockState);
-    }
-
-    @Override
-    public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI) && LootItemHelper.digActions.contains(toolAction)) {
             return true;
         }
-        return super.canHarvestBlock(stack, state);
+        return ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction);
+    }
+
+    @Override
+    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+            if (state.is(BlockTags.MINEABLE_WITH_AXE) || state.is(BlockTags.MINEABLE_WITH_HOE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
+                return TierSortingRegistry.isCorrectTierForDrops(MysticTier.MYSTIC_TIER, state);
+            }
+        }
+        if (state.is(BlockTags.MINEABLE_WITH_PICKAXE))
+            return TierSortingRegistry.isCorrectTierForDrops(MysticTier.MYSTIC_TIER, state);
+        return false;
     }
 
     @Override

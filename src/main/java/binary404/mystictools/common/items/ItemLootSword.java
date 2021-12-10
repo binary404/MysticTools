@@ -8,6 +8,7 @@ import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
+import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -75,7 +76,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack);
+            UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack, ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack));
         }
 
         return hit;

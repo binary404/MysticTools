@@ -5,7 +5,7 @@ import binary404.mystictools.common.loot.effects.PotionEffectInstance;
 import com.google.gson.annotations.Expose;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +42,13 @@ public class LootEffectAttribute extends PooledAttribute<List<LootEffectInstance
 
     @Override
     public void read(CompoundTag nbt) {
-        if (!nbt.contains("BaseValue", Constants.NBT.TAG_COMPOUND)) {
+        if (!nbt.contains("BaseValue", Tag.TAG_COMPOUND)) {
             this.setBaseValue(new ArrayList<>());
             return;
         }
 
         CompoundTag tag = nbt.getCompound("BaseValue");
-        ListTag effectList = tag.getList("Effects", Constants.NBT.TAG_COMPOUND);
+        ListTag effectList = tag.getList("Effects", Tag.TAG_COMPOUND);
 
         this.setBaseValue(effectList.stream()
                 .map(inbt -> (CompoundTag) inbt)

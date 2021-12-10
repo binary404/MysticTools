@@ -12,13 +12,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.17.1-1.0.0"
+version = "1.18-1.0.0"
 group = 'binary404.mystictools'
 archivesBaseName = "mystictools"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-minecraft {mappings channel: 'official', version: '1.17.1'
+minecraft {
+    mappings channel: 'official', version: '1.18'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -64,7 +65,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.18'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.4'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -87,7 +88,6 @@ jar {
 jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 //publish.dependsOn('reobfJar')
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -96,7 +96,7 @@ publishing {
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url "file://${project.projectDir}/mcmodsrepo"
         }
     }
 }

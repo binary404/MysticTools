@@ -44,7 +44,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -55,6 +56,8 @@ public class LootItemHelper {
 
     protected static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
     protected static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
+
+    public static final Set<ToolAction> digActions = Set.of(ToolActions.AXE_DIG, ToolActions.HOE_DIG, ToolActions.PICKAXE_DIG, ToolActions.SHOVEL_DIG);
 
     public static ItemStack getRandomLoot(Random rand) {
         RandomCollection<Item> col = new RandomCollection<>(rand);
@@ -99,6 +102,16 @@ public class LootItemHelper {
             maxDamage = 100;
 
         return maxDamage;
+    }
+
+    public static int getEffectLevel(ItemStack stack) {
+        int effectLevel = ModAttributes.LOOT_EFFECT_LEVEL.getOrDefault(stack, 0).getValue(stack);
+
+        return effectLevel;
+    }
+
+    public static void setEffectLevel(ItemStack stack, int level) {
+        ModAttributes.LOOT_EFFECT_LEVEL.create(stack, level);
     }
 
     public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
@@ -281,22 +294,6 @@ public class LootItemHelper {
             effect = list.get(rand.nextInt(list.size()));
 
         return effect;
-    }
-
-    public static double getEfficiency(ItemStack stack, BlockState state) {
-        double speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
-
-        for (ToolType type : stack.getItem().getToolTypes(stack)) {
-            Material material = state.getMaterial();
-            if (state.getBlock().isToolEffective(state, type)
-                    || (type == ToolType.SHOVEL && (BlockTags.MINEABLE_WITH_SHOVEL.contains(state.getBlock())))
-                    || (type == ToolType.PICKAXE && (BlockTags.MINEABLE_WITH_PICKAXE.contains(state.getBlock())))
-                    || (type == ToolType.AXE && (BlockTags.MINEABLE_WITH_AXE.contains(state.getBlock())))) {
-                return speed;
-            }
-        }
-
-        return 1.0;
     }
 
     public static void addInformation(ItemStack stack, List<Component> tooltip) {
@@ -519,47 +516,31 @@ public class LootItemHelper {
         int zradN = 0;
         int zradP = 0;
 
+        System.out.println(level);
+
         switch (level) {
-            case 1: //2x2
-                xradN = 0;
-                xradP = 1;
-                yradN = 1;
-                yradP = 0;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 2: //3x3
+            case 1 -> { //3x3
                 xradN = 1;
                 xradP = 1;
                 yradN = 1;
                 yradP = 1;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 3: //4x4
-                xradN = 1;
-                xradP = 2;
-                yradN = 1;
-                yradP = 2;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 4: //5x5
+                System.out.println("3x3");
+            }
+            case 2 -> { //5x5
                 xradN = 2;
                 xradP = 2;
                 yradN = 2;
                 yradP = 2;
-                zradN = 0;
-                zradP = 0;
-                break;
-            default:
+                System.out.println("5x5");
+            }
+            default -> {
                 xradN = 0;
                 xradP = 0;
                 yradN = 0;
                 yradP = 0;
                 zradN = 0;
                 zradP = 0;
-                break;
+            }
         }
 
         if (side.getAxis() == Direction.Axis.Y) {
@@ -583,7 +564,7 @@ public class LootItemHelper {
             return false;
         }
 
-        if (level == 4 && side.getAxis() != Direction.Axis.Y) {
+        if (level == 2 && side.getAxis() != Direction.Axis.Y) {
             aPos = aPos.above();
             BlockState theState = world.getBlockState(aPos);
             if (theState.getDestroySpeed(world, aPos) <= mainHardness + 5.0F) {
@@ -614,8 +595,7 @@ public class LootItemHelper {
         Block block = state.getBlock();
         float hardness = state.getDestroySpeed(world, pos);
 
-        boolean canHarvest =
-                (ForgeHooks.canHarvestBlock(state, player, world, pos) || stack.getItem().isCorrectToolForDrops(state))
+        boolean canHarvest = (ForgeHooks.isCorrectToolForDrops(state, player) || stack.getItem().isCorrectToolForDrops(state))
                         && (!isExtra || stack.getItem().getDestroySpeed(stack, world.getBlockState(pos)) > 1.0F);
 
         if (hardness >= 0.0F && (!isExtra || (canHarvest))) {
@@ -637,7 +617,7 @@ public class LootItemHelper {
 
             BlockEntity tileEntity = world.getBlockEntity(pos);
 
-            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+            if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
                 block.playerDestroy(world, player, pos, state, tileEntity, stack);
                 if (world instanceof ServerLevel)
@@ -649,7 +629,7 @@ public class LootItemHelper {
         } else {
             world.levelEvent(2001, pos, Block.getId(state));
 
-            if (block.removedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
+            if (block.onDestroyedByPlayer(state, world, pos, player, true, world.getFluidState(pos))) {
                 block.destroy(world, pos, state);
             }
 
