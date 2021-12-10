@@ -90,9 +90,9 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
 
     public I create(ItemStack stack, Supplier<T> value) {
         CompoundTag nbt = stack.getOrCreateTagElement("MysticTools");
-        if (!nbt.contains(this.getTagKey(), 9))
+        if (!nbt.contains(this.getTagKey(), Tag.TAG_LIST))
             nbt.put(this.getTagKey(), new ListTag());
-        ListTag attributesList = nbt.getList(this.getTagKey(), 10);
+        ListTag attributesList = nbt.getList(this.getTagKey(), Tag.TAG_COMPOUND);
 
         CompoundTag attributeNBT = attributesList.stream()
                 .map(element -> (CompoundTag) element)

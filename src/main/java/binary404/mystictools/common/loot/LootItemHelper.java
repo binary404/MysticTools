@@ -104,6 +104,16 @@ public class LootItemHelper {
         return maxDamage;
     }
 
+    public static int getEffectLevel(ItemStack stack) {
+        int effectLevel = ModAttributes.LOOT_EFFECT_LEVEL.getOrDefault(stack, 0).getValue(stack);
+
+        return effectLevel;
+    }
+
+    public static void setEffectLevel(ItemStack stack, int level) {
+        ModAttributes.LOOT_EFFECT_LEVEL.create(stack, level);
+    }
+
     public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
         return modifiersForStack(slot, EquipmentSlot.MAINHAND, stack, initial, modifierKey);
     }
@@ -506,47 +516,31 @@ public class LootItemHelper {
         int zradN = 0;
         int zradP = 0;
 
+        System.out.println(level);
+
         switch (level) {
-            case 1: //2x2
-                xradN = 0;
-                xradP = 1;
-                yradN = 1;
-                yradP = 0;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 2: //3x3
+            case 1 -> { //3x3
                 xradN = 1;
                 xradP = 1;
                 yradN = 1;
                 yradP = 1;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 3: //4x4
-                xradN = 1;
-                xradP = 2;
-                yradN = 1;
-                yradP = 2;
-                zradN = 0;
-                zradP = 0;
-                break;
-            case 4: //5x5
+                System.out.println("3x3");
+            }
+            case 2 -> { //5x5
                 xradN = 2;
                 xradP = 2;
                 yradN = 2;
                 yradP = 2;
-                zradN = 0;
-                zradP = 0;
-                break;
-            default:
+                System.out.println("5x5");
+            }
+            default -> {
                 xradN = 0;
                 xradP = 0;
                 yradN = 0;
                 yradP = 0;
                 zradN = 0;
                 zradP = 0;
-                break;
+            }
         }
 
         if (side.getAxis() == Direction.Axis.Y) {
@@ -570,7 +564,7 @@ public class LootItemHelper {
             return false;
         }
 
-        if (level == 4 && side.getAxis() != Direction.Axis.Y) {
+        if (level == 2 && side.getAxis() != Direction.Axis.Y) {
             aPos = aPos.above();
             BlockState theState = world.getBlockState(aPos);
             if (theState.getDestroySpeed(world, aPos) <= mainHardness + 5.0F) {

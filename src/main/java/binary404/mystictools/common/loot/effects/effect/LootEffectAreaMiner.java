@@ -21,11 +21,11 @@ public class LootEffectAreaMiner implements IEffectAction {
 
     @Override
     public void toggleAction(Player player, ItemStack stack) {
-        int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+        int level = LootItemHelper.getEffectLevel(stack);
 
-        level = (level + 1) % 5;
+        level = (level + 1) % 3;
 
-        LootNbtHelper.setLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL, level);
+        LootItemHelper.setEffectLevel(stack, level);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class LootEffectAreaMiner implements IEffectAction {
 
     @Override
     public Component modificationResponseMessage(Player player, ItemStack stack) {
-        int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+        int level = LootItemHelper.getEffectLevel(stack);
 
         String message = "[Mystic Tools]: ";
 
@@ -46,8 +46,12 @@ public class LootEffectAreaMiner implements IEffectAction {
         message += ", has been set to: ";
         if (level == 0)
             message += "[Off]";
-        else
-            message += "[" + (level + 1) + "x" + (level + 1) + "]";
+        else {
+            if (level == 1)
+                message += "[3x3]";
+            if (level == 2)
+                message += "[5x5]";
+        }
 
         return new TextComponent(message);
     }
@@ -59,7 +63,7 @@ public class LootEffectAreaMiner implements IEffectAction {
 
     @Override
     public String getStatusString(ItemStack stack) {
-        int level = LootNbtHelper.getLootIntValue(stack, LootTags.LOOT_TAG_EFFECT_LEVEL);
+        int level = LootItemHelper.getEffectLevel(stack);
         String status = "[" + (level + 1) + "x" + (level + 1) + "]";
         return status;
     }
