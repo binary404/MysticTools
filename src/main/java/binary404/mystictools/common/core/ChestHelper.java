@@ -55,7 +55,6 @@ public class ChestHelper {
     public static LootPool getInjectPool(String entryName) {
         return LootPool.lootPool()
                 .add(getInjectEntry(entryName, ConfigHandler.COMMON.lootCrateWeight.get()))
-                .bonusRolls(ConfigHandler.COMMON.lootCrateMinRolls.get(), ConfigHandler.COMMON.lootCrateMaxRolls.get())
                 .name("mystictools_inject" + entryName)
                 .build();
     }
