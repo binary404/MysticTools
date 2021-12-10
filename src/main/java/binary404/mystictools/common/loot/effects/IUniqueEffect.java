@@ -14,7 +14,7 @@ public interface IUniqueEffect {
 
     }
 
-    default void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
+    default void hit(LivingEntity target, LivingEntity attacker, ItemStack stack, double damage) {
 
     }
 

@@ -2,6 +2,7 @@ package binary404.mystictools.common.loot.effects.unique;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.util.Utils;
+import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketArc;
@@ -20,10 +21,10 @@ import java.util.List;
 public class Arc implements IUniqueEffect {
 
     @Override
-    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
+    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack, double damage) {
         if (attacker instanceof Player) {
             Player player = (Player) attacker;
-            new ArcEffect(player.level, player, target).start();
+            new ArcEffect(player.level, player, target, stack, damage).start();
         }
     }
 
@@ -35,11 +36,15 @@ public class Arc implements IUniqueEffect {
         private final Level world;
         private final Player player;
         private final LivingEntity target;
+        private final ItemStack sword;
+        private final double damageDealt;
 
-        public ArcEffect(Level world, Player player, LivingEntity target) {
+        public ArcEffect(Level world, Player player, LivingEntity target, ItemStack sword, double damage) {
             this.world = world;
             this.player = player;
             this.target = target;
+            this.sword = sword;
+            this.damageDealt = damage;
         }
 
         void start() {
@@ -88,7 +93,9 @@ public class Arc implements IUniqueEffect {
 
             if (targetedEntities.size() > 1) {
                 targetedEntities.forEach((e) -> {
-                    e.hurt(DamageSource.playerAttack(player), 10.0F);
+                    e.hurt(DamageSource.playerAttack(player), (float) (damageDealt / 3.5D));
+                    LootItemHelper.handleHit(sword, e, player);
+                    LootItemHelper.handlePotionEffects(sword, e, player);
                 });
             }
         }

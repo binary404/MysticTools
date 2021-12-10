@@ -82,8 +82,8 @@ public class UniqueEffect {
         this.effect.rightClick(entity, stack);
     }
 
-    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
-        this.effect.hit(target, attacker, stack);
+    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack, double damage) {
+        this.effect.hit(target, attacker, stack, damage);
     }
 
     public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {

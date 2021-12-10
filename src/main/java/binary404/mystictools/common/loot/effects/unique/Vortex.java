@@ -13,7 +13,7 @@ import java.util.List;
 public class Vortex implements IUniqueEffect {
 
     @Override
-    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack) {
+    public void hit(LivingEntity target, LivingEntity attacker, ItemStack stack, double damage) {
         List<Mob> entities = target.level.getEntitiesOfClass(Mob.class, new AABB(target.blockPosition()).inflate(15, 15, 15));
         entities.remove(attacker);
         for (Mob entity : entities) {
