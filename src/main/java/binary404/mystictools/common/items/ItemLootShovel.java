@@ -76,7 +76,8 @@ public class ItemLootShovel extends ShovelItem implements ILootItem {
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
-            UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.level, player, stack);
+            BlockState state = player.level.getBlockState(pos);
+            UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.level, player, stack, state);
         }
 
         boolean onBreak = super.onBlockStartBreak(stack, pos, player);
