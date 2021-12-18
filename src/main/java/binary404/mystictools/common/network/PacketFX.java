@@ -1,5 +1,6 @@
 package binary404.mystictools.common.network;
 
+import binary404.fx_lib.util.ClientTickHandler;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXHelper;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,17 +43,26 @@ public class PacketFX {
                 case 0: {
                     int count = 50;
                     Level world = MysticTools.proxy.getWorld();
-                    for (int a = 0; a < 50; a++) {
-                        boolean floaty = (a < count / 3);
+                    for (int a = 0; a < 100; a++) {
+                        boolean floaty = world.random.nextFloat() < 0.8f;
                         float r = Mth.nextInt(world.random, 255, 255) / 255.0F;
                         float g = Mth.nextInt(world.random, 64, 255) / 255.0F;
                         float b = Mth.nextInt(world.random, 189, 255) / 255.0F;
-                        FXHelper.sparkle(msg.x + world.random.nextGaussian() * 0.4, msg.y + world.random.nextGaussian() * 0.4, msg.z + world.random.nextGaussian() * 0.4, world.random.nextGaussian() * 0.06, world.random.nextGaussian() * 0.06 + (floaty ? 0.05D : 0.15D), world.random.nextGaussian() * 0.06, r, g, b, 0.15F, floaty ? 0.04F : 0.8F, 16);
+                        float r2 = Mth.nextInt(world.random, 255, 255) / 255.0F;
+                        float g2 = Mth.nextInt(world.random, 64, 255) / 255.0F;
+                        float b2 = Mth.nextInt(world.random, 189, 255) / 255.0F;
+                        FXHelper.sparkle(msg.x + world.random.nextGaussian() * 0.5, msg.y + world.random.nextGaussian() * 0.5, msg.z + world.random.nextGaussian() * 0.5, world.random.nextGaussian() * 0.04, world.random.nextGaussian() * 0.04 + (floaty ? 0.05D : 0.15D), world.random.nextGaussian() * 0.04, r, g, b, r2, g2, b2, 0.04F, floaty ? 0.04F : 0.6F, floaty ? 100 : 30);
                     }
                     break;
                 }
                 case 1: {
-                    FXHelper.shockwave(msg.x, msg.y, msg.z);
+                    double startRadius = 1.0;
+                    double endRadius = 5.0;
+                    double radiusIncrease = 0.5;
+                    for(double i = startRadius; i <= endRadius; i += radiusIncrease) {
+                        final double radius = i;
+                        ClientTickHandler.addRunnable(() -> FXHelper.shockwave(msg.x, msg.y, msg.z, radius), (int) (i * 5));
+                    }
                 }
             }
         });

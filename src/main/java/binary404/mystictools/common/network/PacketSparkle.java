@@ -37,12 +37,12 @@ public class PacketSparkle {
     public static void handle(PacketSparkle msg, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide().isServer()) {
             ctx.get().setPacketHandled(true);
-            ctx.get().setPacketHandled(true);
+            return;
         }
         ctx.get().enqueueWork(() -> {
             Random rand = new Random();
             for (int i = 0; i < 10; i++)
-                FXHelper.sparkle(msg.x + rand.nextGaussian() * 0.4, msg.y + rand.nextGaussian() * 0.4, msg.z + rand.nextGaussian() * 0.4, rand.nextGaussian() * 0.08, rand.nextGaussian() * 0.08, rand.nextGaussian() * 0.08, msg.r, msg.g, msg.b, 0.15F, 0.08F, 16);
+                FXHelper.sparkle(msg.x + rand.nextGaussian() * 0.4, msg.y + rand.nextGaussian() * 0.4, msg.z + rand.nextGaussian() * 0.4, rand.nextGaussian() * 0.08, rand.nextGaussian() * 0.08, rand.nextGaussian() * 0.08, msg.r, msg.g, msg.b, msg.r, msg.g, msg.b, 0.15F, 0.08F, 16);
         });
         ctx.get().setPacketHandled(true);
     }

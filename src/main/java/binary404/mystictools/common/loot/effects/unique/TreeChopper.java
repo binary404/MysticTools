@@ -1,8 +1,15 @@
 package binary404.mystictools.common.loot.effects.unique;
 
+import binary404.fx_lib.fx.effects.EffectRegistrar;
+import binary404.fx_lib.fx.effects.FXGen;
+import binary404.fx_lib.fx.effects.FXSourceOrbital;
+import binary404.fx_lib.fx.effects.ParticleOrbitalController;
+import binary404.fx_lib.util.Vector3;
 import binary404.mystictools.MysticTools;
+import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.network.PacketRemoveSpirals;
 import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -33,6 +40,8 @@ public class TreeChopper implements IUniqueEffect {
 
     private static final Map<ResourceKey<Level>, Set<BlockSwapper>> blockSwappers = new HashMap<>();
 
+    public static final Map<ResourceKey<Level>, Set<FXSourceOrbital>> orbitals = new HashMap<>();
+
     public static final List<Material> materialsAxe = Arrays.asList(Material.LEAVES, Material.PLANT, Material.WOOD, Material.VEGETABLE);
 
     public TreeChopper() {
@@ -47,23 +56,37 @@ public class TreeChopper implements IUniqueEffect {
             ResourceKey<Level> dim = event.world.dimension();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
-                swappers.removeIf(next -> next == null || !next.tick());
+                swappers.removeIf((next) -> {
+                    if (next == null || !next.tick()) {
+                        NetworkHandler.sendToNearby(event.world, next.origin, new PacketRemoveSpirals());
+                        return true;
+                    }
+                    return false;
+                });
             }
         }
     }
 
     @Override
-    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {
-        addBlockSwapper(world, player, stack, pos, 32, true);
+    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack, BlockState stateBroken) {
+        if (materialsAxe.contains(stateBroken.getMaterial()))
+            addBlockSwapper(world, player, stack, pos, 32, true);
     }
 
     private static void addBlockSwapper(Level world, Player player, ItemStack stack, BlockPos origCoords, int steps, boolean leaves) {
         BlockSwapper swapper = new BlockSwapper(world, player, stack, origCoords, steps, leaves);
+        ResourceKey<Level> dim = world.dimension();
 
         if (world.isClientSide) {
+            List<FXSourceOrbital> orbitalsToAdd = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                FXSourceOrbital orbital = FXHelper.spiralGenerator(origCoords, Vector3.random()).refresh((t) -> true);
+                EffectRegistrar.register(orbital);
+                orbitalsToAdd.add(orbital);
+            }
+            orbitals.computeIfAbsent(dim, d -> new HashSet<>()).addAll(orbitalsToAdd);
             return;
         }
-        ResourceKey<Level> dim = world.dimension();
         blockSwappers.computeIfAbsent(dim, d -> new HashSet<>()).add(swapper);
     }
 
