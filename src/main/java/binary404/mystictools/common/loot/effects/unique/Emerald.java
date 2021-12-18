@@ -9,11 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class Emerald implements IUniqueEffect {
 
     @Override
-    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {
+    public void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack, BlockState blockBroken) {
         if (world.random.nextInt(12) == 0) {
             ItemEntity item = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.EMERALD, 1));
             item.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);

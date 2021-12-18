@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface IUniqueEffect {
 
@@ -22,7 +23,7 @@ public interface IUniqueEffect {
 
     }
 
-    default void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack) {
+    default void breakBlock(BlockPos pos, Level world, Player player, ItemStack stack, BlockState stateBroken) {
 
     }
 

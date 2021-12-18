@@ -62,10 +62,15 @@ sourceSets.main.resources {
 }
 
 repositories {
+    flatDir {
+        dir 'libs'
+    }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.0'
+
+    compileOnly fg.deobf("binary404:fx_lib-1.18.1:1.0.0")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

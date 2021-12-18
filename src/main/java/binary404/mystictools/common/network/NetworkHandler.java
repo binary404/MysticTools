@@ -24,6 +24,7 @@ public class NetworkHandler {
         HANDLER.registerMessage(id++, PacketFX.class, PacketFX::encode, PacketFX::decode, PacketFX::handle);
         HANDLER.registerMessage(id++, PacketJump.class, PacketJump::encode, PacketJump::decode, PacketJump::handle);
         HANDLER.registerMessage(id++, PacketArc.class, PacketArc::encode, PacketArc::decode, PacketArc::handle);
+        HANDLER.registerMessage(id++, PacketRemoveSpirals.class, PacketRemoveSpirals::encode, PacketRemoveSpirals::decode, PacketRemoveSpirals::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend) {

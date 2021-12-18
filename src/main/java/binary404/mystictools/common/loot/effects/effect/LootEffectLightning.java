@@ -18,7 +18,7 @@ public class LootEffectLightning implements IEffectAction {
         entity.setVisualOnly(true);
         target.level.addFreshEntity(entity);
         target.setSecondsOnFire(8);
-        target.hurt(DamageSource.LIGHTNING_BOLT, 10);
+        target.hurt(DamageSource.ON_FIRE, 10);
     }
 
     @Override
