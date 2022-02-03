@@ -70,9 +70,9 @@ public class EntityHandler {
                 if (player.getMainHandItem().getItem() == ModItems.loot_sword) {
                     ItemStack stack = player.getMainHandItem();
 
-                    if (LootItemHelper.hasEffect(stack, LootEffect.LEECH)) {
+                    if (LootItemHelper.hasEffect(stack, LootEffect.getById("leech"))) {
                         float damageInflicted = Math.min(event.getAmount(), event.getEntityLiving().getHealth());
-                        int amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
+                        double amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
                         float leech = damageInflicted * ((float) amplifier / 100.0F);
                         player.heal(leech);
                         NetworkHandler.sendToNearby(player.level, player, new PacketSparkle(event.getEntityLiving().getX() + 0.5, event.getEntityLiving().getY() + 0.5, event.getEntityLiving().getZ() + 0.5, 0.92F, 0.0F, 0.08F));
@@ -92,24 +92,26 @@ public class EntityHandler {
 
             if (event.getEntityLiving() instanceof Player) {
                 Player playerEntity = (Player) event.getEntityLiving();
+                double parry = 0;
                 for (ItemStack stack : playerEntity.getInventory().armor) {
-                    if (LootItemHelper.hasEffect(stack, LootEffect.REFLECT)) {
+                    if (LootItemHelper.hasEffect(stack, LootEffect.getById("reflect"))) {
                         float damage = event.getAmount() / 2;
                         event.setAmount(damage);
                         if (event.getSource().getEntity() != null) {
                             event.getSource().getEntity().hurt(new DamageSource("reflect"), damage);
                         }
                     }
-                    if (LootItemHelper.hasEffect(stack, LootEffect.PARRY)) {
-                        int chance = LootEffect.getAmplifierFromStack(stack, LootEffect.PARRY.getId());
-                        if (playerEntity.level.random.nextInt(100) <= chance) {
-                            playerEntity.level.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(),
-                                    SoundEvents.SHIELD_BLOCK,
-                                    SoundSource.MASTER,
-                                    1F, 1F);
-                            event.setCanceled(true);
-                        }
+                    if (LootItemHelper.hasEffect(stack, LootEffect.getById("parry"))) {
+                        double chance = LootEffect.getAmplifierFromStack(stack, "parry");
+                        parry += chance;
                     }
+                }
+                if (playerEntity.level.random.nextInt(100) <= parry) {
+                    playerEntity.level.playSound(null, playerEntity.getX(), playerEntity.getY(), playerEntity.getZ(),
+                            SoundEvents.SHIELD_BLOCK,
+                            SoundSource.MASTER,
+                            1F, 1F);
+                    event.setCanceled(true);
                 }
             }
         }
@@ -120,7 +122,7 @@ public class EntityHandler {
         Player player = event.getPlayer();
         for (ItemStack stack : player.getInventory().armor) {
             if (LootItemHelper.hasEffect(stack, LootEffect.INSIGHT)) {
-                int level = LootEffect.getAmplifierFromStack(stack, LootEffect.INSIGHT.getId());
+                double level = LootEffect.getAmplifierFromStack(stack, LootEffect.INSIGHT.getId());
                 ExperienceOrb orb = event.getOrb();
                 orb.value *= (1 + level);
             }

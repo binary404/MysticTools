@@ -42,7 +42,7 @@ public class RarityArgument implements ArgumentType<RarityInput> {
 
         }
 
-        return parser.fillSuggestions(builder, LootRarity.getRegistry().values());
+        return parser.fillSuggestions(builder, LootRarity.REGISTRY.values());
     }
 
     @Override

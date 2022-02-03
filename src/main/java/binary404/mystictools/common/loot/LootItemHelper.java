@@ -1,6 +1,9 @@
 package binary404.mystictools.common.loot;
 
+import binary404.mystictools.common.core.config.ModConfigs;
+import binary404.mystictools.common.core.config.entry.ItemEntry;
 import binary404.mystictools.common.core.util.RandomCollection;
+import binary404.mystictools.common.core.util.WeightedList;
 import binary404.mystictools.common.items.ItemLootArmor;
 import binary404.mystictools.common.items.ItemLootSword;
 import binary404.mystictools.common.items.ModItems;
@@ -60,19 +63,10 @@ public class LootItemHelper {
     public static final Set<ToolAction> digActions = Set.of(ToolActions.AXE_DIG, ToolActions.HOE_DIG, ToolActions.PICKAXE_DIG, ToolActions.SHOVEL_DIG);
 
     public static ItemStack getRandomLoot(Random rand) {
-        RandomCollection<Item> col = new RandomCollection<>(rand);
 
-        col.add(2, ModItems.loot_sword);
-        col.add(3, ModItems.loot_axe);
-        col.add(3, ModItems.loot_pickaxe);
-        col.add(3, ModItems.loot_shovel);
-        col.add(2, ModItems.loot_bow);
-        col.add(1, ModItems.loot_boots);
-        col.add(1, ModItems.loot_leggings);
-        col.add(1, ModItems.loot_chestplate);
-        col.add(1, ModItems.loot_helmet);
+        ItemEntry itemEntry = ModConfigs.ITEMS.ITEMS.getRandom(rand);
 
-        ItemStack stack = new ItemStack(col.next());
+        ItemStack stack = new ItemStack(itemEntry.toItem());
 
         return stack;
     }
@@ -123,7 +117,7 @@ public class LootItemHelper {
 
         if (slot == effectiveSlot) {
             double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack);
-            double attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0).getValue(stack);
+            double attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0f).getValue(stack);
             double armorPoints = ModAttributes.LOOT_ARMOR.getOrDefault(stack, 1.0).getValue(stack);
             double armorToughness = ModAttributes.LOOT_TOUGHNESS.getOrDefault(stack, 1.0).getValue(stack);
 
@@ -147,7 +141,7 @@ public class LootItemHelper {
                 for (LootEffectInstance effect : effects) {
                     if (effect != null) {
                         if (effect.getEffect().getAttribute() != null) {
-                            modifiers.put(effect.getEffect().getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
+                            modifiers.put(effect.getEffect().getAttribute().getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
                         }
                     }
                 }
@@ -178,7 +172,7 @@ public class LootItemHelper {
 
             if (effects.size() > 0) {
                 for (LootEffectInstance effect : effects) {
-                    if (effect.getEffect().getAction() != null)
+                    if (effect.getEffect() != null && effect.getEffect().getAction() != null)
                         effect.getEffect().getAction().handleHit(stack, target, attacker);
                 }
             }
@@ -257,7 +251,7 @@ public class LootItemHelper {
 
         if (effects.size() > 0) {
             for (PotionEffectInstance effect : effects) {
-                effect.getEffect().onHit(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()), target, attacker);
+                //effect.getEffect().onHit(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()), target, attacker);
             }
         }
     }
@@ -303,7 +297,7 @@ public class LootItemHelper {
     public static void addInformation(ItemStack stack, List<Component> tooltip, boolean show_durability) {
         int durability = stack.getMaxDamage();
 
-        List<PotionEffectInstance> effects = PotionEffect.getPotionlist(stack);
+/*        List<PotionEffectInstance> effects = PotionEffect.getPotionlist(stack);
         for (PotionEffectInstance effect : effects) {
             tooltip.add(new TextComponent(
                     ChatFormatting.RESET
@@ -313,7 +307,7 @@ public class LootItemHelper {
                                     effect.getEffect().getDurationString(stack, effect.getId()),
                                     effect.getEffect().getAmplifierString(stack, effect.getId()),
                                     effect.getEffect().getAmplifierString(stack, effect.getId(), 1)})));
-        }
+        }*/
         List<LootEffectInstance> effects1 = LootEffect.getEffectList(stack);
         for (LootEffectInstance effect : effects1) {
             tooltip.add(new TextComponent(
@@ -326,7 +320,7 @@ public class LootItemHelper {
 
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
-        if (rarity == LootRarity.UNIQUE) {
+        if (rarity.getId().equals("unique")) {
             String effect = I18n.get(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
 
             tooltip.add(new TextComponent("+ " + ChatFormatting.ITALIC + "" + ChatFormatting.DARK_PURPLE + "" + effect));
@@ -350,7 +344,7 @@ public class LootItemHelper {
     }
 
     @Nullable
-    public static LootEffect getRandomEffectExcluding(Random rand, LootSet.LootSetType type, List<LootEffect> exclude) {
+    public static LootEffect getRandomEffectExcluding(Random rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> exclude) {
         LootEffect weaponEffect = null;
 
         boolean hasActive = false;
@@ -364,39 +358,25 @@ public class LootItemHelper {
                 hasUse = true;
         }
 
-        List<LootEffect> list = new ArrayList<LootEffect>();
+        WeightedList<LootEffect> list = new WeightedList<>();
+        List<LootEffect> possibleEffects = rarity.getPossibleEffects();
+        List<WeightedList.Entry<LootEffect>> toRemove = new ArrayList<>();
 
-        for (LootEffect e : LootEffect.REGISTRY.values()) {
-            if (e.applyToItemType(type)) {
-                if (
-                        !(hasActive && e.getType() == LootEffect.EffectType.ACTIVE)
-                                && !(hasUse && e.getType() == LootEffect.EffectType.USE))
-                    list.add(e);
+        for (WeightedList.Entry<LootEffect> entry : ModConfigs.EFFECTS.EFFECTS) {
+            LootEffect effect = entry.value;
+            if (effect.applyToItemType(type)) {
+                if (!(hasActive && effect.getType() == LootEffect.EffectType.ACTIVE) && !(hasUse && effect.getType() == LootEffect.EffectType.USE) && possibleEffects.contains(effect) && !exclude.contains(effect)) {
+                    list.add(effect, entry.weight);
+                }
             }
         }
 
-        list.removeAll(exclude);
+        list.removeAll(toRemove);
 
         if (list.size() > 0)
-            weaponEffect = list.get(rand.nextInt(list.size()));
+            weaponEffect = list.getRandom(rand);
 
         return weaponEffect;
-    }
-
-    public static ItemStack rerollStats(ItemStack stack) {
-        Random random = new Random();
-
-        LootRarity lootRarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
-
-        ModAttributes.LOOT_DAMAGE.create(stack, lootRarity.getDamage(random));
-        ModAttributes.LOOT_SPEED.create(stack, lootRarity.getSpeed(random));
-        ModAttributes.LOOT_EFFICIENCY.create(stack, lootRarity.getEfficiency(random));
-        ModAttributes.LOOT_DURABILITY.create(stack, lootRarity.getDurability(random));
-
-        ModAttributes.LOOT_DRAWSPEED.create(stack, lootRarity.getSpeed(random) + 4.0);
-        ModAttributes.LOOT_POWER.create(stack, 1.0 + ((float) lootRarity.getDamage(random) / 20.0));
-
-        return stack;
     }
 
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
@@ -423,10 +403,7 @@ public class LootItemHelper {
 
         int modifierCount = lootRarity.getPotionCount(random);
 
-        boolean unbreakable = false;
-
-        if (lootRarity == LootRarity.UNIQUE)
-            unbreakable = true;
+        boolean unbreakable = lootRarity.getUnbreakableChance() > random.nextInt(100);
 
         if (modifierCount > 0) {
             List<PotionEffect> appliedEffects = new ArrayList<>();
@@ -436,7 +413,7 @@ public class LootItemHelper {
                 PotionEffect effect = LootItemHelper.getRandomPotionExcluding(random, type, appliedEffects);
 
                 if (effect != null) {
-                    instances.add(new PotionEffectInstance(effect));
+                    instances.add(new PotionEffectInstance(effect.getEffect(), effect.getDuration(random), effect.getAmplifier(random)));
                     appliedEffects.add(effect);
                 } else {
                 }
@@ -451,7 +428,7 @@ public class LootItemHelper {
             List<LootEffectInstance> instances = new ArrayList<>();
 
             for (int m = 0; m < modifierCount; ++m) {
-                LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, appliedEffects);
+                LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, lootRarity, appliedEffects);
 
                 if (me != null) {
                     instances.add(new LootEffectInstance(me));
@@ -461,9 +438,6 @@ public class LootItemHelper {
             ModAttributes.LOOT_EFFECTS.create(loot, instances);
         }
 
-        if (lootRarity != LootRarity.COMMON)
-            if (random.nextInt(100) > 90)
-                unbreakable = true;
 
         //tag.put(LootTags.LOOT_TAG, lootTag);
 
@@ -596,7 +570,7 @@ public class LootItemHelper {
         float hardness = state.getDestroySpeed(world, pos);
 
         boolean canHarvest = (ForgeHooks.isCorrectToolForDrops(state, player) || stack.getItem().isCorrectToolForDrops(state))
-                        && (!isExtra || stack.getItem().getDestroySpeed(stack, world.getBlockState(pos)) > 1.0F);
+                && (!isExtra || stack.getItem().getDestroySpeed(stack, world.getBlockState(pos)) > 1.0F);
 
         if (hardness >= 0.0F && (!isExtra || (canHarvest))) {
             return breakExtraBlock(stack, world, player, pos);

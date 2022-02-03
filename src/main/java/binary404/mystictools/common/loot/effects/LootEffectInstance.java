@@ -9,7 +9,7 @@ import java.util.Random;
 public class LootEffectInstance implements INBTSerializable<CompoundTag> {
 
     private LootEffect effect;
-    private int amplifier;
+    private double amplifier;
 
     public LootEffectInstance(LootEffect effect) {
         Random random = new Random();
@@ -29,7 +29,7 @@ public class LootEffectInstance implements INBTSerializable<CompoundTag> {
         return effect.getId();
     }
 
-    public int getAmplifier() {
+    public double getAmplifier() {
         return amplifier;
     }
 
@@ -37,7 +37,7 @@ public class LootEffectInstance implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putString("id", effect.getId());
-        tag.putInt("amplifier", amplifier);
+        tag.putDouble("amplifier", amplifier);
         return tag;
     }
 

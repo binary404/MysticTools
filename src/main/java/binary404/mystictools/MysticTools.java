@@ -2,6 +2,7 @@ package binary404.mystictools;
 
 import binary404.mystictools.common.core.ConfigHandler;
 import binary404.mystictools.common.core.GenerateLootCommand;
+import binary404.mystictools.common.core.config.ModConfigs;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.ItemTypeRegistry;
 import binary404.mystictools.common.loot.LootRarity;
@@ -66,6 +67,7 @@ public class MysticTools {
         PotionEffect.init();
         LootEffect.init();
         LootModifiers.ArtifactModifiers.init();
+        ModConfigs.register();
 
         NetworkHandler.init();
 
@@ -79,6 +81,8 @@ public class MysticTools {
             ItemTypeRegistry.register(ModItems.loot_leggings, LootSet.LootSetType.ARMOR_LEGGINGS);
             ItemTypeRegistry.register(ModItems.loot_chestplate, LootSet.LootSetType.ARMOR_CHESTPLATE);
             ItemTypeRegistry.register(ModItems.loot_helmet, LootSet.LootSetType.ARMOR_HELMET);
+            ModConfigs.RARITIES.uploadRaritiesToRegistry();
+            ModConfigs.EFFECTS.uploadEffectsToRegistry();
         });
     }
 

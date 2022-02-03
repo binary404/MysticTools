@@ -12,6 +12,7 @@ import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -22,11 +23,14 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -111,8 +115,21 @@ public class ItemLootSword extends SwordItem implements ILootItem {
     }
 
     @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return super.canApplyAtEnchantingTable(stack, enchantment) && enchantment != Enchantments.MENDING;
+    }
+
+    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack);
+        float speedDisplay = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0f).getValue(stack);
+        double speed = (double) speedDisplay;
+
+        Player player = Minecraft.getInstance().player;
+
+        if(player != null) {
+            speed += player.getAttribute(Attributes.ATTACK_SPEED).getBaseValue();
+        }
 
         if (Screen.hasShiftDown()) {
             LootItemHelper.addInformation(stack, tooltip);
@@ -120,6 +137,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Sword"));
 
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + attackDamage + " Damage"));
+        tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + attackDamage + " Damage | " + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(speed) + " Attack Speed"));
+
     }
 }

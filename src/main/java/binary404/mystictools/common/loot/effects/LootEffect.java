@@ -1,12 +1,14 @@
 package binary404.mystictools.common.loot.effects;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.core.config.entry.AttributeOverride;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.effect.*;
+import com.google.gson.annotations.Expose;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -14,81 +16,60 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeMod;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.*;
 
 public class LootEffect implements IEffect {
     public static final Map<String, LootEffect> REGISTRY = new HashMap<>();
 
-    public static LootEffect LIGHTNING;
-    public static LootEffect LEECH;
-    public static LootEffect HEAL;
-    public static LootEffect DASH;
-    public static LootEffect STUN;
+    public static LootEffect LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(LootEffects.LIGHTNING).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect LEECH = create("leech", EffectType.PASSIVE).setAmplifier(10, 100).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect HEAL = create("heal", EffectType.USE).setAction(LootEffects.HEAL).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect DASH = create("dash", EffectType.USE).setAction(LootEffects.DASH).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect STUN = create("stun", EffectType.USE).setAction(LootEffects.STUN).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect POTION_CLOUD = create("potion_cloud", EffectType.PASSIVE).setAction(LootEffects.POTION_CLOUD).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect BLAST = create("blast", EffectType.USE).setAction(LootEffects.BLAST).setItemTypes(LootSet.LootSetType.SWORD);
 
-    public static LootEffect SLEEP;
-    public static LootEffect MULTI;
-    public static LootEffect AREA_MINER;
-    public static LootEffect AUTO_SMELT;
-    public static LootEffect VOID;
+    public static LootEffect REACH = create("reach", EffectType.PASSIVE, new AttributeOverride(ForgeMod.REACH_DISTANCE.get())).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
 
-    public static LootEffect JUMP;
-    public static LootEffect PARRY;
+    public static LootEffect SLEEP = create("sleep", EffectType.USE).setAction(LootEffects.SLEEP).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+    public static LootEffect MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE);
+    public static LootEffect AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AREA_MINER);
+    public static LootEffect AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AUTOSMELT);
+    public static LootEffect VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(LootEffects.VOID);
 
-    public static LootEffect SHOCKWAVE;
-    public static LootEffect REFLECT;
-    public static LootEffect HEALTH;
-    public static LootEffect KNOCKBACK_RESISTANCE;
+    public static LootEffect JUMP = create("jump", EffectType.PASSIVE).setAmplifier(2, 5).setItemTypes(LootSet.LootSetType.ARMOR_BOOTS);
+    public static LootEffect PARRY = create("parry", EffectType.PASSIVE).setAmplifier(2.5, 20).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET);
 
-    public static LootEffect INSIGHT;
+    public static LootEffect SHOCKWAVE = create("shockwave", EffectType.PASSIVE).setAction(LootEffects.SHOCKWAVE).setItemTypes(LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE);
+    public static LootEffect REFLECT = create("reflect", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS);
+    public static LootEffect HEALTH = create("health", EffectType.PASSIVE, new AttributeOverride(Attributes.MAX_HEALTH)).setAmplifier(2, 10).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+    public static LootEffect KNOCKBACK_RESISTANCE = create("knockback_resistance", EffectType.PASSIVE, new AttributeOverride(Attributes.KNOCKBACK_RESISTANCE)).setAmplifier(0.05, 0.3).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET);
+
+    public static LootEffect INSIGHT = create("insight", EffectType.PASSIVE).setAmplifier(1, 6).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
 
     public static void init() {
-        if (ConfigHandler.COMMON.enableLightning.get())
-            LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(new LootEffectLightning()).setItemTypes(LootSet.LootSetType.SWORD);
-        if (ConfigHandler.COMMON.enableLeach.get())
-            LEECH = create("leech", EffectType.PASSIVE).setAmplifier(1, ConfigHandler.COMMON.maxLeachAmount.get()).setItemTypes(LootSet.LootSetType.SWORD);
-        if (ConfigHandler.COMMON.enableHeal.get())
-            HEAL = create("heal", EffectType.USE).setAction(new LootEffectHeal()).setItemTypes(LootSet.LootSetType.SWORD);
-        if (ConfigHandler.COMMON.enableDash.get())
-            DASH = create("dash", EffectType.USE).setAction(new LootEffectDash()).setItemTypes(LootSet.LootSetType.SWORD);
-        if (ConfigHandler.COMMON.enableStun.get())
-            STUN = create("stun", EffectType.USE).setAction(new LootEffectStun()).setItemTypes(LootSet.LootSetType.SWORD);
-        if (ConfigHandler.COMMON.enableSleep.get())
-            SLEEP = create("sleep", EffectType.USE).setAction(new LootEffectActionSleep()).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
-        if (ConfigHandler.COMMON.enableMultiTool.get())
-            MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE);
-        if (ConfigHandler.COMMON.enableAreaMiner.get())
-            AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAreaMiner());
-        if (ConfigHandler.COMMON.enableAutoSmelt.get())
-            AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(new LootEffectAutoSmelt());
-        if (ConfigHandler.COMMON.enableVoid.get())
-            VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(new LootEffectVoid());
-        if (ConfigHandler.COMMON.enableJump.get())
-            JUMP = create("jump", EffectType.PASSIVE).setAmplifier(2, ConfigHandler.COMMON.maxJumpAmount.get()).setItemTypes(LootSet.LootSetType.ARMOR_BOOTS);
-        if (ConfigHandler.COMMON.enableParry.get())
-            PARRY = create("parry", EffectType.PASSIVE).setAmplifier(10, ConfigHandler.COMMON.maxParryChance.get()).setItemTypes(LootSet.LootSetType.ARMOR_BOOTS);
-        if (ConfigHandler.COMMON.enableShockwave.get())
-            SHOCKWAVE = create("shockwave", EffectType.PASSIVE).setAction(new LootEffectShockwave()).setItemTypes(LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE);
-        if (ConfigHandler.COMMON.enableReflect.get())
-            REFLECT = create("reflect", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS);
-        if (ConfigHandler.COMMON.enableHealth.get())
-            HEALTH = create("health", EffectType.PASSIVE, Attributes.MAX_HEALTH).setAmplifier(1, ConfigHandler.COMMON.maxHealth.get()).setItemTypes(LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE);
-        if (ConfigHandler.COMMON.enableKnockbackResistance.get())
-            KNOCKBACK_RESISTANCE = create("knockback_resistance", EffectType.PASSIVE, Attributes.KNOCKBACK_RESISTANCE).setAmplifier(1, ConfigHandler.COMMON.maxKnockbackResistance.get()).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS);
-        if(ConfigHandler.COMMON.enableInsight.get())
-            INSIGHT = create("insight", EffectType.PASSIVE).setAmplifier(1, ConfigHandler.COMMON.maxInsight.get()).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
+        //NO-OP
     }
 
+    @Expose
     private String id;
+    @Expose
     private List<LootSet.LootSetType> applyToItems = new ArrayList<>();
+    @Expose
+    private AttributeOverride attribute;
+    @Expose
+    private LootEffects action;
 
-    private Attribute attribute;
-    private IEffectAction action;
+    @Expose
+    private double amplifierMin = 0;
+    @Expose
+    private double amplifierMax = 0;
 
-    private int amplifierMin = 0;
-    private int amplifierMax = 0;
-
-    private final EffectType effectType;
+    @Expose
+    private EffectType effectType;
 
     public enum EffectType {
         ACTIVE(ChatFormatting.GOLD),
@@ -123,10 +104,12 @@ public class LootEffect implements IEffect {
     }
 
     public IEffectAction getAction() {
-        return this.action;
+        if (this.action != null)
+            return this.action.action;
+        return null;
     }
 
-    protected LootEffect setAction(IEffectAction action) {
+    protected LootEffect setAction(LootEffects action) {
         this.action = action;
         return this;
     }
@@ -148,21 +131,13 @@ public class LootEffect implements IEffect {
         return this.id;
     }
 
-    public CompoundTag getNbt(Random rand) {
-        CompoundTag tag = new CompoundTag();
-
-        tag.putString("id", this.getId());
-        tag.putInt("amplifier", this.getAmplifier(rand));
-        return tag;
-    }
-
-    public static int getAmplifierFromStack(ItemStack stack, String effectId) {
-        int amplifier = 0;
+    public static double getAmplifierFromStack(ItemStack stack, String effectId) {
+        double amplifier = 0;
 
         List<LootEffectInstance> effects = ModAttributes.LOOT_EFFECTS.getOrDefault(stack, new ArrayList<>()).getValue(stack);
 
-        for(LootEffectInstance instance : effects) {
-            if(instance.getId().contains(effectId)) {
+        for (LootEffectInstance instance : effects) {
+            if (instance.getId().contains(effectId)) {
                 amplifier = instance.getAmplifier();
             }
         }
@@ -184,27 +159,26 @@ public class LootEffect implements IEffect {
         return effect;
     }
 
-    protected static LootEffect create(String id, EffectType type, Attribute attribute) {
+    protected static LootEffect create(String id, EffectType type, AttributeOverride attribute) {
         LootEffect effect = new LootEffect(type);
 
         effect.id = id;
         effect.attribute = attribute;
-        REGISTRY.put(id, effect);
 
         return effect;
     }
 
-    protected LootEffect setAmplifier(int min, int max) {
+    protected LootEffect setAmplifier(double min, double max) {
         this.amplifierMin = min;
         this.amplifierMax = max;
         return this;
     }
 
-    public int getAmplifier(Random rand) {
-        return Mth.nextInt(rand, this.amplifierMin, this.amplifierMax);
+    public double getAmplifier(Random rand) {
+        return Mth.nextDouble(rand, this.amplifierMin, this.amplifierMax);
     }
 
-    public Attribute getAttribute() {
+    public AttributeOverride getAttribute() {
         return this.attribute;
     }
 
@@ -225,5 +199,6 @@ public class LootEffect implements IEffect {
     public String getAmplifierString(ItemStack stack, String effectId, int add) {
         return ChatFormatting.BOLD + "" + (getAmplifierFromStack(stack, effectId) + add) + "" + ChatFormatting.RESET + "" + ((this.getType() == EffectType.PASSIVE) ? ChatFormatting.GREEN : ChatFormatting.GOLD) + "";
     }
+
 
 }

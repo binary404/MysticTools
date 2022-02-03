@@ -10,6 +10,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static binary404.mystictools.common.core.RegistryHelper.register;
 
 @Mod.EventBusSubscriber(modid = "mystictools", bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -43,11 +46,7 @@ public class ModItems {
     public static Item bow_case;
     public static Item sword_case;
 
-    public static ItemSelectRarityCase common_case;
-    public static ItemSelectRarityCase uncommon_case;
-    public static ItemSelectRarityCase rare_case;
-    public static ItemSelectRarityCase epic_case;
-    public static ItemSelectRarityCase unique_case;
+    public static List<Item> rarityCases = new ArrayList<>();
 
     public static Item loot_boots;
     public static Item loot_leggings;
@@ -79,13 +78,7 @@ public class ModItems {
         bow_case = register(r, new ItemSelectTypeCase(loot_bow), "bow_case");
         sword_case = register(r, new ItemSelectTypeCase(loot_sword), "sword_case");
 
-        common_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.COMMON), "common_case");
-        uncommon_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNCOMMON), "uncommon_case");
-        rare_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.RARE), "rare_case");
-        epic_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.EPIC), "epic_case");
-        unique_case = (ItemSelectRarityCase) register(r, new ItemSelectRarityCase(LootRarity.UNIQUE), "unique_case");
-
-        artifact = register(r, new ItemArtifact(new Item.Properties().tab(MysticTools.tab)), "artifact");
+        artifact = register(r, new ItemArtifact(new Item.Properties()), "artifact");
 
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "shard");
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");

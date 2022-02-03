@@ -33,10 +33,6 @@ public class ItemSelectTypeCase extends Item {
 
         LootRarity rarity = LootRarity.generateRandomRarity(serverWorld.random, playerIn);
 
-        if (rarity == LootRarity.UNIQUE) {
-            rarity = LootRarity.EPIC;
-        }
-
         ItemStack loot;
 
         if (rarity != null) {

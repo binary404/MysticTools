@@ -159,7 +159,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
                 if (effects.size() > 0) {
                     for (PotionEffectInstance effect : effects) {
-                        MobEffectInstance potionEffect = effect.getEffect().getPotionEffect(PotionEffect.getDurationFromStack(stack, effect.getId()), PotionEffect.getAmplifierFromStack(stack, effect.getId()));
+                        MobEffectInstance potionEffect = new MobEffectInstance(effect.getEffect(), effect.getDuration(), effect.getAmplifier());
                         if (potionEffect != null && entityarrow instanceof Arrow) {
                             ((Arrow) entityarrow).addEffect(potionEffect);
                         }

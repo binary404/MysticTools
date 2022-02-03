@@ -98,7 +98,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     public void onArmorTick(ItemStack stack, Level world, Player player) {
         LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) player);
 
-        if (LootItemHelper.hasEffect(stack, LootEffect.JUMP)) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.getById("jump"))) {
             DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 if (player == Minecraft.getInstance().player) {
                     LocalPlayer playerSp = (LocalPlayer) player;

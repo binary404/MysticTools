@@ -1,7 +1,10 @@
 package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.core.ConfigHandler;
+import binary404.mystictools.common.core.config.ModConfigs;
 import binary404.mystictools.common.items.ModItems;
+import binary404.mystictools.common.loot.effects.LootEffect;
+import com.google.gson.annotations.Expose;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -10,20 +13,14 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class LootRarity {
 
-    private static final Map<String, LootRarity> REGISTRY = new HashMap<>();
-
-    public static Map<String, LootRarity> getRegistry() {
-        return REGISTRY;
-    }
+    public static final Map<String, LootRarity> REGISTRY = new HashMap<>();
 
     public static LootRarity generateRandomRarity(Random random, Player entity) {
-        int rarity = random.nextInt(100) + 1;
+/*        int rarity = random.nextInt(100) + 1;
         LootRarity lootRarity;
         int commonRarity = ConfigHandler.COMMON.commonRarity.get();
         int uncommonRarity = ConfigHandler.COMMON.uncommonRarity.get();
@@ -42,96 +39,116 @@ public class LootRarity {
         else if (rarity > commonRarity + uncommonRarity + rareRarity + epicRarity && rarity <= commonRarity + uncommonRarity + rareRarity + epicRarity + uniqueRarity)
             lootRarity = LootRarity.UNIQUE;
         else
-            lootRarity = LootRarity.COMMON;
-        return lootRarity;
+            lootRarity = LootRarity.COMMON;*/
+        LootRarity rarity = ModConfigs.RARITIES.RARITIES.getRandom(random);
+        System.out.println(ModConfigs.RARITIES.RARITIES);
+        return rarity;
     }
 
     public static void init() {
-        COMMON = get("common", ChatFormatting.WHITE)
-                .setDamage(ConfigHandler.COMMON.commonDamageMin.get(), ConfigHandler.COMMON.commonDamageMax.get())
-                .setSpeed(-3.1F, -2.399F)
-                .setArmor(1, 3)
-                .setToughness(0, 0)
-                .setEfficiency(5.0F, 12.0F)
-                .setDurability(100, 500)
-                .setPotionCount(ConfigHandler.COMMON.commonPotionMin.get(), ConfigHandler.COMMON.commonPotionMax.get())
-                .setEffectCount(ConfigHandler.COMMON.commonEffectMin.get(), ConfigHandler.COMMON.commonEffectMax.get());
-
-        UNCOMMON = get("uncommon", ChatFormatting.GRAY)
-                .setDamage(ConfigHandler.COMMON.uncommonDamageMin.get(), ConfigHandler.COMMON.uncommonDamageMax.get())
-                .setSpeed(-2.8F, -2.3F)
-                .setArmor(2, 5)
-                .setToughness(1, 3)
-                .setEfficiency(11.0F, 25.0F)
-                .setDurability(350, 1450)
-                .setPotionCount(ConfigHandler.COMMON.uncommonPotionMin.get(), ConfigHandler.COMMON.uncommonPotionMax.get())
-                .setEffectCount(ConfigHandler.COMMON.uncommonEffectMin.get(), ConfigHandler.COMMON.uncommonEffectMax.get());
-
-        RARE = get("rare", ChatFormatting.YELLOW)
-                .setDamage(ConfigHandler.COMMON.rareDamageMin.get(), ConfigHandler.COMMON.rareDamageMax.get())
-                .setSpeed(-2.6999F, -2.1F)
-                .setArmor(3, 6)
-                .setToughness(2, 5)
-                .setEfficiency(15.0F, 40.0F)
-                .setDurability(850, 2500)
-                .setPotionCount(ConfigHandler.COMMON.rarePotionMin.get(), ConfigHandler.COMMON.rarePotionMax.get())
-                .setEffectCount(ConfigHandler.COMMON.rareEffectMin.get(), ConfigHandler.COMMON.rareEffectMax.get());
-
-        EPIC = get("epic", ChatFormatting.BLUE)
-                .setDamage(ConfigHandler.COMMON.epicDamageMin.get(), ConfigHandler.COMMON.epicDamageMax.get())
-                .setSpeed(-2.39999F, -1.8F)
-                .setArmor(4, 8)
-                .setToughness(1, 5)
-                .setEfficiency(20.0F, 42.0F)
-                .setDurability(2000, 4500)
-                .setPotionCount(ConfigHandler.COMMON.epicPotionMin.get(), ConfigHandler.COMMON.epicPotionMax.get())
-                .setEffectCount(ConfigHandler.COMMON.epicEffectMin.get(), ConfigHandler.COMMON.epicEffectMax.get());
-
-        UNIQUE = get("unique", ChatFormatting.DARK_PURPLE)
-                .setDamage(ConfigHandler.COMMON.uniqueDamageMin.get(), ConfigHandler.COMMON.uniqueDamageMax.get())
-                .setSpeed(-2.0F, -1.5F)
-                .setArmor(5, 10)
-                .setToughness(2, 6)
-                .setEfficiency(20.56F, 56.05F)
-                .setDurability(1000, 4000)
-                .setPotionCount(ConfigHandler.COMMON.uniquePotionMin.get(), ConfigHandler.COMMON.uniquePotionMax.get())
-                .setEffectCount(ConfigHandler.COMMON.uniqueEffectMin.get(), ConfigHandler.COMMON.uniqueEffectMax.get());
-
-        ModItems.common_case.lootRarity = COMMON;
-        ModItems.uncommon_case.lootRarity = UNCOMMON;
-        ModItems.rare_case.lootRarity = RARE;
-        ModItems.epic_case.lootRarity = EPIC;
-        ModItems.unique_case.lootRarity = UNIQUE;
+        //NO-OP
     }
 
-    public static LootRarity COMMON;
+    public static LootRarity COMMON = get("common", ChatFormatting.WHITE)
+            .setDamage(5, 7)
+            .setSpeed(-3.1F, -2.399F)
+            .setArmor(1, 3)
+            .setToughness(0, 0)
+            .setEfficiency(5.0F, 12.0F)
+            .setDurability(100, 500)
+            .setPotionCount(0, 1)
+            .setEffectCount(0, 0)
+            .setPossibleEffects("dash", "sleep", "void", "health", "blast")
+            .setUnbreakableChance(0);
 
-    public static LootRarity UNCOMMON;
+    public static LootRarity UNCOMMON = get("uncommon", ChatFormatting.GRAY)
+            .setDamage(7, 10)
+            .setSpeed(-2.8F, -2.3F)
+            .setArmor(2, 5)
+            .setToughness(1, 3)
+            .setEfficiency(11.0F, 25.0F)
+            .setDurability(350, 1450)
+            .setPotionCount(2, 3)
+            .setEffectCount(0, 1)
+            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "blast")
+            .setUnbreakableChance(5);
 
-    public static LootRarity RARE;
+    public static LootRarity RARE = get("rare", ChatFormatting.YELLOW)
+            .setDamage(10, 13)
+            .setSpeed(-2.6999F, -2.1F)
+            .setArmor(3, 6)
+            .setToughness(2, 5)
+            .setEfficiency(15.0F, 40.0F)
+            .setDurability(850, 2500)
+            .setPotionCount(1, 4)
+            .setEffectCount(1, 2)
+            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "blast")
+            .setUnbreakableChance(7);
 
-    public static LootRarity EPIC;
+    public static LootRarity EPIC = get("epic", ChatFormatting.BLUE)
+            .setDamage(13, 17)
+            .setSpeed(-2.39999F, -1.8F)
+            .setArmor(4, 8)
+            .setToughness(1, 5)
+            .setEfficiency(20.0F, 42.0F)
+            .setDurability(2000, 4500)
+            .setPotionCount(1, 4)
+            .setEffectCount(1, 3)
+            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast")
+            .setUnbreakableChance(15);
 
-    public static LootRarity UNIQUE;
+    public static LootRarity UNIQUE = get("unique", ChatFormatting.DARK_PURPLE)
+            .setDamage(17, 27)
+            .setSpeed(-2.0F, -1.5F)
+            .setArmor(5, 10)
+            .setToughness(2, 6)
+            .setEfficiency(20.56F, 56.05F)
+            .setDurability(1000, 4000)
+            .setPotionCount(3, 5)
+            .setEffectCount(3, 4)
+            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast")
+            .setUnbreakableChance(30);
 
-    private ChatFormatting color = ChatFormatting.WHITE;
-    private int damageMin = 0;
-    private int damageMax = 7;
-    private double speedMin = 0.0;
-    private double speedMax = 1.0;
-    private double armorMin = 3.0;
-    private double armorMax = 10.0;
-    private double toughnessMin = 3.0;
-    private double toughnessMax = 10.0;
-    private double efficiencyMin = 1.0;
-    private double efficiencyMax = 1.0;
-    private int durabilityMin = 0;
-    private int durabilityMax = 0;
-    private int potionMin = 0;
-    private int potionMax = 1;
-    private int effectMin = 0;
-    private int effectMax = 1;
+    @Expose
     private String id;
+    @Expose
+    private ChatFormatting color = ChatFormatting.WHITE;
+    @Expose
+    private int unbreakableChance;
+    @Expose
+    private int damageMin = 0;
+    @Expose
+    private int damageMax = 7;
+    @Expose
+    private float speedMin = 0.0f;
+    @Expose
+    private float speedMax = 1.0f;
+    @Expose
+    private double armorMin = 3.0;
+    @Expose
+    private double armorMax = 10.0;
+    @Expose
+    private double toughnessMin = 3.0;
+    @Expose
+    private double toughnessMax = 10.0;
+    @Expose
+    private double efficiencyMin = 1.0;
+    @Expose
+    private double efficiencyMax = 1.0;
+    @Expose
+    private int durabilityMin = 0;
+    @Expose
+    private int durabilityMax = 0;
+    @Expose
+    private int potionMin = 0;
+    @Expose
+    private int potionMax = 1;
+    @Expose
+    private int effectMin = 0;
+    @Expose
+    private int effectMax = 1;
+    @Expose
+    private List<String> possibleEffects = new ArrayList<>();
 
     private LootRarity() {
     }
@@ -154,6 +171,20 @@ public class LootRarity {
         }
 
         return r;
+    }
+
+    public List<String> getPossibleEffectIds() {
+        return this.possibleEffects;
+    }
+
+    public List<LootEffect> getPossibleEffects() {
+        List<LootEffect> effects = new ArrayList<>();
+        for(String id : getPossibleEffectIds()) {
+            LootEffect effect = LootEffect.REGISTRY.get(id);
+            if(effect != null)
+                effects.add(effect);
+        }
+        return effects;
     }
 
     public static LootRarity read(StringReader reader) throws CommandSyntaxException {
@@ -225,6 +256,25 @@ public class LootRarity {
         return this;
     }
 
+    protected LootRarity setUnbreakableChance(int chance) {
+        this.unbreakableChance = chance;
+        return this;
+    }
+
+    protected LootRarity setPossibleEffects(String... lootEffects) {
+        this.possibleEffects.addAll(List.of(lootEffects));
+        return this;
+    }
+
+    protected LootRarity setPossibleEffects(LootEffect... lootEffects) {
+        List<String> possibleEffectsToAdd = new ArrayList<>();
+        for (LootEffect effect : lootEffects) {
+            possibleEffectsToAdd.add(effect.getId());
+        }
+        this.possibleEffects.addAll(possibleEffectsToAdd);
+        return this;
+    }
+
     public int getPotionCount(Random rand) {
         int modifierCount = this.potionMin;
 
@@ -261,10 +311,10 @@ public class LootRarity {
         return damage;
     }
 
-    public double getSpeed(Random rand) {
-        double speed = this.speedMin;
+    public float getSpeed(Random rand) {
+        float speed = this.speedMin;
 
-        speed += (this.speedMax - speed) * rand.nextDouble();
+        speed += (this.speedMax - speed) * rand.nextFloat();
 
         return speed;
     }
@@ -295,13 +345,15 @@ public class LootRarity {
         return efficiency;
     }
 
+    public int getUnbreakableChance() {
+        return unbreakableChance;
+    }
+
     protected static LootRarity get(String id, ChatFormatting color) {
         LootRarity r = new LootRarity();
 
         r.id = id;
         r.color = color;
-
-        REGISTRY.put(id, r);
 
         return r;
     }

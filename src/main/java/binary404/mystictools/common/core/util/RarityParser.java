@@ -46,7 +46,7 @@ public class RarityParser {
     }
 
     private CompletableFuture<Suggestions> suggestRarity(SuggestionsBuilder builder, Collection<LootRarity> list) {
-        return SharedSuggestionProvider.suggest(LootRarity.getRegistry().keySet(), builder);
+        return SharedSuggestionProvider.suggest(LootRarity.REGISTRY.keySet(), builder);
     }
 
     public CompletableFuture<Suggestions> fillSuggestions(SuggestionsBuilder builder, Collection<LootRarity> list) {

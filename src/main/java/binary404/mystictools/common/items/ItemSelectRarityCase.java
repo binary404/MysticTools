@@ -41,12 +41,14 @@ public class ItemSelectRarityCase extends Item {
         } else {
             loot = LootItemHelper.getRandomLoot(worldIn.random);
 
-            LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
+            if(loot.getItem() instanceof ILootItem) {
+                LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 
-            if (type == null)
-                type = LootSet.LootSetType.SWORD;
+                if (type == null)
+                    type = LootSet.LootSetType.SWORD;
 
-            loot = LootItemHelper.generateLoot(this.lootRarity, type, loot);
+                loot = LootItemHelper.generateLoot(this.lootRarity, type, loot);
+            }
         }
         playerIn.drop(loot, false, true);
         stack.shrink(1);

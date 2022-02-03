@@ -1,16 +1,16 @@
 {
   "pools": [{
     "name": "main",
-    "rolls": 1,
+    "rolls": 2,
     "entries": [
       {
         "type": "item",
-        "name": "mystictools:rare_case",
-        "weight": 30
+        "name": "mystictools:loot_case",
+        "weight": 55
       },
       {
         "type": "empty",
-        "weight": 70
+        "weight": 45
       }
     ]
   }]

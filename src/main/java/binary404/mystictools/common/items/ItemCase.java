@@ -32,17 +32,19 @@ public class ItemCase extends Item {
 
         ItemStack loot;
         if (lootRarity != null) {
-            if (lootRarity == LootRarity.UNIQUE) {
+            if (lootRarity.getId().equals("unique")) {
                 loot = UniqueHandler.getRandomUniqueItem(serverWorld, playerIn);
             } else {
                 loot = LootItemHelper.getRandomLoot(worldIn.random);
 
-                LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
+                if(loot.getItem() instanceof ILootItem) {
+                    LootSet.LootSetType type = LootItemHelper.getItemType(loot.getItem());
 
-                if (type == null)
-                    type = LootSet.LootSetType.SWORD;
+                    if (type == null)
+                        type = LootSet.LootSetType.SWORD;
 
-                loot = LootItemHelper.generateLoot(lootRarity, type, loot);
+                    loot = LootItemHelper.generateLoot(lootRarity, type, loot);
+                }
             }
             playerIn.drop(loot, false, true);
             stack.shrink(1);

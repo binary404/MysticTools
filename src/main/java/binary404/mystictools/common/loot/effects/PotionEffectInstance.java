@@ -1,33 +1,38 @@
 package binary404.mystictools.common.loot.effects;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Random;
 
 public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
 
-    private PotionEffect effect;
+    private MobEffect effect;
     private int duration;
     private int amplifier;
 
-    public PotionEffectInstance(PotionEffect effect) {
+    public PotionEffectInstance(MobEffect effect, int duration, int amplifier) {
         Random random = new Random();
         this.effect = effect;
-        this.duration = effect.getDuration(random);
-        this.amplifier = effect.getAmplifier(random);
+        this.duration = duration;
+        this.amplifier = amplifier;
     }
 
     private PotionEffectInstance() {
 
     }
 
-    public PotionEffect getEffect() {
+    public MobEffect getEffect() {
         return effect;
     }
 
     public String getId() {
-        return effect.getId();
+        return effect.getRegistryName().toString();
     }
 
     public int getDuration() {
@@ -41,7 +46,7 @@ public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("id", effect.getId());
+        tag.putString("id", getId());
         tag.putInt("duration", duration);
         tag.putInt("amplifier", amplifier);
         return tag;
@@ -55,7 +60,7 @@ public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        this.effect = PotionEffect.getById(nbt.getString("id"));
+        this.effect = Registry.MOB_EFFECT.getOptional(new ResourceLocation(nbt.getString("id"))).orElse(MobEffects.MOVEMENT_SPEED);
         this.duration = nbt.getInt("duration");
         this.amplifier = nbt.getInt("amplifier");
     }

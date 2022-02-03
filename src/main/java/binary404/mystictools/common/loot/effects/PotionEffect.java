@@ -203,6 +203,10 @@ public class PotionEffect implements IEffect {
         return weaponEffect;
     }
 
+    public MobEffect getEffect() {
+        return this.effect;
+    }
+
     public void onHit(int duration, int amplifier, LivingEntity target, LivingEntity attacker) {
         MobEffectInstance instance = this.getPotionEffect(duration, amplifier);
         if (instance != null) {
