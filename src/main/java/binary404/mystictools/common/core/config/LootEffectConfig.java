@@ -39,6 +39,9 @@ public class LootEffectConfig extends Config {
         EFFECTS.add(LootEffect.STUN, 2);
         EFFECTS.add(LootEffect.HEALTH, 2);
         EFFECTS.add(LootEffect.KNOCKBACK_RESISTANCE, 2);
+        EFFECTS.add(LootEffect.SILKY, 2);
+        EFFECTS.add(LootEffect.LUCKY, 2);
+        EFFECTS.add(LootEffect.DIRECT, 2);
     }
 
     public void uploadEffectsToRegistry() {

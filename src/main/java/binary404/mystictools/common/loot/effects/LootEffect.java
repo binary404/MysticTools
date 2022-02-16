@@ -24,31 +24,34 @@ import java.util.*;
 public class LootEffect implements IEffect {
     public static final Map<String, LootEffect> REGISTRY = new HashMap<>();
 
-    public static LootEffect LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(LootEffects.LIGHTNING).setItemTypes(LootSet.LootSetType.SWORD);
-    public static LootEffect LEECH = create("leech", EffectType.PASSIVE).setAmplifier(10, 100).setItemTypes(LootSet.LootSetType.SWORD);
-    public static LootEffect HEAL = create("heal", EffectType.USE).setAction(LootEffects.HEAL).setItemTypes(LootSet.LootSetType.SWORD);
-    public static LootEffect DASH = create("dash", EffectType.USE).setAction(LootEffects.DASH).setItemTypes(LootSet.LootSetType.SWORD);
-    public static LootEffect STUN = create("stun", EffectType.USE).setAction(LootEffects.STUN).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect LIGHTNING = create("lightning", EffectType.PASSIVE).setAction(LootEffects.LIGHTNING).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("lightning");
+    public static LootEffect LEECH = create("leech", EffectType.PASSIVE).setAmplifier(10, 100).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("leech");
+    public static LootEffect HEAL = create("heal", EffectType.USE).setAction(LootEffects.HEAL).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("heal");
+    public static LootEffect DASH = create("dash", EffectType.USE).setAction(LootEffects.DASH).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("dash");
+    public static LootEffect STUN = create("stun", EffectType.USE).setAction(LootEffects.STUN).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("stun");
     public static LootEffect POTION_CLOUD = create("potion_cloud", EffectType.PASSIVE).setAction(LootEffects.POTION_CLOUD).setItemTypes(LootSet.LootSetType.SWORD);
-    public static LootEffect BLAST = create("blast", EffectType.USE).setAction(LootEffects.BLAST).setItemTypes(LootSet.LootSetType.SWORD);
+    public static LootEffect BLAST = create("blast", EffectType.USE).setAction(LootEffects.BLAST).setItemTypes(LootSet.LootSetType.SWORD).setIncompatible("blast");
 
-    public static LootEffect REACH = create("reach", EffectType.PASSIVE, new AttributeOverride(ForgeMod.REACH_DISTANCE.get())).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
+    public static LootEffect REACH = create("reach", EffectType.PASSIVE, new AttributeOverride(ForgeMod.REACH_DISTANCE.get(), "Reach", 1L)).setAmplifier(1, 5).setItemTypes(LootSet.LootSetType.SWORD, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setIncompatible("reach");
 
-    public static LootEffect SLEEP = create("sleep", EffectType.USE).setAction(LootEffects.SLEEP).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
-    public static LootEffect MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE);
-    public static LootEffect AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AREA_MINER);
-    public static LootEffect AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AUTOSMELT);
-    public static LootEffect VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(LootEffects.VOID);
+    public static LootEffect SLEEP = create("sleep", EffectType.USE).setAction(LootEffects.SLEEP).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setIncompatible("sleep");
+    public static LootEffect MULTI = create("multi", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE).setIncompatible("multi");
+    public static LootEffect AREA_MINER = create("area_miner", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AREA_MINER).setIncompatible("area_miner");
+    public static LootEffect AUTO_SMELT = create("auto_smelt", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.AXE).setAction(LootEffects.AUTOSMELT).setIncompatible("auto_smelt");
+    public static LootEffect VOID = create("void", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(LootEffects.VOID).setIncompatible("void");
+    public static LootEffect SILKY = create("silky", EffectType.ACTIVE).setItemTypes(LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setAction(LootEffects.SILKY).setIncompatible("silky");
+    public static LootEffect LUCKY = create("lucky", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE).setAmplifier(1, 3).setIncompatible("lucky");
+    public static LootEffect DIRECT = create("direct", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.SHOVEL, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE).setIncompatible("direct");
 
-    public static LootEffect JUMP = create("jump", EffectType.PASSIVE).setAmplifier(2, 5).setItemTypes(LootSet.LootSetType.ARMOR_BOOTS);
-    public static LootEffect PARRY = create("parry", EffectType.PASSIVE).setAmplifier(2.5, 20).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET);
+    public static LootEffect JUMP = create("jump", EffectType.PASSIVE).setAmplifier(2, 5).setItemTypes(LootSet.LootSetType.ARMOR_BOOTS).setIncompatible("jump");
+    public static LootEffect PARRY = create("parry", EffectType.PASSIVE).setAmplifier(2.5, 20).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET).setIncompatible("parry");
 
-    public static LootEffect SHOCKWAVE = create("shockwave", EffectType.PASSIVE).setAction(LootEffects.SHOCKWAVE).setItemTypes(LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE);
-    public static LootEffect REFLECT = create("reflect", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS);
-    public static LootEffect HEALTH = create("health", EffectType.PASSIVE, new AttributeOverride(Attributes.MAX_HEALTH)).setAmplifier(2, 10).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL);
-    public static LootEffect KNOCKBACK_RESISTANCE = create("knockback_resistance", EffectType.PASSIVE, new AttributeOverride(Attributes.KNOCKBACK_RESISTANCE)).setAmplifier(0.05, 0.3).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET);
+    public static LootEffect SHOCKWAVE = create("shockwave", EffectType.PASSIVE).setAction(LootEffects.SHOCKWAVE).setItemTypes(LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_CHESTPLATE).setIncompatible("shockwave");
+    public static LootEffect REFLECT = create("reflect", EffectType.PASSIVE).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS).setIncompatible("reflect");
+    public static LootEffect HEALTH = create("health", EffectType.PASSIVE, new AttributeOverride(Attributes.MAX_HEALTH, "Extra Health", 0L)).setAmplifier(2, 10).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET, LootSet.LootSetType.PICKAXE, LootSet.LootSetType.AXE, LootSet.LootSetType.SHOVEL).setIncompatible("health");
+    public static LootEffect KNOCKBACK_RESISTANCE = create("knockback_resistance", EffectType.PASSIVE, new AttributeOverride(Attributes.KNOCKBACK_RESISTANCE, "Armor knockback resistance", 2L)).setAmplifier(1.0, 3.0).setItemTypes(LootSet.LootSetType.ARMOR_CHESTPLATE, LootSet.LootSetType.ARMOR_LEGGINGS, LootSet.LootSetType.ARMOR_BOOTS, LootSet.LootSetType.ARMOR_HELMET).setIncompatible("knockback_resistance");
 
-    public static LootEffect INSIGHT = create("insight", EffectType.PASSIVE).setAmplifier(1, 6).setItemTypes(LootSet.LootSetType.ARMOR_HELMET);
+    public static LootEffect INSIGHT = create("insight", EffectType.PASSIVE).setAmplifier(1, 6).setItemTypes(LootSet.LootSetType.ARMOR_HELMET).setIncompatible("insight");
 
     public static void init() {
         //NO-OP
@@ -70,6 +73,9 @@ public class LootEffect implements IEffect {
 
     @Expose
     private EffectType effectType;
+
+    @Expose
+    private String[] incompatibleWith;
 
     public enum EffectType {
         ACTIVE(ChatFormatting.GOLD),
@@ -103,6 +109,20 @@ public class LootEffect implements IEffect {
         return applyToItems.contains(type);
     }
 
+    public boolean isCompatible(List<LootEffect> existing) {
+        boolean compatible = true;
+        if(this.incompatibleWith == null || this.incompatibleWith.length < 1)
+            return true;
+        for(LootEffect test : existing) {
+            for(String id : incompatibleWith) {
+                if(test.id.equals(id)) {
+                    compatible = false;
+                }
+            }
+        }
+        return compatible;
+    }
+
     public IEffectAction getAction() {
         if (this.action != null)
             return this.action.action;
@@ -111,6 +131,11 @@ public class LootEffect implements IEffect {
 
     protected LootEffect setAction(LootEffects action) {
         this.action = action;
+        return this;
+    }
+
+    protected LootEffect setIncompatible(String... incompatible) {
+        this.incompatibleWith = incompatible;
         return this;
     }
 

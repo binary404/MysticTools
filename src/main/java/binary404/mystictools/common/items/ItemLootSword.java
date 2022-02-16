@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
@@ -39,7 +40,7 @@ import java.util.List;
 public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
-        super(MysticTier.MYSTIC_TIER, 3, -2.4F, new Item.Properties().tab(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 0, -2.4F, new Item.Properties().tab(MysticTools.tab));
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override
@@ -96,7 +97,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use (Level worldIn, Player playerIn, InteractionHand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
         if (rarity == LootRarity.UNIQUE) {
@@ -108,10 +109,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-
-        Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
-
-        return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Weapon modifier");
+        return LootItemHelper.modifiersForStack(slot, stack, super.getAttributeModifiers(slot, stack));
     }
 
     @Override
@@ -127,8 +125,9 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
         Player player = Minecraft.getInstance().player;
 
-        if(player != null) {
+        if (player != null) {
             speed += player.getAttribute(Attributes.ATTACK_SPEED).getBaseValue();
+            attackDamage += player.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
         }
 
         if (Screen.hasShiftDown()) {
@@ -138,6 +137,5 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Sword"));
 
         tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + attackDamage + " Damage | " + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(speed) + " Attack Speed"));
-
     }
 }

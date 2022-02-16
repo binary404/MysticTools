@@ -58,7 +58,7 @@ public class LootRarity {
             .setDurability(100, 500)
             .setPotionCount(0, 1)
             .setEffectCount(0, 0)
-            .setPossibleEffects("dash", "sleep", "void", "health", "blast")
+            .setPossibleEffects("dash", "sleep", "void", "health", "blast", "direct")
             .setUnbreakableChance(0);
 
     public static LootRarity UNCOMMON = get("uncommon", ChatFormatting.GRAY)
@@ -70,7 +70,7 @@ public class LootRarity {
             .setDurability(350, 1450)
             .setPotionCount(2, 3)
             .setEffectCount(0, 1)
-            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "blast")
+            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "blast", "direct")
             .setUnbreakableChance(5);
 
     public static LootRarity RARE = get("rare", ChatFormatting.YELLOW)
@@ -82,7 +82,7 @@ public class LootRarity {
             .setDurability(850, 2500)
             .setPotionCount(1, 4)
             .setEffectCount(1, 2)
-            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "blast")
+            .setPossibleEffects("knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "blast", "direct", "silky")
             .setUnbreakableChance(7);
 
     public static LootRarity EPIC = get("epic", ChatFormatting.BLUE)
@@ -94,7 +94,7 @@ public class LootRarity {
             .setDurability(2000, 4500)
             .setPotionCount(1, 4)
             .setEffectCount(1, 3)
-            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast")
+            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast", "direct", "silky", "lucky")
             .setUnbreakableChance(15);
 
     public static LootRarity UNIQUE = get("unique", ChatFormatting.DARK_PURPLE)
@@ -106,7 +106,7 @@ public class LootRarity {
             .setDurability(1000, 4000)
             .setPotionCount(3, 5)
             .setEffectCount(3, 4)
-            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast")
+            .setPossibleEffects("potion_cloud", "reach", "knockback_resistance", "dash", "sleep", "void", "auto_smelt", "insight", "area_miner", "leech", "jump", "health", "stun", "shockwave", "reflect", "parry", "multi", "lightning", "heal", "blast", "direct", "silky", "lucky")
             .setUnbreakableChance(30);
 
     @Expose

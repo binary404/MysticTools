@@ -48,10 +48,10 @@ public class UniqueHandler {
         if (info.found) {
             save.uniques.set(randomInt, info);
             save.setDirty();
-            return LootItemHelper.generateLoot(LootRarity.EPIC, LootItemHelper.getItemType(info.item), new ItemStack(info.item));
+            return LootItemHelper.generateLoot(LootRarity.fromId("epic"), LootItemHelper.getItemType(info.item), new ItemStack(info.item));
         }
         LootSet.LootSetType type = LootItemHelper.getItemType(info.item);
-        ItemStack loot = LootItemHelper.generateLoot(LootRarity.UNIQUE, type, new ItemStack(info.item));
+        ItemStack loot = LootItemHelper.generateLoot(LootRarity.fromId("unique"), type, new ItemStack(info.item));
 
         loot.getTag().getCompound(LootTags.LOOT_TAG).put(LootTags.LOOT_TAG_UNIQUE, info.effect.getNbt());
         info.found = true;

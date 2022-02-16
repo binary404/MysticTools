@@ -1,6 +1,7 @@
 package binary404.mystictools.common.loot.effects;
 
 
+import binary404.mystictools.common.loot.LootSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.Random;
 
 public interface IEffectAction {
     default public void toggleAction(Player player, ItemStack stack) {
@@ -49,6 +51,9 @@ public interface IEffectAction {
     }
 
     default public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    }
+
+    default public void rollExtra(ItemStack stack, LootSet.LootSetType type, Random random) {
 
     }
 }

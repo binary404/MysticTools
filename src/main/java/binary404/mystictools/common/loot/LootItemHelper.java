@@ -12,8 +12,11 @@ import binary404.mystictools.common.items.attribute.FloatAttribute;
 import binary404.mystictools.common.items.attribute.IntegerAttribute;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.effects.*;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
@@ -56,6 +59,7 @@ import java.util.*;
 public class LootItemHelper {
 
     private static final UUID[] ARMOR_MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+    private static final UUID[] ARMOR_TOUGHNESS_MODIFIERS = new UUID[]{UUID.fromString("b972ad47-fa70-496b-aebf-7fda5cd071aa"), UUID.fromString("3f788515-def1-4300-9e2a-df95a505cc0b"), UUID.fromString("018d3528-e366-4d1b-a7d2-54ff503f4e74"), UUID.fromString("d42d1c71-99ad-45ef-b1f6-98f90c6b0c7b")};
 
     protected static final UUID ATTACK_DAMAGE_MODIFIER = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
     protected static final UUID ATTACK_SPEED_MODIFIER = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
@@ -108,47 +112,58 @@ public class LootItemHelper {
         ModAttributes.LOOT_EFFECT_LEVEL.create(stack, level);
     }
 
-    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
-        return modifiersForStack(slot, EquipmentSlot.MAINHAND, stack, initial, modifierKey);
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial) {
+        return modifiersForStack(slot, EquipmentSlot.MAINHAND, stack, initial);
     }
 
-    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, EquipmentSlot effectiveSlot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial, String modifierKey) {
-        Multimap<Attribute, AttributeModifier> modifiers = initial;
+    public static Multimap<Attribute, AttributeModifier> modifiersForStack(EquipmentSlot slot, EquipmentSlot effectiveSlot, ItemStack stack, Multimap<Attribute, AttributeModifier> initial) {
+        Multimap<Attribute, AttributeModifier> modifiableMap = LinkedHashMultimap.create(initial);
 
         if (slot == effectiveSlot) {
-            double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack);
-            double attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0f).getValue(stack);
-            double armorPoints = ModAttributes.LOOT_ARMOR.getOrDefault(stack, 1.0).getValue(stack);
-            double armorToughness = ModAttributes.LOOT_TOUGHNESS.getOrDefault(stack, 1.0).getValue(stack);
+            double attackDamage = ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 0.0).getValue(stack);
+            float attackSpeed = ModAttributes.LOOT_SPEED.getOrDefault(stack, 0.0f).getValue(stack);
+            double armorPoints = ModAttributes.LOOT_ARMOR.getOrDefault(stack, 0.0).getValue(stack);
+            double armorToughness = ModAttributes.LOOT_TOUGHNESS.getOrDefault(stack, 0.0).getValue(stack);
+
+            System.out.println(attackDamage);
 
             if (attackDamage > 0 && stack.getItem() instanceof ItemLootSword)
-                applyAttributeModifier(modifiers, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, modifierKey, (double) attackDamage);
-
-            if (attackSpeed > 0 && !(stack.getItem() instanceof ArmorItem))
-                applyAttributeModifier(modifiers, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, modifierKey, attackSpeed);
-
+                applyAttributeModifier(modifiableMap, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage);
+            if (attackSpeed > 0)
+                applyAttributeModifier(modifiableMap, Attributes.ATTACK_SPEED, ATTACK_SPEED_MODIFIER, "Weapon modifier", attackSpeed);
             if (armorPoints > 0 && stack.getItem() instanceof ItemLootArmor)
-                applyAttributeModifier(modifiers, Attributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorPoints);
-
+                applyAttributeModifier(modifiableMap, Attributes.ARMOR, ARMOR_MODIFIERS[slot.getIndex()], "Armor modifier", armorPoints);
             if (armorToughness > 0 && stack.getItem() instanceof ItemLootArmor)
-                applyAttributeModifier(modifiers, Attributes.ARMOR_TOUGHNESS, ARMOR_MODIFIERS[slot.getIndex()], modifierKey, (double) armorToughness);
+                applyAttributeModifier(modifiableMap, Attributes.ARMOR_TOUGHNESS, ARMOR_TOUGHNESS_MODIFIERS[slot.getIndex()], "Armor toughness", armorToughness);
+/*            if (attribute == Attributes.ATTACK_DAMAGE && attackDamage > 1 && stack.getItem() instanceof ItemLootSword) {
+                modifiableMap.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(modifier.getId(), "Weapon modifier", attackDamage, AttributeModifier.Operation.ADDITION));
+            } else if (attribute == Attributes.ATTACK_SPEED && attackSpeed > 1 && stack.getItem() instanceof ItemLootSword) {
+                modifiableMap.put(Attributes.ATTACK_SPEED, new AttributeModifier(modifier.getId(), "Weapon modifier", attackSpeed, AttributeModifier.Operation.ADDITION));
+            } else if (attribute == Attributes.ARMOR && armorPoints > 1 && stack.getItem() instanceof ItemLootArmor) {
+                modifiableMap.put(Attributes.ARMOR, new AttributeModifier(modifier.getId(), "Armor modifier", armorPoints, AttributeModifier.Operation.ADDITION));
+            } else if (attribute == Attributes.ARMOR_TOUGHNESS && armorToughness > 1 && stack.getItem() instanceof ItemLootArmor) {
+                modifiableMap.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modifier.getId(), "Armor toughness", armorToughness, AttributeModifier.Operation.ADDITION));
+            } else {
+                modifiableMap.put(attribute, modifier);
+            }*/
 
             List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
-            String uuid_string = ModAttributes.LOOT_UUID.getOrDefault(stack, "").getValue(stack);
-
-            if (uuid_string.length() > 0) {
-                for (LootEffectInstance effect : effects) {
-                    if (effect != null) {
-                        if (effect.getEffect().getAttribute() != null) {
-                            modifiers.put(effect.getEffect().getAttribute().getAttribute(), new AttributeModifier(UUID.fromString(uuid_string), "EquipmentModifier", LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
-                        }
+            for (LootEffectInstance effect : effects) {
+                if (effect != null) {
+                    if (effect.getEffect().getAttribute() != null) {
+                        UUID uuid = itemHash(stack.getItem(), effect.getEffect().getAttribute().salt);
+                        modifiableMap.put(effect.getEffect().getAttribute().getAttribute(), new AttributeModifier(uuid, effect.getEffect().getAttribute().modifierType, LootEffect.getAmplifierFromStack(stack, effect.getId()), AttributeModifier.Operation.ADDITION));
                     }
                 }
             }
         }
 
-        return modifiers;
+        return modifiableMap;
+    }
+
+    static UUID itemHash(Item item, long salt) {
+        return new UUID(salt, item.hashCode());
     }
 
     private static void applyAttributeModifier(Multimap<Attribute, AttributeModifier> modifiers, Attribute attribute, UUID uuid, String modifierKey, double value) {
@@ -274,6 +289,28 @@ public class LootItemHelper {
         return effect;
     }
 
+    public static PotionEffect getRandomPotionEffectExcluding(Random rand, LootSet.LootSetType type, List<PotionEffectInstance> exclude) {
+        PotionEffect effect = null;
+
+        List<PotionEffect> list = new ArrayList<>();
+        List<MobEffect> effects = new ArrayList<>();
+
+        for(PotionEffectInstance instance : exclude) {
+            effects.add(instance.getEffect());
+        }
+
+        for (PotionEffect e : PotionEffect.REGISTRY.values()) {
+            if (e.applyToItemType(type) && !effects.contains(e.getEffect())) {
+                list.add(e);
+            }
+        }
+
+        if (list.size() > 0)
+            effect = list.get(rand.nextInt(list.size()));
+
+        return effect;
+    }
+
     public static UniqueEffect getRandomUnique(Random rand, LootSet.LootSetType type) {
         UniqueEffect effect = null;
 
@@ -310,12 +347,19 @@ public class LootItemHelper {
         }*/
         List<LootEffectInstance> effects1 = LootEffect.getEffectList(stack);
         for (LootEffectInstance effect : effects1) {
-            tooltip.add(new TextComponent(
-                    ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
-                            effect.getEffect().getAmplifierString(stack, effect.getId()),
-                            effect.getEffect().getAmplifierString(stack, effect.getId(), 1)
-                    })
-            ));
+            if (effect.getEffect().getType() != LootEffect.EffectType.ACTIVE) {
+                tooltip.add(new TextComponent(
+                        ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
+                                effect.getEffect().getAmplifierString(stack, effect.getId())
+                        })
+                ));
+            } else {
+                tooltip.add(new TextComponent(
+                        ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
+                                LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE)
+                        })
+                ));
+            }
         }
 
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
@@ -343,6 +387,37 @@ public class LootItemHelper {
         return new TextComponent(text.toString()).withStyle(formatting);
     }
 
+    public static LootEffect getNextEffect(Random rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> existing) {
+        LootEffect effectResult = null;
+
+        boolean hasActive = false;
+        boolean hasUse = false;
+
+        for (LootEffect ex : existing) {
+            if (ex.getType() == LootEffect.EffectType.ACTIVE)
+                hasActive = true;
+            if (ex.getType() == LootEffect.EffectType.USE)
+                hasUse = true;
+        }
+
+        WeightedList<LootEffect> list = new WeightedList<>();
+        List<LootEffect> possibleEffects = rarity.getPossibleEffects();
+
+        for (WeightedList.Entry<LootEffect> entry : ModConfigs.EFFECTS.EFFECTS) {
+            LootEffect effect = entry.value;
+            if (effect.applyToItemType(type)) {
+                if (!(hasActive && effect.getType() == LootEffect.EffectType.ACTIVE) && !(hasUse && effect.getType() == LootEffect.EffectType.USE) && possibleEffects.contains(effect) && effect.isCompatible(existing)) {
+                    list.add(effect, entry.weight);
+                }
+            }
+        }
+
+        if(list.size() > 0)
+            effectResult = list.getRandom(rand);
+
+        return effectResult;
+    }
+
     @Nullable
     public static LootEffect getRandomEffectExcluding(Random rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> exclude) {
         LootEffect weaponEffect = null;
@@ -360,7 +435,6 @@ public class LootItemHelper {
 
         WeightedList<LootEffect> list = new WeightedList<>();
         List<LootEffect> possibleEffects = rarity.getPossibleEffects();
-        List<WeightedList.Entry<LootEffect>> toRemove = new ArrayList<>();
 
         for (WeightedList.Entry<LootEffect> entry : ModConfigs.EFFECTS.EFFECTS) {
             LootEffect effect = entry.value;
@@ -370,8 +444,6 @@ public class LootItemHelper {
                 }
             }
         }
-
-        list.removeAll(toRemove);
 
         if (list.size() > 0)
             weaponEffect = list.getRandom(rand);
@@ -405,7 +477,7 @@ public class LootItemHelper {
 
         boolean unbreakable = lootRarity.getUnbreakableChance() > random.nextInt(100);
 
-        if (modifierCount > 0) {
+        /*if (modifierCount > 0) {
             List<PotionEffect> appliedEffects = new ArrayList<>();
             List<PotionEffectInstance> instances = new ArrayList<>();
 
@@ -419,7 +491,7 @@ public class LootItemHelper {
                 }
             }
             ModAttributes.LOOT_POTION_EFFECTS.create(loot, instances);
-        }
+        }*/
 
         modifierCount = lootRarity.getEffectCount(random);
 
@@ -428,11 +500,13 @@ public class LootItemHelper {
             List<LootEffectInstance> instances = new ArrayList<>();
 
             for (int m = 0; m < modifierCount; ++m) {
-                LootEffect me = LootItemHelper.getRandomEffectExcluding(random, type, lootRarity, appliedEffects);
+                LootEffect me = LootItemHelper.getNextEffect(random, type, lootRarity, appliedEffects);
 
                 if (me != null) {
                     instances.add(new LootEffectInstance(me));
                     appliedEffects.add(me);
+                    if(me.getAction() != null)
+                        me.getAction().rollExtra(loot, type, random);
                 }
             }
             ModAttributes.LOOT_EFFECTS.create(loot, instances);
@@ -498,14 +572,12 @@ public class LootItemHelper {
                 xradP = 1;
                 yradN = 1;
                 yradP = 1;
-                System.out.println("3x3");
             }
             case 2 -> { //5x5
                 xradN = 2;
                 xradP = 2;
                 yradN = 2;
                 yradP = 2;
-                System.out.println("5x5");
             }
             default -> {
                 xradN = 0;

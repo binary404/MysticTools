@@ -68,7 +68,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.0'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.75'
 
     compileOnly fg.deobf("binary404:fx_lib-1.18.1:1.0.0")
 }

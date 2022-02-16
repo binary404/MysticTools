@@ -47,8 +47,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> modifiers = LootItemHelper.modifiersForStack(slot, this.slot, stack, HashMultimap.create(), "Armor modifier");
-
+        Multimap<Attribute, AttributeModifier> modifiers = LootItemHelper.modifiersForStack(slot, this.slot, stack, super.getAttributeModifiers(equipmentSlot, stack));
         return modifiers;
     }
 
@@ -64,7 +63,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
         } else {
             EquipmentSlot type = this.slot;
             tooltip.add(new TextComponent(ChatFormatting.RESET + "" + this.type));
-            Multimap<Attribute, AttributeModifier> multimap = stack.getAttributeModifiers(type);
+            Multimap<Attribute, AttributeModifier> multimap = getAttributeModifiers(type, stack);
             if (!multimap.isEmpty() && type != EquipmentSlot.MAINHAND) {
                 for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
                     if (entry.getKey().equals(Attributes.ARMOR_TOUGHNESS) || entry.getKey().equals(Attributes.ARMOR)) {

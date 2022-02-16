@@ -52,7 +52,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
     public boolean isFoil(ItemStack stack) {
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
-        return rarity == LootRarity.UNIQUE;
+        return super.isFoil(stack) || rarity.getId().equals("unique");
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
     @Override
     public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player) {
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
-        if (rarity == LootRarity.UNIQUE) {
+        if (rarity == LootRarity.fromId("unique")) {
             BlockState state = player.level.getBlockState(pos);
             UniqueEffect.getUniqueEffect(stack).breakBlock(pos, player.level, player, stack, state);
         }
@@ -72,7 +72,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
         LootItemHelper.handleBreak(stack, player, pos);
 
-        if (LootItemHelper.hasEffect(stack, LootEffect.AREA_MINER) && LootItemHelper.getEffectLevel(stack) >= 1) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.getById("area_miner")) && LootItemHelper.getEffectLevel(stack) >= 1) {
             HitResult raytrace = LootItemHelper.getBlockOnReach(player.level, player);
             if (raytrace != null) {
                 int level = LootItemHelper.getEffectLevel(stack);
@@ -88,7 +88,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
         if (entityIn instanceof LivingEntity && isSelected)
             LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) entityIn);
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
-        if (rarity == LootRarity.UNIQUE) {
+        if (rarity == LootRarity.fromId("unique")) {
             try {
                 UniqueEffect.getUniqueEffect(stack).tick(entityIn, stack);
             } catch (Exception e) {
@@ -102,7 +102,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
-        if (rarity == LootRarity.UNIQUE) {
+        if (rarity == LootRarity.fromId("unique")) {
             UniqueEffect.getUniqueEffect(stack).rightClick(playerIn, stack);
         }
 
@@ -111,16 +111,13 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-
-        Multimap<Attribute, AttributeModifier> multiMap = HashMultimap.create();
-
-        return LootItemHelper.modifiersForStack(slot, stack, multiMap, "Tool modifier");
+        return LootItemHelper.modifiersForStack(slot, stack, super.getAttributeModifiers(slot, stack));
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
         double speed = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
-        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.getById("multi"))) {
             if (state.is(BlockTags.MINEABLE_WITH_AXE) || state.is(BlockTags.MINEABLE_WITH_HOE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
                 return (float) speed;
             }
@@ -133,7 +130,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     @Override
     public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI) && LootItemHelper.digActions.contains(toolAction)) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.getById("multi")) && LootItemHelper.digActions.contains(toolAction)) {
             return true;
         }
         return ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction);
@@ -141,7 +138,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        if (LootItemHelper.hasEffect(stack, LootEffect.MULTI)) {
+        if (LootItemHelper.hasEffect(stack, LootEffect.getById("multi"))) {
             if (state.is(BlockTags.MINEABLE_WITH_AXE) || state.is(BlockTags.MINEABLE_WITH_HOE) || state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
                 return TierSortingRegistry.isCorrectTierForDrops(MysticTier.MYSTIC_TIER, state);
             }

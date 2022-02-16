@@ -13,7 +13,8 @@ public enum LootEffects {
     STUN(new LootEffectStun()),
     VOID(new LootEffectVoid()),
     POTION_CLOUD(new LootEffectPotionCloud()),
-    BLAST(new LootEffectBlast());
+    BLAST(new LootEffectBlast()),
+    SILKY(new LootEffectSilky());
 
     public IEffectAction action;
 

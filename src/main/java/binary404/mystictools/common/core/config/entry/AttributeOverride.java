@@ -9,9 +9,15 @@ public class AttributeOverride {
 
     @Expose
     public String name;
+    @Expose
+    public String modifierType;
+    @Expose
+    public long salt;
 
-    public AttributeOverride(Attribute attribute) {
+    public AttributeOverride(Attribute attribute, String type, long salt) {
         this.name = attribute.getRegistryName().toString();
+        this.modifierType = type;
+        this.salt = salt;
     }
 
     public Attribute getAttribute() {

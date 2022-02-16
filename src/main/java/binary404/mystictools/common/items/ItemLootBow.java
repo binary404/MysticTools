@@ -63,7 +63,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
     public boolean isFoil(ItemStack stack) {
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
-        return rarity == LootRarity.UNIQUE;
+        return super.isFoil(stack) || rarity.getId().equals("unique");
     }
 
     public float getPull(ItemStack stack, Level world, LivingEntity entity) {
