@@ -36,7 +36,7 @@
   "weaponeffect.fire_resistance.description": "Fire Resistance",
   "weaponeffect.resistance.description": "Resistance",
   "weaponeffect.blindness.description": "Blindness",
-  "weaponeffect.leech.description": "Leeches %2$s perc. of damage dealt",
+  "weaponeffect.leech.description": "Leeches %1$s perc. of damage dealt",
   "weaponeffect.auto_smelt.description": "Auto Smelt: %1$s",
   "weaponeffect.multi.description": "Multi Tool",
   "weaponeffect.void.description": "Void: %1$s",
@@ -56,6 +56,7 @@
   "weaponeffect.stun.description": "Stun [Right Click]",
   "weaponeffect.lucky.description": "Lucky %1$s",
   "weaponeffect.direct.description": "Direct",
+  "weaponeffect.potion_cloud.description": "Potion Cloud of %2$s",
 
   "container.mystictools.upgrader": "Tool Upgrader",
 

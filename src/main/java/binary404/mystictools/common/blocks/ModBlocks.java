@@ -5,6 +5,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,6 +21,9 @@ public class ModBlocks {
     @ObjectHolder("mystictools:cauldron")
     public static Block cauldron;
 
+    public static Block mysterious_stone;
+    public static Block mysterious_bricks;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -27,6 +31,11 @@ public class ModBlocks {
         Block.Properties builder = Block.Properties.of(Material.STONE).strength(3.5F).sound(SoundType.ANVIL);
 
         register(r, new BlockCauldron(builder), "cauldron");
+
+        builder = BlockBehaviour.Properties.of(Material.STONE).strength(6.0f, 12.0f).sound(SoundType.STONE).requiresCorrectToolForDrops();
+
+        mysterious_stone = register(r, new Block(builder), "mysterious_stone");
+        mysterious_bricks = register(r, new Block(builder), "mysterious_bricks");
     }
 
     @SubscribeEvent
@@ -36,6 +45,9 @@ public class ModBlocks {
         Item.Properties props = new Item.Properties().tab(MysticTools.tab);
 
         register(r, new BlockItem(cauldron, props), "cauldron");
+
+        register(r, new BlockItem(mysterious_stone, props), "mysterious_stone");
+        register(r, new BlockItem(mysterious_bricks, props), "mysterious_bricks");
     }
 
 }
