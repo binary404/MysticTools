@@ -31,7 +31,7 @@ public class AutoSmeltCondition implements LootItemCondition {
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
-                    if (LootItemHelper.hasEffect(tool, LootEffect.AUTO_SMELT)) {
+                    if (LootItemHelper.hasEffect(tool, LootEffect.getById("auto_smelt"))) {
                         return ((LootEffectAutoSmelt) LootEffect.AUTO_SMELT.getAction()).active(tool);
                     }
                 }
@@ -43,7 +43,6 @@ public class AutoSmeltCondition implements LootItemCondition {
     public LootItemConditionType getType() {
         return ModLootModifiers.AUTOSMELT;
     }
-
 
     public static class AutoSmeltSerializer implements Serializer<AutoSmeltCondition> {
 

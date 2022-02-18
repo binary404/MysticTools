@@ -31,7 +31,7 @@ public class VoidCondition implements LootItemCondition {
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
-                        if (LootItemHelper.hasEffect(tool, LootEffect.VOID)) {
+                        if (LootItemHelper.hasEffect(tool, LootEffect.getById("void"))) {
                             return ((LootEffectVoid) LootEffect.VOID.getAction()).active(tool);
                         }
                 }

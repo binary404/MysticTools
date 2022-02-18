@@ -2,7 +2,7 @@ package binary404.mystictools.common.loot;
 
 public class LootTags {
 
-    public static final String LOOT_TAG = "mysticTools";
+    public static final String LOOT_TAG = "MysticToolsData";
     public static final String LOOT_TAG_NAME = "loot_name";
     public static final String LOOT_TAG_RARITY = "rarity";
     public static final String LOOT_TAG_MODEL = "model";

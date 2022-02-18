@@ -127,4 +127,25 @@ public class LootNbtHelper {
 
         stack.getTag().getCompound(LootTags.LOOT_TAG).putString(key, value);
     }
+
+    public static void setLootAdditionalData(ItemStack stack, String key, CompoundTag compound) {
+        if (!stack.hasTag())
+            stack.setTag(new CompoundTag());
+        if (!stack.getTag().contains(LootTags.LOOT_TAG))
+            stack.getTag().put(LootTags.LOOT_TAG, new CompoundTag());
+
+        stack.getTag().getCompound(LootTags.LOOT_TAG).put(key, compound);
+    }
+
+    public static CompoundTag getLootAdditionalData(ItemStack stack, String key) {
+        CompoundTag tag = new CompoundTag();
+
+        if (stack.hasTag() && stack.getTag().contains(LootTags.LOOT_TAG)) {
+            if (stack.getTag().getCompound(LootTags.LOOT_TAG).contains(key)) {
+                tag = stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(key);
+            }
+        }
+
+        return tag;
+    }
 }

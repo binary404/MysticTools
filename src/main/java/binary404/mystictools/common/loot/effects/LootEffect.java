@@ -222,7 +222,7 @@ public class LootEffect implements IEffect {
     }
 
     public String getAmplifierString(ItemStack stack, String effectId, int add) {
-        return ChatFormatting.BOLD + "" + (getAmplifierFromStack(stack, effectId) + add) + "" + ChatFormatting.RESET + "" + ((this.getType() == EffectType.PASSIVE) ? ChatFormatting.GREEN : ChatFormatting.GOLD) + "";
+        return "" + (getAmplifierFromStack(stack, effectId) + add) + "";
     }
 
 

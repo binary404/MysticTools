@@ -186,9 +186,10 @@ public class LootItemHelper {
             List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
 
             if (effects.size() > 0) {
-                for (LootEffectInstance effect : effects) {
+                for (int i = 0; i < effects.size(); i++) {
+                    LootEffectInstance effect = effects.get(i);
                     if (effect.getEffect() != null && effect.getEffect().getAction() != null)
-                        effect.getEffect().getAction().handleHit(stack, target, attacker);
+                        effect.getEffect().getAction().handleHit(stack, target, attacker, i);
                 }
             }
 
@@ -295,7 +296,7 @@ public class LootItemHelper {
         List<PotionEffect> list = new ArrayList<>();
         List<MobEffect> effects = new ArrayList<>();
 
-        for(PotionEffectInstance instance : exclude) {
+        for (PotionEffectInstance instance : exclude) {
             effects.add(instance.getEffect());
         }
 
@@ -346,11 +347,15 @@ public class LootItemHelper {
                                     effect.getEffect().getAmplifierString(stack, effect.getId(), 1)})));
         }*/
         List<LootEffectInstance> effects1 = LootEffect.getEffectList(stack);
-        for (LootEffectInstance effect : effects1) {
+        for (int i = 0; i < effects1.size(); i++) {
+            LootEffectInstance effect = effects1.get(i);
             if (effect.getEffect().getType() != LootEffect.EffectType.ACTIVE) {
+                String additionalTranslation = "";
+                if(effect.getEffect().getAction() != null)
+                    additionalTranslation = effect.getEffect().getAction().getAdditionalTooltip(stack, i);
                 tooltip.add(new TextComponent(
                         ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
-                                effect.getEffect().getAmplifierString(stack, effect.getId())
+                                effect.getEffect().getAmplifierString(stack, effect.getId()), additionalTranslation
                         })
                 ));
             } else {
@@ -412,7 +417,7 @@ public class LootItemHelper {
             }
         }
 
-        if(list.size() > 0)
+        if (list.size() > 0)
             effectResult = list.getRandom(rand);
 
         return effectResult;
@@ -505,13 +510,14 @@ public class LootItemHelper {
                 if (me != null) {
                     instances.add(new LootEffectInstance(me));
                     appliedEffects.add(me);
-                    if(me.getAction() != null)
+                    if (me.getAction() != null) {
                         me.getAction().rollExtra(loot, type, random);
+                        LootNbtHelper.setLootAdditionalData(loot, String.valueOf(m), me.getAction().addAdditionalData(loot, type, random));
+                    }
                 }
             }
             ModAttributes.LOOT_EFFECTS.create(loot, instances);
         }
-
 
         //tag.put(LootTags.LOOT_TAG, lootTag);
 

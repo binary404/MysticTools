@@ -31,7 +31,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
     }
 
     public Optional<I> get(ItemStack stack) {
-        CompoundTag nbt = stack.getTagElement("MysticTools");
+        CompoundTag nbt = stack.getTagElement("MysticToolsAttributes");
         if (nbt == null || !nbt.contains(this.getTagKey(), 9))
             return Optional.empty();
 
@@ -89,7 +89,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
     }
 
     public I create(ItemStack stack, Supplier<T> value) {
-        CompoundTag nbt = stack.getOrCreateTagElement("MysticTools");
+        CompoundTag nbt = stack.getOrCreateTagElement("MysticToolsAttributes");
         if (!nbt.contains(this.getTagKey(), Tag.TAG_LIST))
             nbt.put(this.getTagKey(), new ListTag());
         ListTag attributesList = nbt.getList(this.getTagKey(), Tag.TAG_COMPOUND);

@@ -36,6 +36,8 @@ public class MysticTools {
 
     public static final Logger LOGGER = LogManager.getLogger("mystictools");
 
+    public static final String modid = "mystictools";
+
     public static CreativeModeTab tab = new CreativeModeTab("mystictools") {
         @Override
         public ItemStack makeIcon() {

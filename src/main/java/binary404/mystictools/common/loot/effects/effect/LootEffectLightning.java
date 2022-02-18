@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class LootEffectLightning implements IEffectAction {
 
     @Override
-    public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker, int id) {
         LightningBolt entity = new LightningBolt(EntityType.LIGHTNING_BOLT, target.level);
         entity.setPos(target.getX(), target.getY(), target.getZ());
         entity.setVisualOnly(true);

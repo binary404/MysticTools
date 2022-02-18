@@ -3,8 +3,10 @@ package binary404.mystictools.common.loot.effects;
 
 import binary404.mystictools.common.loot.LootSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.NbtComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -50,10 +52,18 @@ public interface IEffectAction {
         return "";
     }
 
-    default public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    default public String getAdditionalTooltip(ItemStack stack, int id) {
+        return "";
+    }
+
+    default public void handleHit(ItemStack stack, LivingEntity target, LivingEntity attacker, int id) {
     }
 
     default public void rollExtra(ItemStack stack, LootSet.LootSetType type, Random random) {
 
+    }
+
+    default public CompoundTag addAdditionalData(ItemStack stack, LootSet.LootSetType type, Random random) {
+        return new CompoundTag();
     }
 }
