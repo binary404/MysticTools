@@ -12,6 +12,8 @@ import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import binary404.mystictools.common.loot.serializer.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.world.gen.ModStructures;
+import binary404.mystictools.common.world.gen.ShrinePools;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
@@ -24,6 +26,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,9 +56,16 @@ public class MysticTools {
         proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::parallelDispatch);
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
+        ModStructures.DEFERRED_STRUCTURE_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+
         ModLootModifiers.init();
+    }
+
+    private void parallelDispatch(ParallelDispatchEvent event) {
+        event.enqueueWork(ModStructures::setup);
     }
 
     private void registerCommands(RegisterCommandsEvent event) {

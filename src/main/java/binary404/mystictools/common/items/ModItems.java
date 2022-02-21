@@ -55,6 +55,8 @@ public class ModItems {
 
     public static Item artifact;
 
+    public static Item peridot;
+
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
         IForgeRegistry<Item> r = event.getRegistry();
@@ -84,6 +86,7 @@ public class ModItems {
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "charm");
 
+        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "peridot");
     }
 
 }

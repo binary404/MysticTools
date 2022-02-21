@@ -1,9 +1,11 @@
 package binary404.mystictools.common.blocks;
 
 import binary404.mystictools.MysticTools;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.OreBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
@@ -24,6 +26,8 @@ public class ModBlocks {
     public static Block mysterious_stone;
     public static Block mysterious_bricks;
 
+    public static Block peridot_ore;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -36,6 +40,10 @@ public class ModBlocks {
 
         mysterious_stone = register(r, new Block(builder), "mysterious_stone");
         mysterious_bricks = register(r, new Block(builder), "mysterious_bricks");
+
+        builder = BlockBehaviour.Properties.of(Material.STONE).strength(4.5F, 3.0f).sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops();
+
+        peridot_ore = register(r, new OreBlock(builder, UniformInt.of(3, 6)), "peridot_ore");
     }
 
     @SubscribeEvent
@@ -48,6 +56,8 @@ public class ModBlocks {
 
         register(r, new BlockItem(mysterious_stone, props), "mysterious_stone");
         register(r, new BlockItem(mysterious_bricks, props), "mysterious_bricks");
+
+        register(r, new BlockItem(peridot_ore, props), "peridot_ore");
     }
 
 }
