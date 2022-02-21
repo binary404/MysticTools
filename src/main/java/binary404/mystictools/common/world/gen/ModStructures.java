@@ -74,7 +74,6 @@ public class ModStructures {
             HashMap<StructureFeature<?>, HashMultimap<ConfiguredStructureFeature<?, ?>, ResourceKey<Biome>>> STStructureToMultiMap = new HashMap<>();
 
             for (Map.Entry<ResourceKey<Biome>, Biome> biomeEntry : serverLevel.registryAccess().ownedRegistryOrThrow(Registry.BIOME_REGISTRY).entrySet()) {
-                //if(biomeConfig.canSpawn(biomeEntry.getValue()))
                 associateBiomeToConfiguredStructure(STStructureToMultiMap, SHRINE_CONFIGURED.get(), biomeEntry.getKey());
             }
 
