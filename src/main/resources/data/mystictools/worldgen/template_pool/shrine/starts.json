@@ -1,11 +1,11 @@
 {
-  "name": "mystictools:shrine/start",
+  "name": "mystictools:shrine/starts",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
-        "location": "mystictools:shrine/start/start1",
+        "location": "mystictools:shrine/starts/start1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:single_pool_element"

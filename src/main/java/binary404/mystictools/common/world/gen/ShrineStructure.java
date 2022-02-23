@@ -5,9 +5,12 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
+import net.minecraft.world.level.levelgen.feature.JigsawFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.JigsawConfiguration;
 import net.minecraft.world.level.levelgen.feature.structures.JigsawPlacement;
@@ -34,7 +37,7 @@ public class ShrineStructure extends StructureFeature<JigsawConfiguration> {
 
     @Override
     public GenerationStep.Decoration step() {
-        return GenerationStep.Decoration.UNDERGROUND_STRUCTURES;
+        return GenerationStep.Decoration.UNDERGROUND_DECORATION;
     }
 
     @Override
@@ -48,24 +51,15 @@ public class ShrineStructure extends StructureFeature<JigsawConfiguration> {
         WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
         worldgenrandom.setSeed((long) (i ^ j << 4) ^ context.seed());
         worldgenrandom.nextInt();
-        if (worldgenrandom.nextDouble() < 0.3) {
+
+        if (worldgenrandom.nextDouble() < 0.6)
             return true;
-        } else {
-            return false;
-        }
+
+        return false;
     }
 
     public static Optional<PieceGenerator<JigsawConfiguration>> createGenerator(PieceGeneratorSupplier.Context<JigsawConfiguration> context) {
-        int i = context.chunkPos().x >> 4;
-        int j = context.chunkPos().z >> 4;
-        WorldgenRandom worldgenrandom = new WorldgenRandom(new LegacyRandomSource(0L));
-        worldgenrandom.setSeed((long) (i ^ j << 4) ^ context.seed());
-        worldgenrandom.nextInt();
-        int y = -64 + worldgenrandom.nextInt(99);
-
-        BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(y);
-
-        JigsawConfiguration newConfig = new JigsawConfiguration(() -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY) .get(new ResourceLocation(MysticTools.modid, "shrine/start")), 7);
+        JigsawConfiguration newConfig = new JigsawConfiguration(() -> context.registryAccess().ownedRegistryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(MysticTools.modid, "shrine/starts")), 7);
 
         PieceGeneratorSupplier.Context<JigsawConfiguration> newContext = new PieceGeneratorSupplier.Context<>(
                 context.chunkGenerator(),
@@ -79,8 +73,18 @@ public class ShrineStructure extends StructureFeature<JigsawConfiguration> {
                 context.registryAccess()
         );
 
-        Optional<PieceGenerator<JigsawConfiguration>> structurePiecesGenerator = JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, blockpos, false, false);
+        BlockPos blockpos = context.chunkPos().getMiddleBlockPosition(0);
 
-        return structurePiecesGenerator;
+        NoiseColumn column = context.chunkGenerator().getBaseColumn(blockpos.getX(), blockpos.getZ(), context.heightAccessor());
+
+        for (int y = -58; y < 33; y++) {
+            if (column.getBlock(y).getBlock() instanceof AirBlock) {
+                if (column.getBlock(y + 6).getBlock() instanceof AirBlock && !(column.getBlock(y - 2).getBlock() instanceof AirBlock)) {
+                    MysticTools.LOGGER.error("generating shrine at " + blockpos.getX() + " " + y + " " + blockpos.getZ());
+                    return JigsawPlacement.addPieces(newContext, PoolElementStructurePiece::new, new BlockPos(blockpos.getX(), y, blockpos.getZ()), false, false);
+                }
+            }
+        }
+        return Optional.empty();
     }
 }

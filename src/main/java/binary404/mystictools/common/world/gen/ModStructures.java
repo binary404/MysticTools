@@ -38,7 +38,7 @@ public class ModStructures {
 
     public static DeferredRegister<StructureFeature<?>> DEFERRED_STRUCTURE_REGISTRY = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, MysticTools.modid);
     public static RegistryObject<StructureFeature<JigsawConfiguration>> SHRINE = DEFERRED_STRUCTURE_REGISTRY.register("shrine", () -> (new ShrineStructure(JigsawConfiguration.CODEC)));
-    public static Lazy<ConfiguredStructureFeature<?, ?>> SHRINE_CONFIGURED = Lazy.of(() -> SHRINE.get().configured(new JigsawConfiguration(() -> PlainVillagePools.START, 10)));
+    public static Lazy<ConfiguredStructureFeature<?, ?>> SHRINE_CONFIGURED = Lazy.of(() -> SHRINE.get().configured(new JigsawConfiguration(() -> PlainVillagePools.START, 0)));
 
     public static void setup() {
         setupMapSpacingAndLand(SHRINE.get(), new StructureFeatureConfiguration(15, 8, 1576839289));
