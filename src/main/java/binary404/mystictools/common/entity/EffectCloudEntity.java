@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.logging.LogUtils;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class EffectCloudEntity extends Entity {
-
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final EntityDataAccessor<Float> RADIUS = SynchedEntityData.defineId(EffectCloudEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(EffectCloudEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IGNORE_RADIUS = SynchedEntityData.defineId(EffectCloudEntity.class, EntityDataSerializers.BOOLEAN);

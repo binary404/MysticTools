@@ -12,8 +12,7 @@ import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import binary404.mystictools.common.loot.serializer.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
-import binary404.mystictools.common.world.gen.ModStructures;
-import binary404.mystictools.common.world.gen.ShrinePools;
+import binary404.mystictools.common.world.gen.ModFeatures;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
@@ -58,14 +57,9 @@ public class MysticTools {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::parallelDispatch);
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
-
-        ModStructures.DEFERRED_STRUCTURE_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-
-        ModLootModifiers.init();
     }
 
     private void parallelDispatch(ParallelDispatchEvent event) {
-        event.enqueueWork(ModStructures::setup);
     }
 
     private void registerCommands(RegisterCommandsEvent event) {
@@ -82,6 +76,9 @@ public class MysticTools {
         ModConfigs.register();
 
         NetworkHandler.init();
+
+        ModLootModifiers.init();
+        ModFeatures.registerOres(event);
 
         event.enqueueWork(() -> {
             ItemTypeRegistry.register(ModItems.loot_sword, LootSet.LootSetType.SWORD);

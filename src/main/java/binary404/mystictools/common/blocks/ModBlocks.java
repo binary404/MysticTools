@@ -35,8 +35,9 @@ public class ModBlocks {
         Block.Properties builder = Block.Properties.of(Material.STONE).strength(3.5F).sound(SoundType.ANVIL);
 
         register(r, new BlockCauldron(builder), "cauldron");
+/*
 
-        builder = BlockBehaviour.Properties.of(Material.STONE).strength(6.0f, 12.0f).sound(SoundType.STONE).requiresCorrectToolForDrops();
+        builder = BlockBehaviour.Properties.of(Material.STONE).strength(4.5f, 3.0f).sound(SoundType.STONE).requiresCorrectToolForDrops();
 
         mysterious_stone = register(r, new Block(builder), "mysterious_stone");
         mysterious_bricks = register(r, new Block(builder), "mysterious_bricks");
@@ -44,6 +45,7 @@ public class ModBlocks {
         builder = BlockBehaviour.Properties.of(Material.STONE).strength(4.5F, 3.0f).sound(SoundType.DEEPSLATE).requiresCorrectToolForDrops();
 
         peridot_ore = register(r, new OreBlock(builder, UniformInt.of(3, 6)), "peridot_ore");
+*/
     }
 
     @SubscribeEvent
@@ -54,10 +56,10 @@ public class ModBlocks {
 
         register(r, new BlockItem(cauldron, props), "cauldron");
 
-        register(r, new BlockItem(mysterious_stone, props), "mysterious_stone");
+/*        register(r, new BlockItem(mysterious_stone, props), "mysterious_stone");
         register(r, new BlockItem(mysterious_bricks, props), "mysterious_bricks");
 
-        register(r, new BlockItem(peridot_ore, props), "peridot_ore");
+        register(r, new BlockItem(peridot_ore, props), "peridot_ore");*/
     }
 
 }

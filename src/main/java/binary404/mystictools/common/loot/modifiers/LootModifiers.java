@@ -22,7 +22,7 @@ public class LootModifiers {
 
         public static void init() {
             SWORD = new BaseModifiers();
-            SWORD.ADD_DAMAGE = new Generators.DoubleGenerator(1.5, 5.0);
+            SWORD.ADD_DAMAGE = new Generators.DoubleGenerator(2.0, 8.0);
         }
 
         public static class BaseModifiers {

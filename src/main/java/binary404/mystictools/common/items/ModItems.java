@@ -86,7 +86,7 @@ public class ModItems {
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");
         register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "charm");
 
-        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "peridot");
+        //register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "peridot");
     }
 
 }

@@ -351,7 +351,7 @@ public class LootItemHelper {
             LootEffectInstance effect = effects1.get(i);
             if (effect.getEffect().getType() != LootEffect.EffectType.ACTIVE) {
                 String additionalTranslation = "";
-                if(effect.getEffect().getAction() != null)
+                if (effect.getEffect().getAction() != null)
                     additionalTranslation = effect.getEffect().getAction().getAdditionalTooltip(stack, i);
                 tooltip.add(new TextComponent(
                         ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
@@ -367,6 +367,7 @@ public class LootItemHelper {
             }
         }
 
+
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
 
         if (rarity.getId().equals("unique")) {
@@ -375,8 +376,9 @@ public class LootItemHelper {
             tooltip.add(new TextComponent("+ " + ChatFormatting.ITALIC + "" + ChatFormatting.DARK_PURPLE + "" + effect));
         }
 
-        if (rarity != null)
-            tooltip.add(new TextComponent("Rarity: " + rarity.getColor() + I18n.get(rarity.getId())));
+
+
+        tooltip.add(new TextComponent("Rarity: " + rarity.getColor() + I18n.get(rarity.getId())));
 
         if (show_durability)
             tooltip.add(new TextComponent(ChatFormatting.RESET + "" + durability + "" + ChatFormatting.GRAY + " Durability"));

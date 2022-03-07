@@ -197,10 +197,11 @@ public class TreeChopper implements IUniqueEffect {
                 // Then, go through all of the adjacent blocks and look if
                 // any of them are any good.
                 for (BlockPos adj : adjacent(cand.coordinates)) {
-                    Block block = world.getBlockState(adj).getBlock();
+                    BlockState state = world.getBlockState(adj);
+                    Block block = state.getBlock();
 
-                    boolean isWood = BlockTags.LOGS.contains(block);
-                    boolean isLeaf = BlockTags.LEAVES.contains(block);
+                    boolean isWood = state.is(BlockTags.LOGS);
+                    boolean isLeaf = state.is(BlockTags.LEAVES);
 
                     // If it's not wood or a leaf, we aren't interested.
                     if (!isWood && !isLeaf) {

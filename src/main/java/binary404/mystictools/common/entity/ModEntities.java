@@ -15,12 +15,13 @@ import static binary404.mystictools.common.core.RegistryHelper.register;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntities {
 
-    public static final EntityType<EffectCloudEntity> EFFECT_CLOUD = EntityType.Builder.<EffectCloudEntity>of(EffectCloudEntity::new, MobCategory.MISC)
-            .fireImmune().sized(6.0F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("");
+    public static EntityType<EffectCloudEntity> EFFECT_CLOUD;
 
     @SubscribeEvent
     public static void registerEntityTypes(RegistryEvent.Register<EntityType<?>> event) {
         IForgeRegistry<EntityType<?>> r = event.getRegistry();
+        EFFECT_CLOUD = EntityType.Builder.<EffectCloudEntity>of(EffectCloudEntity::new, MobCategory.MISC)
+                .fireImmune().sized(6.0F, 0.5F).clientTrackingRange(10).updateInterval(Integer.MAX_VALUE).build("");
         register(r, EFFECT_CLOUD, "effect_cloud");
     }
 

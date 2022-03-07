@@ -48,7 +48,7 @@ public class XRay implements IUniqueEffect {
                 for (int y = 0; y < highest; y++) {
                     pooled.setY(y);
                     BlockState at = c.getBlockState(pooled);
-                    if (at.getBlock() instanceof OreBlock || at.getBlock() == Blocks.ANCIENT_DEBRIS || Tags.Blocks.ORES.contains(at.getBlock())) {
+                    if (at.getBlock() instanceof OreBlock || at.getBlock() == Blocks.ANCIENT_DEBRIS || at.is(Tags.Blocks.ORES)) {
                         successful.add(new BlockPos(pooled));
                     }
                 }

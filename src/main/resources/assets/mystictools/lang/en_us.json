@@ -57,6 +57,8 @@
   "weaponeffect.lucky.description": "Lucky %1$s",
   "weaponeffect.direct.description": "Direct",
   "weaponeffect.potion_cloud.description": "Potion Cloud of %2$s",
+  "weaponeffect.blast.description": "Blast [Right Click]",
+  "weaponeffect.reach.description": "Reach %1$s",
 
   "container.mystictools.upgrader": "Tool Upgrader",
 
