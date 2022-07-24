@@ -18,6 +18,7 @@ import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -29,12 +30,14 @@ import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.units.qual.C;
 
 @Mod("mystictools")
 public class MysticTools {
 
     public static MysticTools instance;
-    public static IProxy proxy;
+    public static IProxy proxy = new IProxy() {
+    };
 
     public static final Logger LOGGER = LogManager.getLogger("mystictools");
 
@@ -49,7 +52,7 @@ public class MysticTools {
 
     public MysticTools() {
         instance = this;
-        proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+        DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> proxy = new ClientProxy());
         proxy.registerHandlers();
         proxy.attachEventHandlers(MinecraftForge.EVENT_BUS);
         proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
@@ -67,8 +70,6 @@ public class MysticTools {
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
-        proxy.init();
-
         LootRarity.init();
         PotionEffect.init();
         LootEffect.init();

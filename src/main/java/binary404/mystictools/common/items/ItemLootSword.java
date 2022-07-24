@@ -1,18 +1,12 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
-import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
-import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
-import binary404.mystictools.common.loot.modifiers.LootModifiers;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -30,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
@@ -41,18 +34,6 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
         super(MysticTier.MYSTIC_TIER, 0, -2.4F, new Item.Properties().tab(MysticTools.tab));
-        /*
-        this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
-            @Override
-            public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-                float model = 1.0F;
-
-                model = LootNbtHelper.getLootIntValue(p_call_1_, LootTags.LOOT_TAG_MODEL);
-
-                return model;
-            }
-        });
-         */
     }
 
     @Override
@@ -123,7 +104,8 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         float speedDisplay = ModAttributes.LOOT_SPEED.getOrDefault(stack, 1.0f).getValue(stack);
         double speed = (double) speedDisplay;
 
-        Player player = Minecraft.getInstance().player;
+
+        Player player = MysticTools.proxy.getPlayer();
 
         if (player != null) {
             speed += player.getAttribute(Attributes.ATTACK_SPEED).getBaseValue();

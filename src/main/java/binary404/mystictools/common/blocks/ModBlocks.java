@@ -59,7 +59,8 @@ public class ModBlocks {
 /*        register(r, new BlockItem(mysterious_stone, props), "mysterious_stone");
         register(r, new BlockItem(mysterious_bricks, props), "mysterious_bricks");
 
-        register(r, new BlockItem(peridot_ore, props), "peridot_ore");*/
+        register(r, new BlockItem(peridot_ore, props), "peridot_ore");
+        */
     }
 
 }

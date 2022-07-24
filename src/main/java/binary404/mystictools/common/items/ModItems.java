@@ -1,7 +1,6 @@
 package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.loot.LootRarity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -34,10 +33,7 @@ public class ModItems {
     @ObjectHolder("mystictools:shard")
     public static Item shard;
 
-    @ObjectHolder("mystictools:dice")
     public static Item dice;
-
-    @ObjectHolder("mystictools:charm")
     public static Item charm;
 
     public static Item pickaxe_case;
@@ -82,9 +78,9 @@ public class ModItems {
 
         artifact = register(r, new ItemArtifact(new Item.Properties()), "artifact");
 
-        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "shard");
-        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");
-        register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "charm");
+        shard = register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "shard");
+        dice = register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "dice");
+        charm = register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "charm");
 
         //register(r, new Item(new Item.Properties().tab(MysticTools.tab)), "peridot");
     }

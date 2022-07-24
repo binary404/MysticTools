@@ -1,26 +1,21 @@
 package binary404.mystictools.proxy;
 
-import binary404.mystictools.MysticTools;
-import binary404.mystictools.client.RenderCauldron;
+import binary404.mystictools.client.render.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
-import binary404.mystictools.client.fx.FXHelper;
-import binary404.mystictools.client.fx.ModEffects;
 import binary404.mystictools.common.core.ClientHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ItemLootBow;
 import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.common.tile.ModContainers;
 import binary404.mystictools.common.tile.ModTiles;
-import com.mojang.blaze3d.platform.ScreenManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -37,8 +32,6 @@ public class ClientProxy implements IProxy {
             registerPropertyGetters();
         });
         BlockEntityRenderers.register(ModTiles.CAULDRON, RenderCauldron::new);
-        if (FXHelper.fxlibLoaded())
-            ModEffects.init();
     }
 
     private static void registerPropertyGetter(ItemLike item, ResourceLocation id, ItemPropertyFunction propGetter) {
@@ -77,11 +70,6 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
-    public Level getWorld() {
-        return Minecraft.getInstance().level;
-    }
-
-    @Override
     public void blockFX(BlockPos pos) {
         FXBlock data = new FXBlock(Minecraft.getInstance().level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true, 600, getWorld().getBlockState(pos).getBlock());
         Minecraft.getInstance().particleEngine.add(data);
@@ -90,5 +78,15 @@ public class ClientProxy implements IProxy {
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
         System.out.println("Scheduling runnable on client");
+    }
+
+    @Override
+    public Level getWorld() {
+        return Minecraft.getInstance().level;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return Minecraft.getInstance().player;
     }
 }

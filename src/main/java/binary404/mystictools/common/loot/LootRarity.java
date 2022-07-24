@@ -41,7 +41,6 @@ public class LootRarity {
         else
             lootRarity = LootRarity.COMMON;*/
         LootRarity rarity = ModConfigs.RARITIES.RARITIES.getRandom(random);
-        System.out.println(ModConfigs.RARITIES.RARITIES);
         return rarity;
     }
 

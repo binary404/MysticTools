@@ -3,19 +3,11 @@ package binary404.mystictools.common.items;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
-import binary404.mystictools.common.loot.LootNbtHelper;
-import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.LootEffectInstance;
-import binary404.mystictools.common.network.NetworkHandler;
-import binary404.mystictools.common.network.PacketJump;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -28,8 +20,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -98,7 +88,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
         LootItemHelper.handlePotionEffects(stack, null, (LivingEntity) player);
 
         if (LootItemHelper.hasEffect(stack, LootEffect.getById("jump"))) {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+/*            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
                 if (player == Minecraft.getInstance().player) {
                     LocalPlayer playerSp = (LocalPlayer) player;
 
@@ -117,7 +107,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
                         }
                     }
                 }
-            });
+            });*/
         }
 
         List<LootEffectInstance> effects = LootEffect.getEffectList(stack);

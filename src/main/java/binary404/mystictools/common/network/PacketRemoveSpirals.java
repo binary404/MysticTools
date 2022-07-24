@@ -1,6 +1,8 @@
 package binary404.mystictools.common.network;
 
 import binary404.fx_lib.fx.effects.FXSourceOrbital;
+import binary404.mystictools.client.fx.FXHelper;
+import binary404.mystictools.client.render.TreeChopperClient;
 import binary404.mystictools.common.loot.effects.unique.TreeChopper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,16 +25,18 @@ public class PacketRemoveSpirals {
     }
 
     public static void handle(PacketRemoveSpirals msg, Supplier<NetworkEvent.Context> ctx) {
-        if(ctx.get().getDirection().getReceptionSide().isServer()) {
+        if (ctx.get().getDirection().getReceptionSide().isServer()) {
             ctx.get().setPacketHandled(true);
             return;
         }
         ctx.get().enqueueWork(() -> {
-            if(TreeChopper.orbitals.containsKey(Minecraft.getInstance().level.dimension())) {
-                for(FXSourceOrbital orbital : TreeChopper.orbitals.get(Minecraft.getInstance().level.dimension())) {
-                    orbital.requestRemoval();
+            if (FXHelper.fxlibLoaded()) {
+                if (TreeChopperClient.orbitals.containsKey(Minecraft.getInstance().level.dimension())) {
+                    for (FXSourceOrbital orbital : TreeChopperClient.orbitals.get(Minecraft.getInstance().level.dimension())) {
+                        orbital.requestRemoval();
+                    }
+                    TreeChopperClient.orbitals.get(Minecraft.getInstance().level.dimension()).clear();
                 }
-                TreeChopper.orbitals.get(Minecraft.getInstance().level.dimension()).clear();
             }
         });
         ctx.get().setPacketHandled(true);

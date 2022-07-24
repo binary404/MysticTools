@@ -1,4 +1,4 @@
-package binary404.mystictools.client;
+package binary404.mystictools.client.render;
 
 
 import binary404.mystictools.common.tile.TileEntityCauldron;
@@ -13,6 +13,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class RenderCauldron implements BlockEntityRenderer<TileEntityCauldron> {
 

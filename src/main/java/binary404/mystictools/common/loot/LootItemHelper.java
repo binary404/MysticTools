@@ -2,14 +2,9 @@ package binary404.mystictools.common.loot;
 
 import binary404.mystictools.common.core.config.ModConfigs;
 import binary404.mystictools.common.core.config.entry.ItemEntry;
-import binary404.mystictools.common.core.util.RandomCollection;
 import binary404.mystictools.common.core.util.WeightedList;
 import binary404.mystictools.common.items.ItemLootArmor;
 import binary404.mystictools.common.items.ItemLootSword;
-import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.common.items.attribute.DoubleAttribute;
-import binary404.mystictools.common.items.attribute.FloatAttribute;
-import binary404.mystictools.common.items.attribute.IntegerAttribute;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.effects.*;
 import com.google.common.collect.ImmutableMultimap;

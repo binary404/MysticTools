@@ -10,7 +10,6 @@ import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.PotionEffectInstance;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
