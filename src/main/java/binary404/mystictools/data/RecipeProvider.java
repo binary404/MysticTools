@@ -19,12 +19,12 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-        ShapelessRecipeBuilder.shapeless(ModItems.loot_case)
-                .requires(ModItems.shard, 9)
+        ShapelessRecipeBuilder.shapeless(ModItems.loot_case.get())
+                .requires(ModItems.shard.get(), 9)
                 .group("mystictools:case")
-                .unlockedBy("has_item", has(ModItems.shard))
+                .unlockedBy("has_item", has(ModItems.shard.get()))
                 .save(consumer);
-        ShapedRecipeBuilder.shaped(ModBlocks.cauldron)
+        ShapedRecipeBuilder.shaped(ModBlocks.cauldron.get())
                 .define('I', Tags.Items.INGOTS_IRON)
                 .define('E', Tags.Items.GEMS_EMERALD)
                 .pattern("IEI")
@@ -32,46 +32,6 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                 .pattern("III")
                 .group("mystictools:cauldron")
                 .unlockedBy("has_item", has(Blocks.CAULDRON))
-                .save(consumer);
-        ShapedRecipeBuilder.shaped(ModItems.charm)
-                .define('S', ModItems.shard)
-                .define('E', Tags.Items.GEMS_EMERALD)
-                .define('C', ModItems.loot_case)
-                .pattern("SES")
-                .pattern("ECE")
-                .pattern("SES")
-                .group("mystictools:charm")
-                .unlockedBy("has_item", has(ModItems.shard))
-                .save(consumer);
-        ShapedRecipeBuilder.shaped(ModItems.dice)
-                .define('D', Blocks.DIAMOND_BLOCK)
-                .define('E', Blocks.EMERALD_BLOCK)
-                .define('C', ModItems.loot_case)
-                .pattern("DCD")
-                .pattern("CEC")
-                .pattern("DCD")
-                .group("mystictools:dice")
-                .unlockedBy("has_item", has(ModItems.loot_case))
-                .save(consumer);
-        ShapedRecipeBuilder.shaped(ModItems.charm)
-                .define('S', ModItems.shard)
-                .define('E', Tags.Items.GEMS_EMERALD)
-                .define('C', ModItems.loot_case)
-                .pattern("SES")
-                .pattern("ECE")
-                .pattern("SES")
-                .group("mystictools:charm")
-                .unlockedBy("has_item", has(ModItems.shard))
-                .save(consumer);
-        ShapedRecipeBuilder.shaped(ModItems.dice)
-                .define('D', Blocks.DIAMOND_BLOCK)
-                .define('E', Blocks.EMERALD_BLOCK)
-                .define('C', ModItems.loot_case)
-                .pattern("DCD")
-                .pattern("CEC")
-                .pattern("DCD")
-                .group("mystictools:dice")
-                .unlockedBy("has_item", has(ModItems.loot_case))
                 .save(consumer);
     }
 

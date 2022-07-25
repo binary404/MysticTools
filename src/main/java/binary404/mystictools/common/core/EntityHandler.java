@@ -36,7 +36,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -64,8 +64,8 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void sleepingCheck(SleepingLocationCheckEvent event) {
-        if (event.getEntityLiving().isSleeping() && !event.getEntityLiving().level.isDay()) {
-            ItemStack stack = event.getEntityLiving().getMainHandItem();
+        if (event.getEntity().isSleeping() && !event.getEntity().level.isDay()) {
+            ItemStack stack = event.getEntity().getMainHandItem();
             if (LootItemHelper.hasEffect(stack, LootEffect.getById("sleep"))) {
                 event.setResult(Event.Result.ALLOW);
             }
@@ -80,20 +80,20 @@ public class EntityHandler {
             if (sourceEntity instanceof Player) {
                 Player player = (Player) sourceEntity;
 
-                if (player.getMainHandItem().getItem() == ModItems.loot_sword) {
+                if (player.getMainHandItem().getItem() == ModItems.loot_sword.get()) {
                     ItemStack stack = player.getMainHandItem();
 
                     if (LootItemHelper.hasEffect(stack, LootEffect.getById("leech"))) {
-                        float damageInflicted = Math.min(event.getAmount(), event.getEntityLiving().getHealth());
+                        float damageInflicted = Math.min(event.getAmount(), event.getEntity().getHealth());
                         double amplifier = LootEffect.getAmplifierFromStack(stack, "leech");
                         float leech = damageInflicted * ((float) amplifier / 100.0F);
                         player.heal(leech);
-                        NetworkHandler.sendToNearby(player.level, player, new PacketSparkle(event.getEntityLiving().getX() + 0.5, event.getEntityLiving().getY() + 0.5, event.getEntityLiving().getZ() + 0.5, 0.92F, 0.0F, 0.08F));
+                        NetworkHandler.sendToNearby(player.level, player, new PacketSparkle(event.getEntity().getX() + 0.5, event.getEntity().getY() + 0.5, event.getEntity().getZ() + 0.5, 0.92F, 0.0F, 0.08F));
                     }
                 }
             }
-            if (event.getEntityLiving() instanceof Player && event.getSource().getEntity() instanceof LivingEntity) {
-                Player player = (Player) event.getEntityLiving();
+            if (event.getEntity() instanceof Player && event.getSource().getEntity() instanceof LivingEntity) {
+                Player player = (Player) event.getEntity();
                 for (ItemStack stack : player.getInventory().armor) {
                     List<LootEffectInstance> effects = LootEffect.getEffectList(stack);
                     for (LootEffectInstance effect : effects) {
@@ -103,8 +103,8 @@ public class EntityHandler {
                 }
             }
 
-            if (event.getEntityLiving() instanceof Player) {
-                Player playerEntity = (Player) event.getEntityLiving();
+            if (event.getEntity() instanceof Player) {
+                Player playerEntity = (Player) event.getEntity();
                 double parry = 0;
                 for (ItemStack stack : playerEntity.getInventory().armor) {
                     if (LootItemHelper.hasEffect(stack, LootEffect.getById("reflect"))) {
@@ -132,7 +132,7 @@ public class EntityHandler {
 
     @SubscribeEvent
     public static void onOrbPickup(PlayerXpEvent.PickupXp event) {
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         for (ItemStack stack : player.getInventory().armor) {
             if (LootItemHelper.hasEffect(stack, LootEffect.getById("insight"))) {
                 double level = LootEffect.getAmplifierFromStack(stack, "insight");
@@ -149,7 +149,7 @@ public class EntityHandler {
         if (LootItemHelper.hasEffect(heldStack, LootEffect.getById("lucky"))) {
             ActiveFlags.IS_LUCKY_MINING.runIfNotSet(() -> {
                 int fortuneLevelToAdd = (int) LootEffect.getAmplifierFromStack(heldStack, "lucky");
-                ServerLevel level = (ServerLevel) event.getWorld();
+                ServerLevel level = (ServerLevel) event.getLevel();
                 ItemStack miningStack = OverLevelEnchantmentHelper.addFortune(heldStack.copy(), fortuneLevelToAdd);
                 BlockPos pos = event.getPos();
 
@@ -172,7 +172,7 @@ public class EntityHandler {
         ItemStack heldStack = player.getMainHandItem();
         if (LootItemHelper.hasEffect(heldStack, LootEffect.getById("direct"))) {
             ActiveFlags.IS_DIRECT_MINING.runIfNotSet(() -> {
-                ServerLevel level = (ServerLevel) event.getWorld();
+                ServerLevel level = (ServerLevel) event.getLevel();
                 BlockPos pos = event.getPos();
 
                 BlockDropCaptureHelper.startCapturing();

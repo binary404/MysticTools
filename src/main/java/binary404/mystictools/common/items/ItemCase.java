@@ -15,6 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
 
+import net.minecraft.world.item.Item.Properties;
+
 public class ItemCase extends Item {
 
     public ItemCase() {

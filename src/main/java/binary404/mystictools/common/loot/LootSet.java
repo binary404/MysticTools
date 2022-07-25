@@ -4,7 +4,8 @@ import binary404.mystictools.common.items.ModItems;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 
 import java.util.*;
@@ -144,7 +145,7 @@ public class LootSet {
         return this.id;
     }
 
-    public static String getNameForType(LootSetType type, Random rand) {
+    public static String getNameForType(LootSetType type, RandomSource rand) {
         if (!LOOT_NAMES.containsKey(type))
             return "NAME";
 
@@ -154,15 +155,15 @@ public class LootSet {
     }
 
     public enum LootSetType {
-        SWORD("sword", 79, ModItems.loot_sword),
-        PICKAXE("pickaxe", 16, ModItems.loot_pickaxe),
-        AXE("axe", 21, ModItems.loot_axe),
-        SHOVEL("shovel", 15, ModItems.loot_shovel),
-        BOW("bow", 12, ModItems.loot_bow),
-        ARMOR_BOOTS("armor_boots", 5, ModItems.loot_boots),
-        ARMOR_LEGGINGS("armor_leggings", 5, ModItems.loot_leggings),
-        ARMOR_CHESTPLATE("armor_chestplate", 5, ModItems.loot_chestplate),
-        ARMOR_HELMET("armor_helmet", 5, ModItems.loot_helmet);
+        SWORD("sword", 79, ModItems.loot_sword.get()),
+        PICKAXE("pickaxe", 16, ModItems.loot_pickaxe.get()),
+        AXE("axe", 21, ModItems.loot_axe.get()),
+        SHOVEL("shovel", 15, ModItems.loot_shovel.get()),
+        BOW("bow", 12, ModItems.loot_bow.get()),
+        ARMOR_BOOTS("armor_boots", 5, ModItems.loot_boots.get()),
+        ARMOR_LEGGINGS("armor_leggings", 5, ModItems.loot_leggings.get()),
+        ARMOR_CHESTPLATE("armor_chestplate", 5, ModItems.loot_chestplate.get()),
+        ARMOR_HELMET("armor_helmet", 5, ModItems.loot_helmet.get());
 
         public final int models;
         private String id;
@@ -212,7 +213,7 @@ public class LootSet {
                 return LootSetType.fromString(s);
             } catch (Exception e) {
                 reader.setCursor(i);
-                throw new SimpleCommandExceptionType(new TranslatableComponent("argument.id.invalid")).createWithContext(reader);
+                throw new SimpleCommandExceptionType(Component.translatable("argument.id.invalid")).createWithContext(reader);
             }
         }
 

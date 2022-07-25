@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Random;
 
@@ -32,7 +33,7 @@ public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
     }
 
     public String getId() {
-        return effect.getRegistryName().toString();
+        return ForgeRegistries.MOB_EFFECTS.getKey(effect).toString();
     }
 
     public int getDuration() {

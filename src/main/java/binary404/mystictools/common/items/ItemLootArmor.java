@@ -10,7 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,9 +21,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 
 public class ItemLootArmor extends ArmorItem implements ILootItem {
 
@@ -43,7 +44,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
+        return Component.literal(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
@@ -52,7 +53,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip, false);
         } else {
             EquipmentSlot type = this.slot;
-            tooltip.add(new TextComponent(ChatFormatting.RESET + "" + this.type));
+            tooltip.add(Component.literal(ChatFormatting.RESET + "" + this.type));
             Multimap<Attribute, AttributeModifier> multimap = getAttributeModifiers(type, stack);
             if (!multimap.isEmpty() && type != EquipmentSlot.MAINHAND) {
                 for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {
@@ -68,10 +69,10 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
                             d1 = d0 * 100.0D;
 
                         if (d0 > 0.0D) {
-                            tooltip.add(new TextComponent(ChatFormatting.BLUE + " " + I18n.get("attribute.modifier.plus." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
+                            tooltip.add(Component.literal(ChatFormatting.BLUE + " " + I18n.get("attribute.modifier.plus." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
                         } else if (d0 < 0.0D) {
                             d1 = d1 * -1.0D;
-                            tooltip.add(new TextComponent(ChatFormatting.RED + " " + I18n.get("attribute.modifier.take." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
+                            tooltip.add(Component.literal(ChatFormatting.RED + " " + I18n.get("attribute.modifier.take." + modifier.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), I18n.get(entry.getKey().getDescriptionId()))));
                         }
                     }
                 }
@@ -129,7 +130,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
         if (id > 0)
             texture = "mystictools:textures/models/armor/" + id;
 
-        if (stack.getItem() == ModItems.loot_leggings)
+        if (stack.getItem() == ModItems.loot_leggings.get())
             texture = texture + "_2";
 
         texture += ".png";

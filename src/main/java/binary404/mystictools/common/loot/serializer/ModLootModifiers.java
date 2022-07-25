@@ -1,28 +1,26 @@
 package binary404.mystictools.common.loot.serializer;
 
+import binary404.mystictools.MysticTools;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(modid = "mystictools", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModLootModifiers {
 
-    public static final LootItemConditionType AUTOSMELT = new LootItemConditionType(new AutoSmeltCondition.AutoSmeltSerializer());
-    public static final LootItemConditionType VOID = new LootItemConditionType(new VoidCondition.VoidSerializer());
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLM = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, MysticTools.modid);
+    public static final DeferredRegister<LootItemConditionType> CONDITION = DeferredRegister.create(Registry.LOOT_CONDITION_TYPE.key(), MysticTools.modid);
 
-    public static void init() {
-        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation("mystictools", "autosmelt"), AUTOSMELT);
-        Registry.register(Registry.LOOT_CONDITION_TYPE, new ResourceLocation("mystictools", "void"), VOID);
-    }
+    public static final RegistryObject<Codec<AutoSmeltModifier>> AUTOSMELT = GLM.register("autosmelt", AutoSmeltModifier.CODEC);
+    public static final RegistryObject<Codec<VoidModifier>> VOID = GLM.register("void", VoidModifier.CODEC);
 
-    @SubscribeEvent
-    public static void registerModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new AutoSmeltModifier.Serializer().setRegistryName(new ResourceLocation("mystictools", "autosmelt")));
-        event.getRegistry().register(new VoidModifier.Serializer().setRegistryName(new ResourceLocation("mystictools", "void")));
-    }
-
+    public static final RegistryObject<LootItemConditionType> AUTOSMELT_CONDITION = CONDITION.register("autosmelt", () -> new LootItemConditionType(new AutoSmeltCondition.AutoSmeltSerializer()));
+    public static final RegistryObject<LootItemConditionType> VOID_CONDITION = CONDITION.register("void", () -> new LootItemConditionType(new VoidCondition.VoidSerializer()));
 }

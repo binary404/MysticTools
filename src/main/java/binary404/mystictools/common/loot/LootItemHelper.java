@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.ChatFormatting;
@@ -20,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +49,9 @@ import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class LootItemHelper {
 
@@ -61,7 +63,7 @@ public class LootItemHelper {
 
     public static final Set<ToolAction> digActions = Set.of(ToolActions.AXE_DIG, ToolActions.HOE_DIG, ToolActions.PICKAXE_DIG, ToolActions.SHOVEL_DIG);
 
-    public static ItemStack getRandomLoot(Random rand) {
+    public static ItemStack getRandomLoot(RandomSource rand) {
 
         ItemEntry itemEntry = ModConfigs.ITEMS.ITEMS.getRandom(rand);
 
@@ -267,7 +269,7 @@ public class LootItemHelper {
         }
     }
 
-    public static PotionEffect getRandomPotionExcluding(Random rand, LootSet.LootSetType type, List<PotionEffect> exclude) {
+    public static PotionEffect getRandomPotionExcluding(RandomSource rand, LootSet.LootSetType type, List<PotionEffect> exclude) {
         PotionEffect effect = null;
 
         List<PotionEffect> list = new ArrayList<>();
@@ -348,13 +350,13 @@ public class LootItemHelper {
                 String additionalTranslation = "";
                 if (effect.getEffect().getAction() != null)
                     additionalTranslation = effect.getEffect().getAction().getAdditionalTooltip(stack, i);
-                tooltip.add(new TextComponent(
+                tooltip.add(Component.literal(
                         ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
                                 effect.getEffect().getAmplifierString(stack, effect.getId()), additionalTranslation
                         })
                 ));
             } else {
-                tooltip.add(new TextComponent(
+                tooltip.add(Component.literal(
                         ChatFormatting.RESET + "- " + effect.getEffect().getType().getColor() + I18n.get("weaponeffect." + effect.getId() + ".description", new Object[]{
                                 LootNbtHelper.getLootBooleanValue(stack, LootTags.LOOT_TAG_EFFECT_ACTIVE)
                         })
@@ -368,15 +370,15 @@ public class LootItemHelper {
         if (rarity.getId().equals("unique")) {
             String effect = I18n.get(stack.getTag().getCompound(LootTags.LOOT_TAG).getCompound(LootTags.LOOT_TAG_UNIQUE).getString("id") + ".description");
 
-            tooltip.add(new TextComponent("+ " + ChatFormatting.ITALIC + "" + ChatFormatting.DARK_PURPLE + "" + effect));
+            tooltip.add(Component.literal("+ " + ChatFormatting.ITALIC + "" + ChatFormatting.DARK_PURPLE + "" + effect));
         }
 
 
 
-        tooltip.add(new TextComponent("Rarity: " + rarity.getColor() + I18n.get(rarity.getId())));
+        tooltip.add(Component.literal("Rarity: " + rarity.getColor() + I18n.get(rarity.getId())));
 
         if (show_durability)
-            tooltip.add(new TextComponent(ChatFormatting.RESET + "" + durability + "" + ChatFormatting.GRAY + " Durability"));
+            tooltip.add(Component.literal(ChatFormatting.RESET + "" + durability + "" + ChatFormatting.GRAY + " Durability"));
 
 
     }
@@ -386,10 +388,10 @@ public class LootItemHelper {
         for (int i = 0; i < amount; i++) {
             text.append("\u2b22 ");
         }
-        return new TextComponent(text.toString()).withStyle(formatting);
+        return Component.literal(text.toString()).withStyle(formatting);
     }
 
-    public static LootEffect getNextEffect(Random rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> existing) {
+    public static LootEffect getNextEffect(RandomSource rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> existing) {
         LootEffect effectResult = null;
 
         boolean hasActive = false;
@@ -421,7 +423,7 @@ public class LootItemHelper {
     }
 
     @Nullable
-    public static LootEffect getRandomEffectExcluding(Random rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> exclude) {
+    public static LootEffect getRandomEffectExcluding(RandomSource rand, LootSet.LootSetType type, LootRarity rarity, List<LootEffect> exclude) {
         LootEffect weaponEffect = null;
 
         boolean hasActive = false;
@@ -454,7 +456,7 @@ public class LootItemHelper {
     }
 
     public static ItemStack generateLoot(LootRarity lootRarity, LootSet.LootSetType type, ItemStack loot) {
-        Random random = new Random();
+        RandomSource random = RandomSource.create();
 
         int model = 1 + random.nextInt(type.models);
 

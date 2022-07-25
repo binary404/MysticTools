@@ -12,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -29,6 +28,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.List;
 
 public class ItemLootBow extends BowItem implements ILootItem {
@@ -72,7 +72,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
             return pull;
         } else {
             ItemStack itemstack = entity.getUseItem();
-            pull = itemstack != null && itemstack.getItem() == ModItems.loot_bow ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F : 0.0F;
+            pull = itemstack != null && itemstack.getItem() == ModItems.loot_bow.get() ? (float) (stack.getUseDuration() - entity.getUseItemRemainingTicks()) / 20.0F : 0.0F;
 
             return pull;
         }
@@ -89,7 +89,7 @@ public class ItemLootBow extends BowItem implements ILootItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
+        return Component.literal(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
@@ -214,9 +214,9 @@ public class ItemLootBow extends BowItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Bow"));
+        tooltip.add(Component.literal(ChatFormatting.RESET + "" + "Bow"));
 
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1.0).getValue(stack))));
-        tooltip.add(new TextComponent("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_POWER.getOrDefault(stack, 1.0).getValue(stack))));
+        tooltip.add(Component.literal(ChatFormatting.GRAY + "Draw speed modifier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_DRAWSPEED.getOrDefault(stack, 1.0).getValue(stack))));
+        tooltip.add(Component.literal("Power multiplier " + ChatFormatting.BOLD + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(ModAttributes.LOOT_POWER.getOrDefault(stack, 1.0).getValue(stack))));
     }
 }

@@ -46,12 +46,6 @@ public class NetworkHandler {
         HANDLER.sendTo(toSend, playerMP.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendNonLocal(ServerPlayer playerMP, Object toSend) {
-        if (playerMP.server.isDedicatedServer() || !playerMP.getGameProfile().getName().equals(playerMP.server.getSingleplayerName())) {
-            sendTo(playerMP, toSend);
-        }
-    }
-
     public static void sendToServer(Object msg) {
         HANDLER.sendToServer(msg);
     }

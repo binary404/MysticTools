@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemEntry {
 
@@ -15,7 +16,7 @@ public class ItemEntry {
     }
 
     public ItemEntry(Item item) {
-        this.ITEM = item.getRegistryName().toString();
+        this.ITEM = ForgeRegistries.ITEMS.getKey(item).toString();
     }
 
     public Item toItem() {

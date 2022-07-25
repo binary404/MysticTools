@@ -6,7 +6,6 @@ import com.mojang.math.Vector3d;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -24,6 +23,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
+import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
@@ -108,7 +108,7 @@ public class LootEffectActionSleep implements IEffectAction {
 
     @Override
     public Component modificationResponseMessage(Player player, ItemStack stack) {
-        return new TextComponent("");
+        return Component.literal("");
     }
 
     @Override

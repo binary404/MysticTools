@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -18,8 +18,8 @@ public class BlockDropCaptureHelper {
     private static final Stack<List<ItemEntity>> capturing = new Stack<>();
 
     @SubscribeEvent
-    public static void onDrop(EntityJoinWorldEvent event) {
-        if (event.getWorld() instanceof ServerLevel && event.getEntity() instanceof ItemEntity) {
+    public static void onDrop(EntityJoinLevelEvent event) {
+        if (event.getLevel() instanceof ServerLevel && event.getEntity() instanceof ItemEntity) {
             ItemStack itemStack = ((ItemEntity) event.getEntity()).getItem();
             if (!capturing.isEmpty()) {
                 event.setCanceled(true);

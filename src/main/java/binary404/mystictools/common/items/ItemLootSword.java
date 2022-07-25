@@ -9,7 +9,6 @@ import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -26,8 +25,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.List;
 
 public class ItemLootSword extends SwordItem implements ILootItem {
@@ -45,7 +46,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
+        return Component.literal(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
@@ -116,8 +117,8 @@ public class ItemLootSword extends SwordItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Sword"));
+        tooltip.add(Component.literal(ChatFormatting.RESET + "" + "Sword"));
 
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + attackDamage + " Damage | " + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(speed) + " Attack Speed"));
+        tooltip.add(Component.literal(ChatFormatting.GRAY + "" + attackDamage + " Damage | " + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(speed) + " Attack Speed"));
     }
 }

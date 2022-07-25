@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class AttributeOverride {
 
@@ -15,7 +16,7 @@ public class AttributeOverride {
     public long salt;
 
     public AttributeOverride(Attribute attribute, String type, long salt) {
-        this.name = attribute.getRegistryName().toString();
+        this.name = ForgeRegistries.ATTRIBUTES.getKey(attribute).toString();
         this.modifierType = type;
         this.salt = salt;
     }

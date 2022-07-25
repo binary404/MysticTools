@@ -30,6 +30,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BlockCauldron extends Block implements EntityBlock {
 
     private static final VoxelShape INSIDE = box(2.0D, 8.0D, 2.0D, 14.0D, 16.0D, 14.0D);
@@ -53,19 +55,19 @@ public class BlockCauldron extends Block implements EntityBlock {
                 ItemStack stack;
                 LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(itemEntity.getItem(), "common").getValue(itemEntity.getItem()));
                 if (rarity == LootRarity.COMMON) {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 3, 7));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 3, 7));
                 } else if (rarity == LootRarity.UNCOMMON) {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 6, 10));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 6, 10));
                 } else if (rarity == LootRarity.RARE) {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 9, 13));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 9, 13));
                 } else if (rarity == LootRarity.EPIC) {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 12, 15));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 12, 15));
                 } else if (rarity == LootRarity.UNIQUE) {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 15, 18));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 15, 18));
                     if (worldIn instanceof ServerLevel)
                         UniqueHandler.resetUniqueItems((ServerLevel) worldIn);
                 } else {
-                    stack = new ItemStack(ModItems.shard, Mth.nextInt(worldIn.random, 3, 7));
+                    stack = new ItemStack(ModItems.shard.get(), Mth.nextInt(worldIn.random, 3, 7));
                 }
                 NetworkHandler.sendToNearby(worldIn, entityIn, new PacketFX(entityIn.getX(), entityIn.getY(), entityIn.getZ(), 0));
                 itemEntity.setItem(stack);

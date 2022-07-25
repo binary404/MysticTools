@@ -1,14 +1,6 @@
 package binary404.mystictools.common.core;
 import net.minecraftforge.fml.common.Mod;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import static binary404.mystictools.common.core.RegistryHelper.register;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class VillagerHandler {

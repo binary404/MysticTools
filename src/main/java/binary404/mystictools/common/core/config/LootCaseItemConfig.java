@@ -18,14 +18,14 @@ public class LootCaseItemConfig extends Config {
     @Override
     protected void reset() {
         ITEMS = new WeightedList<>();
-        ITEMS.add(new ItemEntry(ModItems.loot_sword), 5);
-        ITEMS.add(new ItemEntry(ModItems.loot_axe), 4);
-        ITEMS.add(new ItemEntry(ModItems.loot_pickaxe), 4);
-        ITEMS.add(new ItemEntry(ModItems.loot_shovel), 4);
-        ITEMS.add(new ItemEntry(ModItems.loot_bow), 3);
-        ITEMS.add(new ItemEntry(ModItems.loot_boots), 5);
-        ITEMS.add(new ItemEntry(ModItems.loot_leggings), 5);
-        ITEMS.add(new ItemEntry(ModItems.loot_chestplate), 5);
-        ITEMS.add(new ItemEntry(ModItems.loot_helmet), 5);
+        ITEMS.add(new ItemEntry(ModItems.loot_sword.get()), 5);
+        ITEMS.add(new ItemEntry(ModItems.loot_axe.get()), 4);
+        ITEMS.add(new ItemEntry(ModItems.loot_pickaxe.get()), 4);
+        ITEMS.add(new ItemEntry(ModItems.loot_shovel.get()), 4);
+        ITEMS.add(new ItemEntry(ModItems.loot_bow.get()), 3);
+        ITEMS.add(new ItemEntry(ModItems.loot_boots.get()), 5);
+        ITEMS.add(new ItemEntry(ModItems.loot_leggings.get()), 5);
+        ITEMS.add(new ItemEntry(ModItems.loot_chestplate.get()), 5);
+        ITEMS.add(new ItemEntry(ModItems.loot_helmet.get()), 5);
     }
 }

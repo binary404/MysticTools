@@ -9,7 +9,8 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nullable;
@@ -19,8 +20,8 @@ public class LootRarity {
 
     public static final Map<String, LootRarity> REGISTRY = new HashMap<>();
 
-    public static LootRarity generateRandomRarity(Random random, Player entity) {
-/*        int rarity = random.nextInt(100) + 1;
+    public static LootRarity generateRandomRarity(RandomSource randomSource, Player entity) {
+/*        int rarity = randomSource.nextInt(100) + 1;
         LootRarity lootRarity;
         int commonRarity = ConfigHandler.COMMON.commonRarity.get();
         int uncommonRarity = ConfigHandler.COMMON.uncommonRarity.get();
@@ -40,7 +41,7 @@ public class LootRarity {
             lootRarity = LootRarity.UNIQUE;
         else
             lootRarity = LootRarity.COMMON;*/
-        LootRarity rarity = ModConfigs.RARITIES.RARITIES.getRandom(random);
+        LootRarity rarity = ModConfigs.RARITIES.RARITIES.getRandom(randomSource);
         return rarity;
     }
 
@@ -199,7 +200,7 @@ public class LootRarity {
             return LootRarity.fromId(s);
         } catch (Exception e) {
             reader.setCursor(i);
-            throw new SimpleCommandExceptionType(new TranslatableComponent("argument.id.invalid")).createWithContext(reader);
+            throw new SimpleCommandExceptionType(Component.translatable("argument.id.invalid")).createWithContext(reader);
         }
     }
 
@@ -274,7 +275,7 @@ public class LootRarity {
         return this;
     }
 
-    public int getPotionCount(Random rand) {
+    public int getPotionCount(RandomSource rand) {
         int modifierCount = this.potionMin;
 
         if (modifierCount < this.potionMax)
@@ -283,7 +284,7 @@ public class LootRarity {
         return modifierCount;
     }
 
-    public int getEffectCount(Random rand) {
+    public int getEffectCount(RandomSource rand) {
         int modifierCount = this.effectMin;
 
         if (modifierCount < this.effectMax)
@@ -292,7 +293,7 @@ public class LootRarity {
         return modifierCount;
     }
 
-    public int getDurability(Random rand) {
+    public int getDurability(RandomSource rand) {
         int durability = this.durabilityMin;
 
         if (durability < this.durabilityMax)
@@ -301,7 +302,7 @@ public class LootRarity {
         return durability;
     }
 
-    public double getDamage(Random rand) {
+    public double getDamage(RandomSource rand) {
         int damage = this.damageMin;
 
         if (damage < this.damageMax)
@@ -310,7 +311,7 @@ public class LootRarity {
         return damage;
     }
 
-    public float getSpeed(Random rand) {
+    public float getSpeed(RandomSource rand) {
         float speed = this.speedMin;
 
         speed += (this.speedMax - speed) * rand.nextFloat();
@@ -318,7 +319,7 @@ public class LootRarity {
         return speed;
     }
 
-    public double getArmor(Random rand) {
+    public double getArmor(RandomSource rand) {
         double armor = this.armorMin;
 
         armor += (this.armorMax - armor) * rand.nextDouble();
@@ -327,7 +328,7 @@ public class LootRarity {
         return armor;
     }
 
-    public double getToughness(Random rand) {
+    public double getToughness(RandomSource rand) {
         double toughness = this.toughnessMin;
 
         toughness += (this.toughnessMax - toughness) * rand.nextDouble();
@@ -336,7 +337,7 @@ public class LootRarity {
         return toughness;
     }
 
-    public double getEfficiency(Random rand) {
+    public double getEfficiency(RandomSource rand) {
         double efficiency = this.efficiencyMin;
 
         efficiency += (this.efficiencyMax - efficiency) * rand.nextDouble();

@@ -14,6 +14,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,7 +41,7 @@ public class GenerateLootCommand {
 
     private static int generateItemFromRarity(CommandSourceStack source, RarityInput input, Collection<ServerPlayer> targets) {
         for (ServerPlayer player : targets) {
-            Random random = new Random();
+            RandomSource random = RandomSource.create();
             ItemStack itemStack = LootItemHelper.getRandomLoot(random);
             LootSet.LootSetType type = LootItemHelper.getItemType(itemStack.getItem());
 

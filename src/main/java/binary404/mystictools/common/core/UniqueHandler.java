@@ -6,11 +6,13 @@ import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
 import binary404.mystictools.common.world.UniqueSave;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,10 +24,8 @@ public class UniqueHandler {
         UniqueSave.forWorld(world).uniques.clear();
         int generated = 0;
         while (generated <= ConfigHandler.COMMON.uniqueCount.get()) {
-            ItemStack stack = LootItemHelper.getRandomLoot(new Random());
+            ItemStack stack = LootItemHelper.getRandomLoot(RandomSource.create());
             UniqueEffect effect = LootItemHelper.getRandomUnique(new Random(), LootItemHelper.getItemType(stack.getItem()));
-            if (stack.getItem().getRegistryName() == null)
-                stack = new ItemStack(ModItems.loot_pickaxe);
             if (effect != null) {
                 UniqueSave.UniqueInfo info = new UniqueSave.UniqueInfo(stack.getItem(), effect, false);
                 UniqueSave.forWorld(world).uniques.add(info);
@@ -65,7 +65,7 @@ public class UniqueHandler {
                 found++;
         }
 
-        target.displayClientMessage(new TextComponent("Unique Found! " + "(" + found + "/" + ConfigHandler.COMMON.uniqueCount.get() + ") found"), true);
+        target.displayClientMessage(Component.literal("Unique Found! " + "(" + found + "/" + ConfigHandler.COMMON.uniqueCount.get() + ") found"), true);
 
         return loot;
     }

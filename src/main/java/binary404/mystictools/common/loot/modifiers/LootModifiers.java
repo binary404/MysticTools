@@ -4,6 +4,7 @@ import binary404.mystictools.common.items.attribute.IntegerAttribute;
 import binary404.mystictools.common.items.attribute.ItemNBTAttribute;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 import java.lang.reflect.Array;
@@ -35,7 +36,7 @@ public class LootModifiers {
             public Generators.FloatGenerator ADD_DRAWSPEED;
             public Generators.FloatGenerator ADD_POWER;
 
-            public void initialize(ItemStack stack, Random random) {
+            public void initialize(ItemStack stack, RandomSource random) {
                 List<ItemNBTAttribute.Instance.Generator<?>> generators = Arrays.asList(
                         this.ADD_DAMAGE, this.ADD_SPEED, this.ADD_EFFICIENCY,
                         this.ADD_DURABILITY, this.ADD_DRAWSPEED, this.ADD_POWER,
@@ -52,7 +53,7 @@ public class LootModifiers {
                         .boxed()
                         .collect(Collectors.toList());
 
-                Collections.shuffle(possible, random);
+                Collections.shuffle(possible, new Random());
 
                 if (this.ADD_DAMAGE == generators.get(possible.get(0)))
                     ModAttributes.ADD_DAMAGE.create(stack, random, this.ADD_DAMAGE);
@@ -72,7 +73,7 @@ public class LootModifiers {
             }
 
             @Override
-            public Double generate(ItemStack stack, Random random) {
+            public Double generate(ItemStack stack, RandomSource random) {
                 return Mth.nextDouble(random, min, max);
             }
         }
@@ -87,7 +88,7 @@ public class LootModifiers {
             }
 
             @Override
-            public Integer generate(ItemStack stack, Random random) {
+            public Integer generate(ItemStack stack, RandomSource random) {
                 return Mth.nextInt(random, min, max);
             }
         }
@@ -102,7 +103,7 @@ public class LootModifiers {
             }
 
             @Override
-            public Float generate(ItemStack stack, Random random) {
+            public Float generate(ItemStack stack, RandomSource random) {
                 return Mth.nextFloat(random, min, max);
             }
         }

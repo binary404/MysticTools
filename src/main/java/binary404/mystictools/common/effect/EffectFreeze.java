@@ -22,23 +22,23 @@ public class EffectFreeze extends MobEffect {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onLivingTick(LivingEvent.LivingUpdateEvent event) {
-        if (shouldFreeze(event.getEntityLiving())) {
-            handleImportantTicks(event.getEntityLiving());
+    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
+        if (shouldFreeze(event.getEntity())) {
+            handleImportantTicks(event.getEntity());
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onLivingKnockBack(LivingKnockBackEvent event) {
-        if (shouldFreeze(event.getEntityLiving())) {
+        if (shouldFreeze(event.getEntity())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onDestroy(LivingDestroyBlockEvent event) {
-        if (shouldFreeze(event.getEntityLiving())) {
+        if (shouldFreeze(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -61,16 +61,16 @@ public class EffectFreeze extends MobEffect {
         entity.oAttackAnim = entity.attackAnim;
         entity.walkDistO = entity.walkDist;
 
-        if (entity.hasEffect(ModPotions.FREEZE)) {
-            MobEffectInstance e = entity.getEffect(ModPotions.FREEZE);
+        if (entity.hasEffect(ModPotions.FREEZE.get())) {
+            MobEffectInstance e = entity.getEffect(ModPotions.FREEZE.get());
             if (!e.tick(entity, () -> {
             })) {
-                entity.removeEffect(ModPotions.FREEZE);
+                entity.removeEffect(ModPotions.FREEZE.get());
             }
         }
     }
 
     public static boolean shouldFreeze(LivingEntity entity) {
-        return entity.hasEffect(ModPotions.FREEZE);
+        return entity.hasEffect(ModPotions.FREEZE.get());
     }
 }

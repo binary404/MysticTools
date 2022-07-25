@@ -54,14 +54,14 @@ public class EffectCloudEntity extends Entity {
     @Nullable
     private UUID ownerUUID;
 
-    public EffectCloudEntity(EntityType<? extends EffectCloudEntity> p_19704_, Level p_19705_) {
+    public EffectCloudEntity(EntityType<?> p_19704_, Level p_19705_) {
         super(p_19704_, p_19705_);
         this.noPhysics = true;
         this.setRadius(3.0F);
     }
 
     public EffectCloudEntity(Level p_19707_, double p_19708_, double p_19709_, double p_19710_) {
-        this(ModEntities.EFFECT_CLOUD, p_19707_);
+        this(ModEntities.EFFECT_CLOUD.get(), p_19707_);
         this.setPos(p_19708_, p_19709_, p_19710_);
     }
 

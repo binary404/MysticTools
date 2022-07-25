@@ -28,10 +28,9 @@ public class ClientProxy implements IProxy {
 
     private void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            ClientHandler.KeyBindings.init();
             registerPropertyGetters();
         });
-        BlockEntityRenderers.register(ModTiles.CAULDRON, RenderCauldron::new);
+        BlockEntityRenderers.register(ModTiles.CAULDRON.get(), RenderCauldron::new);
     }
 
     private static void registerPropertyGetter(ItemLike item, ResourceLocation id, ItemPropertyFunction propGetter) {
@@ -44,16 +43,16 @@ public class ClientProxy implements IProxy {
             return item.getModel(stack);
         };
 
-        registerPropertyGetter(ModItems.loot_sword, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_bow, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_shovel, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_pickaxe, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_axe, new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_sword.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_shovel.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_pickaxe.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_axe.get(), new ResourceLocation("model"), lootGetter);
 
-        registerPropertyGetter(ModItems.loot_boots, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_leggings, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_chestplate, new ResourceLocation("model"), lootGetter);
-        registerPropertyGetter(ModItems.loot_helmet, new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_boots.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_leggings.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_chestplate.get(), new ResourceLocation("model"), lootGetter);
+        registerPropertyGetter(ModItems.loot_helmet.get(), new ResourceLocation("model"), lootGetter);
 
         ItemPropertyFunction pulling = (stack, world, entity, index) -> {
             ItemLootBow bow = ((ItemLootBow) stack.getItem());
@@ -65,8 +64,8 @@ public class ClientProxy implements IProxy {
             return bow.getPull(stack, world, entity);
         };
 
-        registerPropertyGetter(ModItems.loot_bow, new ResourceLocation("ml_pull"), pull);
-        registerPropertyGetter(ModItems.loot_bow, new ResourceLocation("ml_pulling"), pulling);
+        registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("ml_pull"), pull);
+        registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("ml_pulling"), pulling);
     }
 
     @Override

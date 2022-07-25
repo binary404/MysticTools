@@ -1,24 +1,13 @@
 package binary404.mystictools.common.tile;
 
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.blocks.ModBlocks;
-import binary404.mystictools.common.core.RegistryHelper;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
-
-@Mod.EventBusSubscriber(modid = "mystictools", bus = Mod.EventBusSubscriber.Bus.MOD)
+import net.minecraftforge.registries.*;
 public class ModTiles {
 
-    @ObjectHolder("mystictools:cauldron")
-    public static BlockEntityType<TileEntityCauldron> CAULDRON;
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MysticTools.modid);
 
-    @SubscribeEvent
-    public static void registerTileEntity(RegistryEvent.Register<BlockEntityType<?>> event) {
-        IForgeRegistry<BlockEntityType<?>> r = event.getRegistry();
-        RegistryHelper.register(r, BlockEntityType.Builder.of(TileEntityCauldron::new, ModBlocks.cauldron).build(null), "cauldron");
-    }
-
+    public static final RegistryObject<BlockEntityType<TileEntityCauldron>> CAULDRON = BLOCK_ENTITIES.register("cauldron",
+            () -> BlockEntityType.Builder.of(TileEntityCauldron::new, ModBlocks.cauldron.get()).build(null));
 }

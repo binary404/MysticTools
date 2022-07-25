@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class PacketToggle {
 
-    private static final Set<Item> tools = Sets.newHashSet(ModItems.loot_axe, ModItems.loot_pickaxe, ModItems.loot_shovel);
+    private static final Set<Item> tools = Sets.newHashSet(ModItems.loot_axe.get(), ModItems.loot_pickaxe.get(), ModItems.loot_shovel.get());
 
 
     public PacketToggle() {
@@ -45,7 +45,7 @@ public class PacketToggle {
                         IEffectAction action = effect.getEffect().getAction();
                         if(action != null && action.hasResponseMessage(player, tool)) {
                             action.toggleAction(player, tool);
-                            player.sendMessage(action.modificationResponseMessage(player, tool), player.getUUID());
+                            player.sendSystemMessage(action.modificationResponseMessage(player, tool));
                         }
                     }
                 }

@@ -13,6 +13,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
@@ -198,7 +199,7 @@ public class LootEffect implements IEffect {
         return this;
     }
 
-    public double getAmplifier(Random rand) {
+    public double getAmplifier(RandomSource rand) {
         return Mth.nextDouble(rand, this.amplifierMin, this.amplifierMax);
     }
 

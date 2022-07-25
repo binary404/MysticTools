@@ -39,17 +39,17 @@ public class TreeChopper implements IUniqueEffect {
         MinecraftForge.EVENT_BUS.addListener(this::tickEnd);
     }
 
-    private void tickEnd(TickEvent.WorldTickEvent event) {
-        if (event.world.isClientSide) {
+    private void tickEnd(TickEvent.LevelTickEvent event) {
+        if (event.level.isClientSide) {
             return;
         }
-        if (event.phase == TickEvent.Phase.END && event.world.getGameTime() % 5 == 0) {
-            ResourceKey<Level> dim = event.world.dimension();
+        if (event.phase == TickEvent.Phase.END && event.level.getGameTime() % 5 == 0) {
+            ResourceKey<Level> dim = event.level.dimension();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
                 swappers.removeIf((next) -> {
                     if (next == null || !next.tick()) {
-                        NetworkHandler.sendToNearby(event.world, next.origin, new PacketRemoveSpirals());
+                        NetworkHandler.sendToNearby(event.level, next.origin, new PacketRemoveSpirals());
                         return true;
                     }
                     return false;

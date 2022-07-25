@@ -5,6 +5,7 @@ import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,7 +28,7 @@ public class GrowthAura implements IUniqueEffect {
                         if ((world.getBlockState(pos).getBlock() instanceof BonemealableBlock) && world.getBlockState(pos).getBlock() != Blocks.GRASS_BLOCK) {
                             if (world instanceof ServerLevel && world.random.nextInt(1) == 0) {
                                 if (((BonemealableBlock) world.getBlockState(pos).getBlock()).isValidBonemealTarget(world, pos, world.getBlockState(pos), false)) {
-                                    ((BonemealableBlock) world.getBlockState(pos).getBlock()).performBonemeal((ServerLevel) world, new Random(), pos, world.getBlockState(pos));
+                                    ((BonemealableBlock) world.getBlockState(pos).getBlock()).performBonemeal((ServerLevel) world, RandomSource.create(), pos, world.getBlockState(pos));
                                     NetworkHandler.sendToNearby(entity.level, entity, new PacketSparkle(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.1F, 0.96F, 0.1F));
                                     return;
                                 }

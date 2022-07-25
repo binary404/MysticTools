@@ -1,6 +1,7 @@
 package binary404.mystictools.common.core.util;
 
 import com.google.gson.annotations.Expose;
+import net.minecraft.util.RandomSource;
 
 import java.util.AbstractList;
 import java.util.Arrays;
@@ -104,7 +105,7 @@ public class WeightedList<T> extends AbstractList<WeightedList.Entry<T>> impleme
         return current;
     }
 
-    public T getRandom(Random random) {
+    public T getRandom(RandomSource random) {
         int totalWeight = this.getTotalWeight();
         if (totalWeight == 0) return null;
         return this.getWeightedAt(random.nextInt(totalWeight));

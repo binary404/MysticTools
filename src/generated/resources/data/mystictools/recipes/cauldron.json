@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "group": "mystictools:cauldron",
+  "key": {
+    "E": {
+      "tag": "forge:gems/emerald"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
   "pattern": [
     "IEI",
     "IEI",
     "III"
   ],
-  "key": {
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
-    "E": {
-      "tag": "forge:gems/emerald"
-    }
-  },
   "result": {
     "item": "mystictools:cauldron"
   }

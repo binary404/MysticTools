@@ -10,7 +10,6 @@ import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.awt.*;
 import java.util.List;
 
 public class LootEffectAutoSmelt implements IEffectAction {
@@ -60,7 +60,7 @@ public class LootEffectAutoSmelt implements IEffectAction {
         message += ", has been set to: ";
         message += active;
 
-        return new TextComponent(message);
+        return Component.literal(message);
     }
 
     @Override

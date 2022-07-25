@@ -25,9 +25,9 @@ public class AutoSmeltCondition implements LootItemCondition {
         if (lootContext != null) {
             ItemStack tool = lootContext.getParamOrNull(LootContextParams.TOOL);
             List<Item> tools = new ArrayList<Item>();
-            tools.add(ModItems.loot_axe);
-            tools.add(ModItems.loot_pickaxe);
-            tools.add(ModItems.loot_shovel);
+            tools.add(ModItems.loot_axe.get());
+            tools.add(ModItems.loot_pickaxe.get());
+            tools.add(ModItems.loot_shovel.get());
 
             if (tool != null)
                 if (tools.contains(tool.getItem())) {
@@ -41,7 +41,7 @@ public class AutoSmeltCondition implements LootItemCondition {
 
     @Override
     public LootItemConditionType getType() {
-        return ModLootModifiers.AUTOSMELT;
+        return ModLootModifiers.AUTOSMELT_CONDITION.get();
     }
 
     public static class AutoSmeltSerializer implements Serializer<AutoSmeltCondition> {

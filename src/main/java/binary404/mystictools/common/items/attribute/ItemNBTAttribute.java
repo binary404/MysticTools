@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -60,7 +61,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
         return this.getOrDefault(stack, () -> value);
     }
 
-    public I getOrDefault(ItemStack stack, Random random, Instance.Generator<T> generator) {
+    public I getOrDefault(ItemStack stack, RandomSource random, Instance.Generator<T> generator) {
         return this.getOrDefault(stack, () -> generator.generate(stack, random));
     }
 
@@ -72,7 +73,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
         return this.getOrCreate(stack, () -> value);
     }
 
-    public I getOrCreate(ItemStack stack, Random random, Instance.Generator<T> generator) {
+    public I getOrCreate(ItemStack stack, RandomSource random, Instance.Generator<T> generator) {
         return this.getOrCreate(stack, () -> generator.generate(stack, random));
     }
 
@@ -84,7 +85,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
         return this.create(stack, () -> value);
     }
 
-    public I create(ItemStack stack, Random random, Instance.Generator<T> generator) {
+    public I create(ItemStack stack, RandomSource random, Instance.Generator<T> generator) {
         return this.create(stack, () -> generator.generate(stack, random));
     }
 
@@ -196,7 +197,7 @@ public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
 
         @FunctionalInterface
         public interface Generator<T> {
-            T generate(ItemStack stack, Random random);
+            T generate(ItemStack stack, RandomSource random);
         }
     }
 

@@ -14,7 +14,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -38,6 +37,7 @@ import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nullable;
 import javax.tools.Tool;
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +56,7 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
 
     @Override
     public Component getName(ItemStack stack) {
-        return new TextComponent(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
+        return Component.literal(LootItemHelper.getLootName(stack, super.getName(stack).getString()));
     }
 
     @Override
@@ -158,9 +158,9 @@ public class ItemLootAxe extends AxeItem implements ILootItem {
             LootItemHelper.addInformation(stack, tooltip);
         }
 
-        tooltip.add(new TextComponent(ChatFormatting.RESET + "" + "Axe"));
+        tooltip.add(Component.literal(ChatFormatting.RESET + "" + "Axe"));
 
         double efficiency = ModAttributes.LOOT_EFFICIENCY.getOrDefault(stack, 1.0).getValue(stack);
-        tooltip.add(new TextComponent(ChatFormatting.GRAY + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(efficiency) + " Mining Speed"));
+        tooltip.add(Component.literal(ChatFormatting.GRAY + "" + ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(efficiency) + " Mining Speed"));
     }
 }

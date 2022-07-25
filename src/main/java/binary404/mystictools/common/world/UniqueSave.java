@@ -43,7 +43,8 @@ public class UniqueSave extends SavedData {
         ListTag list = new ListTag();
         for (UniqueInfo info : uniques) {
             CompoundTag cmp = new CompoundTag();
-            cmp.putString("item", info.item.getRegistryName().toString());
+            ForgeRegistries.ITEMS.getKey(info.item).toString();
+            cmp.putString("item", ForgeRegistries.ITEMS.getKey(info.item).toString());
             cmp.putString("effect", info.effect.getId());
             cmp.putBoolean("found", info.found);
             list.add(cmp);
@@ -86,7 +87,7 @@ public class UniqueSave extends SavedData {
 
         @Override
         public String toString() {
-            return item.getRegistryName() + " " + effect.getId() + " " + found;
+            return ForgeRegistries.ITEMS.getKey(item).toString() + " " + effect.getId() + " " + found;
         }
     }
 

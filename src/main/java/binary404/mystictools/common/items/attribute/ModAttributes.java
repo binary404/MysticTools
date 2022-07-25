@@ -6,9 +6,9 @@ import binary404.mystictools.common.loot.effects.LootEffectInstance;
 import binary404.mystictools.common.loot.effects.PotionEffectInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +45,7 @@ public class ModAttributes {
     public static ItemNBTAttribute<List<LootEffectInstance>, LootEffectAttribute> LOOT_EFFECTS;
 
     @SubscribeEvent
-    public static void register(RegistryEvent.Register<Attribute> event) {
+    public static void register(FMLCommonSetupEvent event) {
         ADD_DAMAGE = register(new ResourceLocation("mystictools", "add_damage"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));
         ADD_SPEED = register(new ResourceLocation("mystictools", "add_speed"), () -> new FloatAttribute((stack, parent, value) -> parent.getBaseValue() + value));
         ADD_EFFICIENCY = register(new ResourceLocation("mystictools", "add_efficiency"), () -> new DoubleAttribute((stack, parent, value) -> parent.getBaseValue() + value));

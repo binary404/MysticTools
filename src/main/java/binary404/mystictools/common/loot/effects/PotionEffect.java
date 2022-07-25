@@ -9,6 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.EffectInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -109,7 +110,7 @@ public class PotionEffect implements IEffect {
         return this.id;
     }
 
-    public CompoundTag getNbt(Random rand) {
+    public CompoundTag getNbt(RandomSource rand) {
         CompoundTag tag = new CompoundTag();
 
         tag.putString("id", this.getId());
@@ -176,7 +177,7 @@ public class PotionEffect implements IEffect {
         return this;
     }
 
-    public int getDuration(Random rand) {
+    public int getDuration(RandomSource rand) {
         int duration = this.durationMin;
 
         if (duration < this.durationMax)
@@ -185,7 +186,7 @@ public class PotionEffect implements IEffect {
         return duration;
     }
 
-    public int getAmplifier(Random rand) {
+    public int getAmplifier(RandomSource rand) {
         int amplifier = this.amplifierMin;
 
         if (amplifier < this.amplifierMax)

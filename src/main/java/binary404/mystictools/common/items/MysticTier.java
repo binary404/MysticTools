@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public enum MysticTier implements Tier {
     MYSTIC_TIER(5, 1561, 8.0F, 0.0F, 10, () -> {
-        return Ingredient.of(ModItems.shard);
+        return Ingredient.of(ModItems.shard.get());
     });
 
     private final int harvestLevel;

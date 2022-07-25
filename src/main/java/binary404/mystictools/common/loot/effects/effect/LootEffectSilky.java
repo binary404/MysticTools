@@ -14,7 +14,6 @@ import binary404.mystictools.common.network.PacketSparkle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -24,10 +23,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
 import java.util.List;
 
 @Mod.EventBusSubscriber
@@ -56,7 +56,7 @@ public class LootEffectSilky implements IEffectAction {
         if (!active || !LootItemHelper.hasEffect(heldStack, LootEffect.getById("silky")))
             return;
         ActiveFlags.IS_SILKY_MINING.runIfNotSet(() -> {
-            ServerLevel level = (ServerLevel) event.getWorld();
+            ServerLevel level = (ServerLevel) event.getLevel();
             ItemStack miningStack = OverLevelEnchantmentHelper.enableSilkTouch(heldStack.copy());
             BlockPos pos = event.getPos();
 
@@ -85,7 +85,7 @@ public class LootEffectSilky implements IEffectAction {
         message += ", has been set to: ";
         message += active;
 
-        return new TextComponent(message);
+        return Component.literal(message);
     }
 
     @Override

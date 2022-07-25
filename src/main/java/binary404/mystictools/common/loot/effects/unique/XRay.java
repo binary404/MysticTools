@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.OreBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.Tags;
@@ -48,7 +47,7 @@ public class XRay implements IUniqueEffect {
                 for (int y = 0; y < highest; y++) {
                     pooled.setY(y);
                     BlockState at = c.getBlockState(pooled);
-                    if (at.getBlock() instanceof OreBlock || at.getBlock() == Blocks.ANCIENT_DEBRIS || at.is(Tags.Blocks.ORES)) {
+                    if (at.getBlock() == Blocks.ANCIENT_DEBRIS || at.is(Tags.Blocks.ORES)) {
                         successful.add(new BlockPos(pooled));
                     }
                 }

@@ -10,6 +10,7 @@ import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.effects.PotionEffectInstance;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,7 +54,7 @@ public class LootEffectPotionCloud implements IEffectAction {
     }
 
     @Override
-    public CompoundTag addAdditionalData(ItemStack stack, LootSet.LootSetType type, Random random) {
+    public CompoundTag addAdditionalData(ItemStack stack, LootSet.LootSetType type, RandomSource random) {
         PotionEffect effect = LootItemHelper.getRandomPotionExcluding(random, type, new ArrayList<>());
         CompoundTag tag = new CompoundTag();
         if (effect != null) {

@@ -2,6 +2,7 @@ package binary404.mystictools.common.loot.effects;
 
 import binary404.mystictools.common.items.attribute.LootEffectAttribute;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Random;
@@ -12,7 +13,7 @@ public class LootEffectInstance implements INBTSerializable<CompoundTag> {
     private double amplifier;
 
     public LootEffectInstance(LootEffect effect) {
-        Random random = new Random();
+        RandomSource random = RandomSource.create();
         this.effect = effect;
         this.amplifier = effect.getAmplifier(random);
     }

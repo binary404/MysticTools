@@ -26,7 +26,7 @@ public class LootEffectStun implements IEffectAction {
         List<LivingEntity> livingEntities = world.getEntitiesOfClass(LivingEntity.class, new AABB(player.blockPosition()).inflate(5.0D, 5.0D, 5.0D));
         livingEntities.remove(player);
         for(LivingEntity entity : livingEntities) {
-            entity.addEffect(new MobEffectInstance(ModPotions.FREEZE, 50));
+            entity.addEffect(new MobEffectInstance(ModPotions.FREEZE.get(), 50));
         }
         player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 200);
         return InteractionResultHolder.pass(player.getItemInHand(hand));
