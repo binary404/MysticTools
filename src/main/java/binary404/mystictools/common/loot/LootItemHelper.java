@@ -122,8 +122,6 @@ public class LootItemHelper {
             double armorPoints = ModAttributes.LOOT_ARMOR.getOrDefault(stack, 0.0).getValue(stack);
             double armorToughness = ModAttributes.LOOT_TOUGHNESS.getOrDefault(stack, 0.0).getValue(stack);
 
-            System.out.println(attackDamage);
-
             if (attackDamage > 0 && stack.getItem() instanceof ItemLootSword)
                 applyAttributeModifier(modifiableMap, Attributes.ATTACK_DAMAGE, ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage);
             if (attackSpeed > 0)
@@ -568,8 +566,6 @@ public class LootItemHelper {
         int yradP = 0;
         int zradN = 0;
         int zradP = 0;
-
-        System.out.println(level);
 
         switch (level) {
             case 1 -> { //3x3

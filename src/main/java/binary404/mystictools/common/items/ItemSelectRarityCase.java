@@ -2,15 +2,23 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
+import binary404.mystictools.common.core.config.LootRarityConfig;
+import binary404.mystictools.common.core.config.ModConfigs;
+import binary404.mystictools.common.core.util.WeightedList;
+import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootRarity;
 import binary404.mystictools.common.loot.LootSet;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -19,11 +27,33 @@ import javax.annotation.Nonnull;
 
 public class ItemSelectRarityCase extends Item {
 
-     public LootRarity lootRarity;
-
-    public ItemSelectRarityCase(@Nonnull LootRarity item) {
+    public ItemSelectRarityCase() {
         super(new Properties().tab(MysticTools.tab));
-        this.lootRarity = item;
+    }
+
+    public static LootRarity getLootRarity(ItemStack stack) {
+        return LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
+    }
+
+    public static void setLootRarity(LootRarity rarity, ItemStack stack) {
+        ModAttributes.LOOT_RARITY.getOrCreate(stack, rarity.getId()).setBaseValue(rarity.getId());
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+        if(this.allowedIn(pCategory)) {
+            for(WeightedList.Entry<LootRarity> rarity : ModConfigs.RARITIES.RARITIES) {
+                ItemStack stack = new ItemStack(this);
+                setLootRarity(rarity.value, stack);
+                pItems.add(stack);
+            }
+        }
+    }
+
+    @Override
+    public Component getName(ItemStack pStack) {
+        LootRarity rarity = getLootRarity(pStack);
+        return Component.literal(rarity.getColor() + I18n.get(rarity.getId()) + " " + "Loot Case");
     }
 
     @Override
@@ -36,7 +66,9 @@ public class ItemSelectRarityCase extends Item {
 
         ItemStack loot;
 
-        if (this.lootRarity == LootRarity.UNIQUE) {
+        LootRarity lootRarity = getLootRarity(stack);
+
+        if (lootRarity == LootRarity.UNIQUE) {
             loot = UniqueHandler.getRandomUniqueItem(world, playerIn);
         } else {
             loot = LootItemHelper.getRandomLoot(worldIn.random);
@@ -47,7 +79,7 @@ public class ItemSelectRarityCase extends Item {
                 if (type == null)
                     type = LootSet.LootSetType.SWORD;
 
-                loot = LootItemHelper.generateLoot(this.lootRarity, type, loot);
+                loot = LootItemHelper.generateLoot(lootRarity, type, loot);
             }
         }
         playerIn.drop(loot, false, true);

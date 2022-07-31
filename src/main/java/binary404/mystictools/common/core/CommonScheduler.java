@@ -29,7 +29,6 @@ public class CommonScheduler {
                     Tuple<Runnable, Counter> r = iterator.next();
                     r.getB().decrement();
                     if(r.getB().getValue() <= 0) {
-                        System.out.println("Running");
                         r.getA().run();
                         iterator.remove();
                     }
@@ -44,7 +43,6 @@ public class CommonScheduler {
     }
 
     public static void addRunnable(Runnable r, int tickDelay) {
-        System.out.println("Adding Runnable " + r);
         synchronized (lock) {
             if(inTick) {
                 waiting.addLast(new Tuple<>(r, tickDelay));

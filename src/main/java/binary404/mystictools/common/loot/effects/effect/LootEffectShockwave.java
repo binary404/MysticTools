@@ -18,7 +18,6 @@ public class LootEffectShockwave implements IEffectAction {
     public void handleArmorHit(ItemStack stack, LivingEntity wearer, LivingEntity attacker) {
         NetworkHandler.sendToNearby(wearer.level, wearer, new PacketFX(wearer.getX(), wearer.getY(), wearer.getZ(), 1));
         List<LivingEntity> entities = wearer.level.getEntitiesOfClass(LivingEntity.class, new AABB(wearer.blockPosition()).inflate(20.0D));
-        System.out.println(entities);
         for (LivingEntity entity : entities) {
             if (wearer == entity) {
                 break;

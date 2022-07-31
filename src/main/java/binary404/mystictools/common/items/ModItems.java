@@ -3,6 +3,7 @@ package binary404.mystictools.common.items;
 import binary404.mystictools.MysticTools;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
@@ -24,6 +25,7 @@ public class ModItems {
     public static final RegistryObject<Item> loot_bow = ITEMS.register("weaponbow", () -> new ItemLootBow());
 
     public static final RegistryObject<Item> loot_case = ITEMS.register("loot_case", () -> new ItemCase());
+    public static final RegistryObject<Item> rarity_case = ITEMS.register("rarity_case", () -> new ItemSelectRarityCase());
     public static final RegistryObject<Item> shard = ITEMS.register("shard", () -> new Item(properties));
     public static final RegistryObject<Item> artifact = ITEMS.register("artifact", () -> new ItemArtifact(properties));
 
@@ -37,5 +39,12 @@ public class ModItems {
     public static final RegistryObject<Item> loot_leggings = ITEMS.register("loot_leggings", () -> new ItemLootArmor(EquipmentSlot.LEGS, "Leggings"));
     public static final RegistryObject<Item> loot_chestplate = ITEMS.register("loot_chestplate", () -> new ItemLootArmor(EquipmentSlot.CHEST, "Chestplate"));
     public static final RegistryObject<Item> loot_helmet = ITEMS.register("loot_helmet", () -> new ItemLootArmor(EquipmentSlot.HEAD, "Helmet"));
+
+    @SubscribeEvent
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.getItemColors().register((item, tint) -> {
+            return tint > 0 ? -1 : ItemSelectRarityCase.getLootRarity(item).getColor().getColor();
+        }, ModItems.rarity_case.get());
+    }
 
 }

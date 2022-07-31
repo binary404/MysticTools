@@ -29,6 +29,5 @@ public class LootRarityConfig extends Config {
             LootRarity rarity = rarityEntry.value;
             LootRarity.REGISTRY.put(rarity.getId(), rarity);
         }
-        System.out.println(LootRarity.REGISTRY);
     }
 }

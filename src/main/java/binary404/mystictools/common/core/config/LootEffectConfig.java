@@ -49,7 +49,6 @@ public class LootEffectConfig extends Config {
             LootEffect effect = effectEntry.value;
             LootEffect.REGISTRY.put(effect.getId(), effect);
         }
-        System.out.println(LootEffect.REGISTRY);
     }
 
 }

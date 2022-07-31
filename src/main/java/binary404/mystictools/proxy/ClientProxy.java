@@ -76,7 +76,6 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
-        System.out.println("Scheduling runnable on client");
     }
 
     @Override
