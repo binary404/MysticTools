@@ -62,7 +62,7 @@ public class ItemLootSword extends SwordItem implements ILootItem {
         LootItemHelper.handleHit(stack, target, attacker);
 
         LootRarity rarity = LootRarity.fromId(ModAttributes.LOOT_RARITY.getOrDefault(stack, "common").getValue(stack));
-        if (rarity == LootRarity.UNIQUE) {
+        if (rarity.getId().equals("unique")) {
             UniqueEffect.getUniqueEffect(stack).hit(target, attacker, stack, ModAttributes.LOOT_DAMAGE.getOrDefault(stack, 1.0).getValue(stack));
         }
 
