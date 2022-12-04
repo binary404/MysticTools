@@ -12,6 +12,7 @@ public class LootTags {
     public static final String LOOT_TAG_TOUGHNESS = "toughness";
     public static final String LOOT_TAG_EFFICIENCY = "efficiency";
     public static final String LOOT_TAG_DURABILITY = "durability";
+    public static final String LOOT_CASE_RARITY = "loot_case_rarity";
 
     public static final String LOOT_TAG_XP = "xp";
     public static final String LOOT_TAG_LEVEL = "level";

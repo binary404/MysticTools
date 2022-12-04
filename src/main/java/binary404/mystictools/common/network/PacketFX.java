@@ -59,9 +59,9 @@ public class PacketFX {
                     double startRadius = 1.0;
                     double endRadius = 5.0;
                     double radiusIncrease = 0.5;
-                    for(double i = startRadius; i <= endRadius; i += radiusIncrease) {
+                    for (double i = startRadius; i <= endRadius; i += radiusIncrease) {
                         final double radius = i;
-                        ClientTickHandler.addRunnable(() -> FXHelper.shockwave(msg.x, msg.y, msg.z, radius), (int) (i * 5));
+                        MysticTools.proxy.scheduleDelayed(() -> FXHelper.shockwave(msg.x, msg.y, msg.z, radius), (int) (i * 5));
                     }
                 }
             }

@@ -41,6 +41,8 @@ public class ModAttributes {
     public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_ARMOR;
     public static ItemNBTAttribute<Double, DoubleAttribute> LOOT_TOUGHNESS;
     public static ItemNBTAttribute<Integer, IntegerAttribute> LOOT_EFFECT_LEVEL;
+
+    public static ItemNBTAttribute<List<String>, StringListAttribute> LOOT_CASE_RARITY;
     public static ItemNBTAttribute<List<PotionEffectInstance>, PotionEffectAttribute> LOOT_POTION_EFFECTS;
     public static ItemNBTAttribute<List<LootEffectInstance>, LootEffectAttribute> LOOT_EFFECTS;
 
@@ -67,6 +69,7 @@ public class ModAttributes {
         LOOT_ARMOR = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_ARMOR), DoubleAttribute::new, ADD_ARMOR);
         LOOT_TOUGHNESS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_TOUGHNESS), DoubleAttribute::new, ADD_TOUGHNESS);
         LOOT_EFFECT_LEVEL = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_EFFECT_LEVEL), IntegerAttribute::new);
+        LOOT_CASE_RARITY = register(new ResourceLocation("mystictools", LootTags.LOOT_CASE_RARITY), StringListAttribute::new);
         LOOT_POTION_EFFECTS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_POTIONLIST), PotionEffectAttribute::new);
         LOOT_EFFECTS = register(new ResourceLocation("mystictools", LootTags.LOOT_TAG_EFFECTLIST), LootEffectAttribute::new);
     }

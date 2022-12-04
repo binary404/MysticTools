@@ -1,10 +1,13 @@
 package binary404.mystictools.proxy;
 
+import binary404.fx_lib.util.ClientTickHandler;
+import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.client.render.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
 import binary404.mystictools.common.core.ClientHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ItemLootBow;
+import binary404.mystictools.common.items.ItemSelectRarityCase;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
@@ -16,6 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -24,6 +29,7 @@ public class ClientProxy implements IProxy {
     @Override
     public void registerHandlers() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerItemColors);
     }
 
     private void clientSetup(FMLClientSetupEvent event) {
@@ -31,6 +37,12 @@ public class ClientProxy implements IProxy {
             registerPropertyGetters();
         });
         BlockEntityRenderers.register(ModTiles.CAULDRON.get(), RenderCauldron::new);
+    }
+
+    public void registerItemColors(RegisterColorHandlersEvent.Item event) {
+        event.getItemColors().register((item, tint) -> {
+            return tint > 0 ? -1 : ItemSelectRarityCase.getLootRarity(item).getColor().getColor();
+        }, ModItems.rarity_case.get());
     }
 
     private static void registerPropertyGetter(ItemLike item, ResourceLocation id, ItemPropertyFunction propGetter) {
@@ -76,6 +88,9 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
+        if(FXHelper.fxlibLoaded()) {
+            ClientTickHandler.addRunnable(r, delay);
+        }
     }
 
     @Override

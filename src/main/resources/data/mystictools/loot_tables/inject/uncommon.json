@@ -6,7 +6,13 @@
       {
         "type": "item",
         "name": "mystictools:loot_case",
-        "weight": 40
+        "weight": 40,
+        "functions": [
+          {
+            "function": "set_nbt",
+            "tag": "{rarity:1}"
+          }
+        ]
       },
       {
         "type": "empty",

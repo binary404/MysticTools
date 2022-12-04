@@ -40,11 +40,4 @@ public class ModItems {
     public static final RegistryObject<Item> loot_chestplate = ITEMS.register("loot_chestplate", () -> new ItemLootArmor(EquipmentSlot.CHEST, "Chestplate"));
     public static final RegistryObject<Item> loot_helmet = ITEMS.register("loot_helmet", () -> new ItemLootArmor(EquipmentSlot.HEAD, "Helmet"));
 
-    @SubscribeEvent
-    public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
-        event.getItemColors().register((item, tint) -> {
-            return tint > 0 ? -1 : ItemSelectRarityCase.getLootRarity(item).getColor().getColor();
-        }, ModItems.rarity_case.get());
-    }
-
 }
