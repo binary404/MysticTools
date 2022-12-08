@@ -1,7 +1,7 @@
 package binary404.mystictools.client.render;
 
 
-import binary404.mystictools.common.tile.TileEntityCauldron;
+import binary404.mystictools.common.tile.CauldronBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -13,17 +13,15 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class RenderCauldron implements BlockEntityRenderer<TileEntityCauldron> {
+public class RenderCauldron implements BlockEntityRenderer<CauldronBlockEntity> {
 
     public RenderCauldron(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(TileEntityCauldron tileEntityIn, float partialTicks, PoseStack ms, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(CauldronBlockEntity tileEntityIn, float partialTicks, PoseStack ms, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ms.pushPose();
         ms.translate(0.0, 0.75, 0.0);
         ms.pushPose();

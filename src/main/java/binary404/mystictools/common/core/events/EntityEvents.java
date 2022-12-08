@@ -1,15 +1,11 @@
-package binary404.mystictools.common.core;
+package binary404.mystictools.common.core.events;
 
-import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.common.core.helper.ActiveFlags;
 import binary404.mystictools.common.core.helper.BlockDropCaptureHelper;
 import binary404.mystictools.common.core.helper.BlockHelper;
 import binary404.mystictools.common.core.helper.OverLevelEnchantmentHelper;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.LootItemHelper;
-import binary404.mystictools.common.loot.LootNbtHelper;
-import binary404.mystictools.common.loot.LootTags;
-import binary404.mystictools.common.loot.effects.IEffectAction;
 import binary404.mystictools.common.loot.effects.LootEffect;
 import binary404.mystictools.common.loot.effects.LootEffectInstance;
 import binary404.mystictools.common.loot.effects.UniqueEffect;
@@ -25,14 +21,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
@@ -41,11 +35,10 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = "mystictools")
-public class EntityHandler {
+public class EntityEvents {
 
     @SubscribeEvent
     public static void arrowHit(ProjectileImpactEvent event) {

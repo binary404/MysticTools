@@ -4,9 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileEntityCauldron extends BlockEntity {
+public class CauldronBlockEntity extends BlockEntity {
 
-    public TileEntityCauldron(BlockPos pos, BlockState state) {
+    public CauldronBlockEntity(BlockPos pos, BlockState state) {
         super(ModTiles.CAULDRON.get(), pos, state);
     }
 

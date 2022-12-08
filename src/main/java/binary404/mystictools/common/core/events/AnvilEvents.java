@@ -1,6 +1,5 @@
-package binary404.mystictools.common.core;
+package binary404.mystictools.common.core.events;
 
-import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ItemLootSword;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.loot.modifiers.LootModifiers;
@@ -10,10 +9,8 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.Random;
-
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class AnvilHandler {
+public class AnvilEvents {
 
     @SubscribeEvent
     public static void applyArtifact(AnvilUpdateEvent event) {

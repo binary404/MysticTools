@@ -4,12 +4,10 @@ import binary404.mystictools.common.core.UniqueHandler;
 import binary404.mystictools.common.items.ILootItem;
 import binary404.mystictools.common.items.ModItems;
 import binary404.mystictools.common.items.attribute.ModAttributes;
-import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootRarity;
-import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
-import binary404.mystictools.common.tile.TileEntityCauldron;
+import binary404.mystictools.common.tile.CauldronBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -29,8 +27,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockCauldron extends Block implements EntityBlock {
 
@@ -78,6 +74,6 @@ public class BlockCauldron extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-        return new TileEntityCauldron(p_153215_, p_153216_);
+        return new CauldronBlockEntity(p_153215_, p_153216_);
     }
 }

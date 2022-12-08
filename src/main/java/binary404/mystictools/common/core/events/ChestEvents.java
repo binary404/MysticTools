@@ -1,8 +1,8 @@
-package binary404.mystictools.common.core;
+package binary404.mystictools.common.core.events;
 
+import binary404.mystictools.common.core.ConfigHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = "mystictools")
-public class ChestHelper {
+public class ChestEvents {
 
     @SubscribeEvent
     public static void onLootTableLoad(LootTableLoadEvent event) {
