@@ -15,4 +15,5 @@ public class ModPotions {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MysticTools.modid);
 
     public static final RegistryObject<MobEffect> FREEZE = EFFECTS.register("freeze", () -> new EffectFreeze());
+    public static final RegistryObject<MobEffect> SHAKE = EFFECTS.register("shake", () -> new EffectShake());
 }

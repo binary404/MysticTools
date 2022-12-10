@@ -1,9 +1,7 @@
 package binary404.mystictools.common.network;
 
-import binary404.fx_lib.util.ClientTickHandler;
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXHelper;
-import binary404.mystictools.common.core.ScreenShakeHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -54,7 +52,6 @@ public class PacketFX {
                         float b2 = Mth.nextInt(world.random, 189, 255) / 255.0F;
                         FXHelper.sparkle(msg.x + world.random.nextGaussian() * 0.5, msg.y + world.random.nextGaussian() * 0.5, msg.z + world.random.nextGaussian() * 0.5, world.random.nextGaussian() * 0.04, world.random.nextGaussian() * 0.04 + (floaty ? 0.05D : 0.15D), world.random.nextGaussian() * 0.04, r, g, b, r2, g2, b2, 0.04F, floaty ? 0.04F : 0.6F, floaty ? 100 : 30);
                     }
-                    ScreenShakeHandler.startShake(200);
                     break;
                 }
                 case 1: {

@@ -1,6 +1,7 @@
 package binary404.mystictools.proxy;
 
 import binary404.fx_lib.util.ClientTickHandler;
+import binary404.mystictools.MysticTools;
 import binary404.mystictools.client.fx.FXHelper;
 import binary404.mystictools.client.render.RenderCauldron;
 import binary404.mystictools.client.fx.FXBlock;
@@ -88,7 +89,7 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
-        if(FXHelper.fxlibLoaded()) {
+        if(MysticTools.fxlibLoaded()) {
             ClientTickHandler.addRunnable(r, delay);
         }
     }

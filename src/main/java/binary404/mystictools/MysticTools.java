@@ -25,6 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -101,6 +102,10 @@ public class MysticTools {
             ModConfigs.RARITIES.uploadRaritiesToRegistry();
             ModConfigs.EFFECTS.uploadEffectsToRegistry();
         });
+    }
+
+    public static boolean fxlibLoaded() {
+        return ModList.get().isLoaded("fx_lib");
     }
 
 }
