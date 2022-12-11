@@ -10,4 +10,6 @@ public class ModTiles {
 
     public static final RegistryObject<BlockEntityType<CauldronBlockEntity>> CAULDRON = BLOCK_ENTITIES.register("cauldron",
             () -> BlockEntityType.Builder.of(CauldronBlockEntity::new, ModBlocks.cauldron.get()).build(null));
+    //public static final RegistryObject<BlockEntityType<SacrificialAltarBlockEntity>> ALTAR = BLOCK_ENTITIES.register("altar",
+      //      () -> BlockEntityType.Builder.of(SacrificialAltarBlockEntity::new, ModBlocks.mysterious_bricks).build(null));
 }

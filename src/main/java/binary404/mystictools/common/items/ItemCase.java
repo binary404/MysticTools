@@ -6,6 +6,7 @@ import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.*;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.network.PacketFX;
+import binary404.mystictools.common.ritual.Ritual;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
 

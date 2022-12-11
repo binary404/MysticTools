@@ -15,15 +15,21 @@ import binary404.mystictools.common.loot.effects.PotionEffect;
 import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import binary404.mystictools.common.loot.serializer.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
+import binary404.mystictools.common.ritual.Ritual;
+import binary404.mystictools.common.ritual.RitualType;
+import binary404.mystictools.common.ritual.RitualTypes;
 import binary404.mystictools.common.tile.ModTiles;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
 import binary404.mystictools.proxy.ServerProxy;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.EventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -32,6 +38,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,22 +62,25 @@ public class MysticTools {
 
     public MysticTools() {
         instance = this;
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> proxy = new ClientProxy());
         proxy.registerHandlers();
         proxy.attachEventHandlers(MinecraftForge.EVENT_BUS);
-        proxy.attachEventHandlers(FMLJavaModLoadingContext.get().getModEventBus());
+        proxy.attachEventHandlers(modEventBus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::parallelDispatch);
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
-        ModBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModBlocks.ITEM_BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModTiles.BLOCK_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModLootModifiers.GLM.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModLootModifiers.CONDITION.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ModPotions.EFFECTS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModBlocks.ITEM_BLOCKS.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
+        ModEntities.ENTITIES.register(modEventBus);
+        ModTiles.BLOCK_ENTITIES.register(modEventBus);
+        ModLootModifiers.GLM.register(modEventBus);
+        ModLootModifiers.CONDITION.register(modEventBus);
+        ModPotions.EFFECTS.register(modEventBus);
+        RitualTypes.RITUAL_TYPE_DEFERRED_REGISTER.register(modEventBus);
+        Ritual.RITUAL_DEFERRED_REGISTER.register(modEventBus);
     }
 
     private void parallelDispatch(ParallelDispatchEvent event) {

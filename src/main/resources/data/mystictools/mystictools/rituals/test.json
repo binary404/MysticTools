@@ -1,0 +1,23 @@
+{
+  "activationTime": 5,
+  "duration": 100,
+  "cost": [
+    {
+      "id": "minecraft:diamond",
+      "Count": 2
+    },
+    {
+      "id": "mystictools:shard",
+      "Count": 6
+    }
+  ],
+  "ritual": {
+    "type": "mystictools:summon",
+    "config": {
+      "entities": [
+        "minecraft:zombie"
+      ],
+      "count": 10
+    }
+  }
+}
