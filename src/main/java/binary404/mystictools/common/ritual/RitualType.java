@@ -25,9 +25,12 @@ public abstract class RitualType<RC extends RitualConfiguration> {
         return configuredCodec;
     }
 
+    //Return false if the ritual cannot begin - other checks
     public abstract boolean startRitual(RC config, Level level, BlockPos pos);
 
+    //Return false if the current ritual tick cannot move forward
     public abstract boolean tickRitual(RC config, Level level, BlockPos pos);
 
+    //Return false if the ritual is not finished
     public abstract boolean endRitual(RC config, Level level, BlockPos pos);
 }

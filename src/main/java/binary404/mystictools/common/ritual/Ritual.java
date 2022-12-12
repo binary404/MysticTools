@@ -3,6 +3,7 @@ package binary404.mystictools.common.ritual;
 import binary404.mystictools.MysticTools;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -14,9 +15,20 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * WARNING!
+ *
+ * THE CODE HERE IS VERY UGLY AND MAY CAUSE TRAUMA AND/OR STROKE(S)
+ * READERS BEWARE, I PHYSICALLY DIED YESTERDAY WRITING THIS
+ *
+ * DO NOT ASK ME WHAT ANY OF THIS DOES
+ * DO NOT CHANGE ANY OF THIS
+ * IT WORKS HOW IT IS DO NOT "FIX IT"
+ */
 //Basically a "recipe" for rituals
 public record Ritual(int activationTime, int duration, List<ItemStack> cost, ConfiguredRitualType<?, ?> ritual) {
 
@@ -37,7 +49,32 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
         }).findFirst();
     }
 
+    public static ResourceLocation getRegistryId(Ritual ritual, Level level) {
+        return level.registryAccess().registryOrThrow(RITUAL_REGISTRY_KEY).getKey(ritual);
+    }
+
     public boolean matches(List<ItemStack> items) {
         return this.cost.equals(items);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Ritual) obj;
+        return this.activationTime == that.activationTime &&
+                this.duration == that.duration &&
+                Objects.equals(this.cost, that.cost) &&
+                Objects.equals(this.ritual, that.ritual);
+    }
+
+    @Override
+    public String toString() {
+        return "Ritual[" +
+                "activationTime=" + activationTime + ", " +
+                "duration=" + duration + ", " +
+                "cost=" + cost + ", " +
+                "ritual=" + ritual + ']';
+    }
+
 }
