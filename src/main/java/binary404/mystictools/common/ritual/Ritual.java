@@ -60,13 +60,14 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
     //MAY OPEN A PORTAL DIRECTLY TO HELL
     public boolean matches(List<ItemStack> items) {
         boolean matches = true;
-        for(ItemStack stack : items) {
+        for(ItemStack stack : this.cost) {
             Item item = stack.getItem();
             int count = stack.getCount();
             boolean foundMatch = false;
-            for(ItemStack test : this.cost) {
-                if(item == test.getItem() && count >= test.getCount())
+            for(ItemStack test : items) {
+                if(item.equals(test.getItem()) && count <= test.getCount()) {
                     foundMatch = true;
+                }
             }
             if(!foundMatch)
                 matches = false;

@@ -43,10 +43,9 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
     }
 
     public static void ritualTick(Level level, BlockPos pos, BlockState state, SacrificialAltarBlockEntity entity) {
-        Optional<Ritual> ritualOptional = Ritual.findRitual(entity.getItems(), level);
-        ritualOptional.ifPresent(ritual -> entity.currentRitual = ritual);
-        if(entity.currentRitual != null) {
-            System.out.println(entity.currentRitual);
+        if(entity.currentRitual == null) {
+            Optional<Ritual> ritualOptional = Ritual.findRitual(entity.getItems(), level);
+            ritualOptional.ifPresent(ritual -> entity.currentRitual = ritual);
         }
     }
 
