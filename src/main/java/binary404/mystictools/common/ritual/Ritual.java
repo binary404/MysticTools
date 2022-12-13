@@ -8,12 +8,14 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,7 +47,8 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
 
     public static Optional<Ritual> findRitual(List<ItemStack> items, Level level) {
         return level.registryAccess().registryOrThrow(RITUAL_REGISTRY_KEY).stream().filter((r) -> {
-            return r.matches(items);
+            boolean matches = r.matches(items);
+            return matches;
         }).findFirst();
     }
 
@@ -53,8 +56,22 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
         return level.registryAccess().registryOrThrow(RITUAL_REGISTRY_KEY).getKey(ritual);
     }
 
+    //PAIN AND SUFFERING
+    //MAY OPEN A PORTAL DIRECTLY TO HELL
     public boolean matches(List<ItemStack> items) {
-        return this.cost.equals(items);
+        boolean matches = true;
+        for(ItemStack stack : items) {
+            Item item = stack.getItem();
+            int count = stack.getCount();
+            boolean foundMatch = false;
+            for(ItemStack test : this.cost) {
+                if(item == test.getItem() && count >= test.getCount())
+                    foundMatch = true;
+            }
+            if(!foundMatch)
+                matches = false;
+        }
+        return matches;
     }
 
     @Override

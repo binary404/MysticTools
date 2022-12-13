@@ -21,7 +21,7 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
     public int ritualTicks = 0;
 
     public SacrificialAltarBlockEntity(BlockPos pos, BlockState state) {
-        super(ModTiles.CAULDRON.get(), pos, state);
+        super(ModTiles.ALTAR.get(), pos, state);
         this.inventory = createHandler();
     }
 
@@ -45,7 +45,9 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
     public static void ritualTick(Level level, BlockPos pos, BlockState state, SacrificialAltarBlockEntity entity) {
         Optional<Ritual> ritualOptional = Ritual.findRitual(entity.getItems(), level);
         ritualOptional.ifPresent(ritual -> entity.currentRitual = ritual);
-        System.out.println(entity.currentRitual);
+        if(entity.currentRitual != null) {
+            System.out.println(entity.currentRitual);
+        }
     }
 
     public void setRitual(Ritual ritual) {
