@@ -79,6 +79,7 @@ public class MysticTools {
         ModLootModifiers.GLM.register(modEventBus);
         ModLootModifiers.CONDITION.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
+        RitualTypes.RITUAL_MODULE_DEFERRED_REGISTER.register(modEventBus);
         RitualTypes.RITUAL_TYPE_DEFERRED_REGISTER.register(modEventBus);
         Ritual.RITUAL_DEFERRED_REGISTER.register(modEventBus);
     }

@@ -10,8 +10,8 @@ public record ConfiguredRitualType<RC extends RitualConfiguration, R extends Rit
         return r.ritualType;
     }, RitualType::configuredCodec);
 
-    public boolean startRitual(Level level, BlockPos pos) {
-        return this.ritualType.startRitual(config, level, pos);
+    public boolean canStart(Level level, BlockPos pos) {
+        return this.ritualType.canStart(config, level, pos);
     }
 
     public boolean tickRitual(Level level, BlockPos pos) {

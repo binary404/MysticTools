@@ -32,13 +32,14 @@ import java.util.function.Supplier;
  * IT WORKS HOW IT IS DO NOT "FIX IT"
  */
 //Basically a "recipe" for rituals
-public record Ritual(int activationTime, int duration, List<ItemStack> cost, ConfiguredRitualType<?, ?> ritual) {
+public record Ritual(int activationTime, int duration, List<ItemStack> cost, ConfiguredRitualType<?, ?> ritual, List<ConfiguredRitualModule<?, ?>> modules) {
 
     public static final Codec<Ritual> CODEC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("activationTime").forGetter(Ritual::activationTime),
             Codec.INT.fieldOf("duration").forGetter(Ritual::duration),
             ItemStack.CODEC.listOf().fieldOf("cost").forGetter(Ritual::cost),
-            ConfiguredRitualType.CODEC.fieldOf("ritual").forGetter(Ritual::ritual)
+            ConfiguredRitualType.CODEC.fieldOf("ritual").forGetter(Ritual::ritual),
+            ConfiguredRitualModule.CODEC.listOf().fieldOf("modules").forGetter(Ritual::modules)
     ).apply(instance, Ritual::new)));
 
     public static final ResourceKey<Registry<Ritual>> RITUAL_REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(MysticTools.modid, "rituals"));
@@ -47,8 +48,7 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
 
     public static Optional<Ritual> findRitual(List<ItemStack> items, Level level) {
         return level.registryAccess().registryOrThrow(RITUAL_REGISTRY_KEY).stream().filter((r) -> {
-            boolean matches = r.matches(items);
-            return matches;
+            return r.matches(items);
         }).findFirst();
     }
 

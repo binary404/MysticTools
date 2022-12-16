@@ -26,7 +26,7 @@ public abstract class RitualType<RC extends RitualConfiguration> {
     }
 
     //Return false if the ritual cannot begin - other checks
-    public abstract boolean startRitual(RC config, Level level, BlockPos pos);
+    public abstract boolean canStart(RC config, Level level, BlockPos pos);
 
     //Return false if the current ritual tick cannot move forward
     public abstract boolean tickRitual(RC config, Level level, BlockPos pos);

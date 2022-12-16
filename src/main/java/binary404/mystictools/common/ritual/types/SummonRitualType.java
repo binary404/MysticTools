@@ -13,7 +13,7 @@ public class SummonRitualType extends RitualType<SummonConfiguration> {
     }
 
     @Override
-    public boolean startRitual(SummonConfiguration config, Level level, BlockPos pos) {
+    public boolean canStart(SummonConfiguration config, Level level, BlockPos pos) {
 
         return false;
     }
