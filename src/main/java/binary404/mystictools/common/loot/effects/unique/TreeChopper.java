@@ -47,13 +47,14 @@ public class TreeChopper implements IUniqueEffect {
             ResourceKey<Level> dim = event.level.dimension();
             if (blockSwappers.containsKey(dim)) {
                 Set<BlockSwapper> swappers = blockSwappers.get(dim);
-                swappers.removeIf((next) -> {
-                    if (next == null || !next.tick()) {
+                Iterator<BlockSwapper> iter = swappers.iterator();
+                while(iter.hasNext()) {
+                    BlockSwapper next = iter.next();
+                    if(!next.tick()) {
                         NetworkHandler.sendToNearby(event.level, next.origin, new PacketRemoveSpirals());
-                        return true;
+                        iter.remove();
                     }
-                    return false;
-                });
+                }
             }
         }
     }
