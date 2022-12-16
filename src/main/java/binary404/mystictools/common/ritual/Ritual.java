@@ -33,7 +33,6 @@ import java.util.function.Supplier;
  */
 //Basically a "recipe" for rituals
 public record Ritual(int activationTime, int duration, List<ItemStack> cost, ConfiguredRitualType<?, ?> ritual, List<ConfiguredRitualModule<?, ?>> modules) {
-
     public static final Codec<Ritual> CODEC = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("activationTime").forGetter(Ritual::activationTime),
             Codec.INT.fieldOf("duration").forGetter(Ritual::duration),
@@ -94,5 +93,4 @@ public record Ritual(int activationTime, int duration, List<ItemStack> cost, Con
                 "cost=" + cost + ", " +
                 "ritual=" + ritual + ']';
     }
-
 }
