@@ -1,5 +1,6 @@
 package binary404.mystictools.data;
 
+import net.minecraft.data.DataProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -8,8 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 public class MysticToolsData {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        if (event.includeServer()) {
-            event.getGenerator().addProvider(true, new RecipeProvider(event.getGenerator()));
-        }
+        event.getGenerator().addProvider(
+                event.includeServer(), (DataProvider.Factory<RecipeProvider>) RecipeProvider::new
+        );
     }
 }

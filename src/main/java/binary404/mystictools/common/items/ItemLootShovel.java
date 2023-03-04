@@ -44,7 +44,7 @@ import java.util.Set;
 public class ItemLootShovel extends ShovelItem implements ILootItem {
 
     public ItemLootShovel() {
-        super(MysticTier.MYSTIC_TIER, 1.5F, -3.0F, new Item.Properties().tab(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 1.5F, -3.0F, new Item.Properties());
 
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {

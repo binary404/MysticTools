@@ -2,9 +2,8 @@ package binary404.mystictools.common.items;
 
 import binary404.mystictools.MysticTools;
 import binary404.mystictools.common.core.UniqueHandler;
-import binary404.mystictools.common.core.config.LootRarityConfig;
 import binary404.mystictools.common.core.config.ModConfigs;
-import binary404.mystictools.common.core.util.WeightedList;
+import binary404.mystictools.common.core.helper.util.WeightedList;
 import binary404.mystictools.common.items.attribute.ModAttributes;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootRarity;
@@ -23,12 +22,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nonnull;
-
 public class ItemSelectRarityCase extends Item {
 
     public ItemSelectRarityCase() {
-        super(new Properties().tab(MysticTools.tab));
+        super(new Properties());
     }
 
     public static LootRarity getLootRarity(ItemStack stack) {
@@ -37,17 +34,6 @@ public class ItemSelectRarityCase extends Item {
 
     public static void setLootRarity(LootRarity rarity, ItemStack stack) {
         ModAttributes.LOOT_RARITY.getOrCreate(stack, rarity.getId()).setBaseValue(rarity.getId());
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if(this.allowedIn(pCategory)) {
-            for(WeightedList.Entry<LootRarity> rarity : ModConfigs.RARITIES.RARITIES) {
-                ItemStack stack = new ItemStack(this);
-                setLootRarity(rarity.value, stack);
-                pItems.add(stack);
-            }
-        }
     }
 
     @Override

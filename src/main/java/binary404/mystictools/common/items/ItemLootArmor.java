@@ -38,7 +38,7 @@ public class ItemLootArmor extends ArmorItem implements ILootItem {
     String type;
 
     public ItemLootArmor(EquipmentSlot type, String pieceType) {
-        super(ArmorMaterials.DIAMOND, type, new Item.Properties().tab(MysticTools.tab));
+        super(ArmorMaterials.DIAMOND, type, new Item.Properties());
         this.type = pieceType;
     }
 

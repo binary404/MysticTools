@@ -4,8 +4,7 @@ package binary404.mystictools.client.render;
 import binary404.mystictools.common.tile.CauldronBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -13,6 +12,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.Blocks;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class RenderCauldron implements BlockEntityRenderer<CauldronBlockEntity> {
 
@@ -28,7 +29,7 @@ public class RenderCauldron implements BlockEntityRenderer<CauldronBlockEntity> 
         float s = 1F / 180F * 10F;
         float v = 1F / 16F;
         float w = -v * 2.5F;
-        ms.mulPose(Vector3f.XP.rotationDegrees(90));
+        ms.mulPose(Axis.XP.rotationDegrees(90));
         ms.scale(s, s, s);
         TextureAtlasSprite sprite = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon();
         VertexConsumer buffer = bufferIn.getBuffer(Sheets.translucentCullBlockSheet());

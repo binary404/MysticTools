@@ -6,9 +6,12 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
 import net.minecraft.commands.arguments.ParticleArgument;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
@@ -25,6 +28,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -360,9 +364,11 @@ public class EffectCloudEntity extends Entity {
             this.ownerUUID = p_19727_.getUUID("Owner");
         }
 
+        HolderLookup<ParticleType<?>> particles = level.holderLookup(Registries.PARTICLE_TYPE);
+
         if (p_19727_.contains("Particle", 8)) {
             try {
-                this.setParticle(ParticleArgument.readParticle(new StringReader(p_19727_.getString("Particle"))));
+                this.setParticle(ParticleArgument.readParticle(new StringReader(p_19727_.getString("Particle")), particles));
             } catch (CommandSyntaxException commandsyntaxexception) {
                 LOGGER.warn("Couldn't load custom particle {}", p_19727_.getString("Particle"), commandsyntaxexception);
             }
@@ -409,7 +415,7 @@ public class EffectCloudEntity extends Entity {
         }
 
         if (this.potion != Potions.EMPTY) {
-            p_19737_.putString("Potion", Registry.POTION.getKey(this.potion).toString());
+            p_19737_.putString("Potion", ForgeRegistries.POTIONS.getKey(this.potion).toString());
         }
 
         if (!this.effects.isEmpty()) {
@@ -438,10 +444,6 @@ public class EffectCloudEntity extends Entity {
 
     public PushReaction getPistonPushReaction() {
         return PushReaction.IGNORE;
-    }
-
-    public Packet<?> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 
     public EntityDimensions getDimensions(Pose p_19721_) {

@@ -44,7 +44,7 @@ import java.util.Set;
 public class ItemLootAxe extends AxeItem implements ILootItem {
 
     public ItemLootAxe() {
-        super(MysticTier.MYSTIC_TIER, 5.0F, -3.0F, new Item.Properties().tab(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 5.0F, -3.0F, new Item.Properties());
     }
 
     @Override

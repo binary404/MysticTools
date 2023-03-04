@@ -1,6 +1,6 @@
 package binary404.mystictools.client.fx.lightning;
 
-import binary404.mystictools.common.core.util.Vector3;
+import binary404.mystictools.common.core.helper.util.Vector3;
 
 public class FXLightningSegment {
 

@@ -22,7 +22,7 @@ public class ItemSelectTypeCase extends Item {
     Item item;
 
     public ItemSelectTypeCase(Item type) {
-        super(new Properties().tab(MysticTools.tab));
+        super(new Properties());
         this.item = type;
     }
 

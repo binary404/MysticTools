@@ -1,5 +1,6 @@
 package binary404.mystictools.client.fx;
 
+import binary404.fx_lib.FXLib;
 import binary404.fx_lib.fx.ParticleGenerator;
 import binary404.fx_lib.fx.effects.FXGen;
 import binary404.fx_lib.fx.effects.FXSourceOrbital;
@@ -11,11 +12,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
 
+import java.util.List;
 import java.util.Random;
 
 public class FXHelper {
@@ -24,6 +27,10 @@ public class FXHelper {
 
     public static ClientLevel getWorld() {
         return Minecraft.getInstance().level;
+    }
+
+    public static RandomSource getRandomSource() {
+        return getWorld().getRandom();
     }
 
     public static boolean fxlibLoaded() {
@@ -38,20 +45,20 @@ public class FXHelper {
                     .setGrid(32)
                     .setParticle(32, 16, 1)
                     .setLoop(true)
-                    .setAlpha(0.2F, 0.8F, 0.0F);
+                    .setColor(List.of(1.0f), List.of(1.0f), List.of(1.0f), List.of(0.2F, 0.8F, 0.0F));
         }
     }
 
     public static void sparkle(double x, double y, double z, double mx, double my, double mz, float r, float g, float b, float r2, float g2, float b2, float scale, float grav, int age) {
         if (fxlibLoaded()) {
             boolean sp = (rand.nextFloat() < 0.2D);
-            sparkle.copy()
+            ParticleGenerator generator = sparkle.copy()
                     .setScale(scale, scale * 1.3f, scale * 0.2f)
-                    .setColor(new float[] {r, r2}, new float[]{g, g2}, new float[] {b, b2})
+                    .setColor(List.of(r, r2), List.of(g, g2), List.of(b, b2), List.of(0.8f))
                     .setParticle(sp ? 0 : 32, 16, 1)
                     .setGrav(grav)
-                    .setAge(age)
-                    .addFX(x, y, z, mx, my, mz);
+                    .setAge(age);
+            FXLib.addGenericEffect(getWorld(), x, y, z, mx, my, mz, generator, 0);
         }
     }
 
@@ -62,12 +69,12 @@ public class FXHelper {
                 final double za = radius * Math.sin(angle);
 
                 Vector3 pos = new Vector3(x, y, z).add(xa, 0, za);
-                sparkle.copy()
+                ParticleGenerator gen = sparkle.copy()
                         .setScale(0.2f, 0.01f)
-                        .setColor(new float[]{0.27f,  0.65f}, new float[] {0.52f, 0.87f}, new float[] {0.65f, 0.98f})
+                        .setColor(List.of(0.27f,  0.65f), List.of(0.52f, 0.87f), List.of(0.65f, 0.98f), List.of(0.8f))
                         .setAge(30)
-                        .setGrav(0)
-                        .addFX(pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
+                        .setGrav(0);
+                FXLib.addGenericEffect(getWorld(), pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0, gen, 0);
             }
         }
     }
@@ -80,7 +87,7 @@ public class FXHelper {
     public static FXSourceOrbital spiralGenerator(BlockPos pos, Vector3 axis) {
         ParticleGenerator fx = sparkle.copy()
                 .setScale(0.3f)
-                .setColor(new float[] {0.2f}, new float[] {0.5f, 0.8f}, new float[]{0.2f})
+                .setColor(List.of(0.2f), List.of(0.5f, 0.8f), List.of(0.2f), List.of(1.0f))
                 .setAge(10)
                 .setGrav(0);
         FXGen generator = new FXGen(new FXGen.ParticleComponent(fx, 1, (mot, ppos, sourcePos, taxis) -> {

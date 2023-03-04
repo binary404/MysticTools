@@ -1,6 +1,6 @@
 {
   "parent": "mystictools:item/loot_chestplate",
   "textures": {
-    "layer0": "mystictools:items/chestplate/7"
+    "layer0": "mystictools:item/chestplate/7"
   }
 }

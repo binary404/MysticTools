@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mystictools:items/pickaxe_case"
+    "layer0": "mystictools:item/pickaxe_case"
   }
 }

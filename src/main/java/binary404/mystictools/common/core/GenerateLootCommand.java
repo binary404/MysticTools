@@ -1,15 +1,14 @@
 package binary404.mystictools.common.core;
 
-import binary404.mystictools.common.core.util.LootSetArgument;
-import binary404.mystictools.common.core.util.LootSetInput;
-import binary404.mystictools.common.core.util.RarityArgument;
-import binary404.mystictools.common.core.util.RarityInput;
+import binary404.mystictools.common.core.helper.util.LootSetArgument;
+import binary404.mystictools.common.core.helper.util.LootSetInput;
+import binary404.mystictools.common.core.helper.util.RarityArgument;
+import binary404.mystictools.common.core.helper.util.RarityInput;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootSet;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;

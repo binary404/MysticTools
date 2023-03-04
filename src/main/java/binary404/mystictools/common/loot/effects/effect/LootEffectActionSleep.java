@@ -2,7 +2,6 @@ package binary404.mystictools.common.loot.effects.effect;
 
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import com.mojang.datafixers.util.Either;
-import com.mojang.math.Vector3d;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

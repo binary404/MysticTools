@@ -44,7 +44,7 @@ import java.util.Set;
 public class ItemLootPickaxe extends PickaxeItem implements ILootItem {
 
     public ItemLootPickaxe() {
-        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties().tab(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 1, -2.8F, new Item.Properties());
         /*
         this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter() {
             @Override

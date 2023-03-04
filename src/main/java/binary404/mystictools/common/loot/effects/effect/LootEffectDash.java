@@ -1,6 +1,6 @@
 package binary404.mystictools.common.loot.effects.effect;
 
-import binary404.mystictools.common.core.util.MathUtils;
+import binary404.mystictools.common.core.helper.util.MathUtils;
 import binary404.mystictools.common.loot.effects.IEffectAction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

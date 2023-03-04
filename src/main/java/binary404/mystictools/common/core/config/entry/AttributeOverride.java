@@ -2,6 +2,7 @@ package binary404.mystictools.common.core.config.entry;
 
 import com.google.gson.annotations.Expose;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,7 +23,7 @@ public class AttributeOverride {
     }
 
     public Attribute getAttribute() {
-        return Registry.ATTRIBUTE.getOptional(new ResourceLocation(name)).orElse(null);
+        return ForgeRegistries.ATTRIBUTES.getValue(new ResourceLocation(name));
     }
 
 }

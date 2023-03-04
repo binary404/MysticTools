@@ -1,6 +1,6 @@
 {
 	"parent": "mystictools:item/bow/2",
 	"textures": {
-		"layer0": "mystictools:items/bow/2_pulling_0"
+		"layer0": "mystictools:item/bow/2_pulling_0"
 	}
 }

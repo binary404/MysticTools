@@ -34,7 +34,7 @@ import java.util.List;
 public class ItemLootBow extends BowItem implements ILootItem {
 
     public ItemLootBow() {
-        super(new Item.Properties().tab(MysticTools.tab));
+        super(new Item.Properties());
         /*
         this.addPropertyOverride(new ResourceLocation("ml_pull"), new IItemPropertyGetter() {
             public float call(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) {

@@ -1,7 +1,5 @@
 package binary404.mystictools.common.loot.effects.effect;
 
-import binary404.mystictools.common.core.util.Utils;
-import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.LootNbtHelper;
 import binary404.mystictools.common.loot.LootTags;
 import binary404.mystictools.common.loot.effects.IEffectAction;
@@ -17,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.awt.*;
 import java.util.List;
 
 public class LootEffectAutoSmelt implements IEffectAction {

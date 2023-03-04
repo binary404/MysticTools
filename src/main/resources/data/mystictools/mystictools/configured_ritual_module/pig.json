@@ -1,0 +1,11 @@
+{
+  "type": "mystictools:summon_module",
+  "config": {
+    "entityTypes": [
+      {
+        "entity": "minecraft:pig",
+        "weight": 1.0
+      }
+    ]
+  }
+}

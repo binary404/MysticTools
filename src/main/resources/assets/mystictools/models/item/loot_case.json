@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mystictools:items/loot_case"
+    "layer0": "mystictools:item/loot_case"
   }
 }

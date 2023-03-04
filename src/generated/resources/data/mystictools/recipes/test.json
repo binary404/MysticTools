@@ -1,0 +1,36 @@
+{
+  "type": "mystictools:ritual",
+  "ingredients": [
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "mystictools:shard"
+    },
+    {
+      "item": "minecraft:diamond"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "ritual": "mystictools:test"
+}

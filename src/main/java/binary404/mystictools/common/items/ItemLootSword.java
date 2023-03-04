@@ -34,7 +34,7 @@ import java.util.List;
 public class ItemLootSword extends SwordItem implements ILootItem {
 
     public ItemLootSword() {
-        super(MysticTier.MYSTIC_TIER, 0, -2.4F, new Item.Properties().tab(MysticTools.tab));
+        super(MysticTier.MYSTIC_TIER, 0, -2.4F, new Item.Properties());
     }
 
     @Override

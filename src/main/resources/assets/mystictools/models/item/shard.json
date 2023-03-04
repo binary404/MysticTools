@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mystictools:items/shard"
+    "layer0": "mystictools:item/shard"
   }
 }

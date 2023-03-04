@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mystictools:items/weaponcase_epic"
+    "layer0": "mystictools:item/weaponcase_epic"
   }
 }

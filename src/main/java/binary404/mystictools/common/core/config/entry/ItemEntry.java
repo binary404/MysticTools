@@ -20,7 +20,7 @@ public class ItemEntry {
     }
 
     public Item toItem() {
-        return Registry.ITEM.getOptional(new ResourceLocation(this.ITEM)).orElse(null);
+        return ForgeRegistries.ITEMS.getValue(new ResourceLocation(this.ITEM));
     }
 
 }

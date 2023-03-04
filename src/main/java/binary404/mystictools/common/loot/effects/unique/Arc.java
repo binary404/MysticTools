@@ -1,7 +1,6 @@
 package binary404.mystictools.common.loot.effects.unique;
 
-import binary404.mystictools.MysticTools;
-import binary404.mystictools.common.core.util.Utils;
+import binary404.mystictools.common.core.helper.util.Utils;
 import binary404.mystictools.common.loot.LootItemHelper;
 import binary404.mystictools.common.loot.effects.IUniqueEffect;
 import binary404.mystictools.common.network.NetworkHandler;

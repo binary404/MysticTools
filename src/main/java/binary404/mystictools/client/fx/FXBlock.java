@@ -21,7 +21,6 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 public class FXBlock extends TextureSheetParticle {
-
     boolean depthIgnoring;
     Block block;
 

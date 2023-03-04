@@ -1,6 +1,6 @@
 {
   "parent": "mystictools:item/loot_helmet",
   "textures": {
-    "layer0": "mystictools:items/helmet/5"
+    "layer0": "mystictools:item/helmet/5"
   }
 }

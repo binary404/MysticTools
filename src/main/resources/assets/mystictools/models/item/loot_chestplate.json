@@ -1,7 +1,7 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "mystictools:items/chestplate/1"
+    "layer0": "mystictools:item/chestplate/1"
   },
   "overrides": [
     {

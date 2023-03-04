@@ -1,6 +1,6 @@
 package binary404.mystictools.common.core;
 
-import binary404.mystictools.common.core.util.Counter;
+import binary404.mystictools.common.core.helper.util.Counter;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

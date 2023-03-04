@@ -1,11 +1,9 @@
 package binary404.mystictools.client.fx.lightning;
 
-import binary404.mystictools.common.core.util.Vector3;
+import binary404.mystictools.common.core.helper.util.Vector3;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -13,7 +11,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nonnull;
 import java.util.List;

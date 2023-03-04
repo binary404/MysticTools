@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "mystictools:items/shovel_case"
+    "layer0": "mystictools:item/shovel_case"
   }
 }

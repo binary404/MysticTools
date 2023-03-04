@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -26,6 +25,11 @@ public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
 
     private PotionEffectInstance() {
 
+    }
+    public static PotionEffectInstance deserialize(CompoundTag nbt) {
+        PotionEffectInstance instance = new PotionEffectInstance();
+        instance.deserializeNBT(nbt);
+        return instance;
     }
 
     public MobEffect getEffect() {
@@ -53,15 +57,9 @@ public class PotionEffectInstance implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    public static PotionEffectInstance deserialize(CompoundTag nbt) {
-        PotionEffectInstance instance = new PotionEffectInstance();
-        instance.deserializeNBT(nbt);
-        return instance;
-    }
-
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        this.effect = Registry.MOB_EFFECT.getOptional(new ResourceLocation(nbt.getString("id"))).orElse(MobEffects.MOVEMENT_SPEED);
+        this.effect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(nbt.getString("id")));
         this.duration = nbt.getInt("duration");
         this.amplifier = nbt.getInt("amplifier");
     }

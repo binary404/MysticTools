@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mystictools:items/dice"
+    "layer0": "mystictools:item/dice"
   }
 }

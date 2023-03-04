@@ -16,19 +16,19 @@ import net.minecraftforge.registries.*;
 @Mod.EventBusSubscriber(modid = "mystictools", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModBlocks {
 
-    private static final Item.Properties props = new Item.Properties().tab(MysticTools.tab);
+    private static final Item.Properties props = new Item.Properties();
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MysticTools.modid);
-    public static final DeferredRegister<Item> ITEM_BLOCKS = DeferredRegister.create(ForgeRegistries.ITEMS, MysticTools.modid);
 
     public static RegistryObject<Block> cauldron = BLOCKS.register("cauldron", () -> new BlockCauldron(BlockBehaviour.Properties.of(Material.STONE).strength(3.5f).sound(SoundType.ANVIL)));
-    public static RegistryObject<Item> cauldronItem = ITEM_BLOCKS.register("cauldron", () -> new BlockItem(cauldron.get(), props));
+    public static RegistryObject<Item> cauldronItem = ModItems.register("cauldron", () -> new BlockItem(cauldron.get(), props));
 
     public static RegistryObject<Block> altar = BLOCKS.register("altar", () -> new BlockRitualAltar(BlockBehaviour.Properties.of(Material.STONE).strength(3.5f)));
-    public static RegistryObject<Item> altarItem = ITEM_BLOCKS.register("altar", () -> new BlockItem(altar.get(), props));
+    public static RegistryObject<Item> altarItem = ModItems.register("altar", () -> new BlockItem(altar.get(), props));
 
     public static Block mysterious_stone;
     public static Block mysterious_bricks;
 
     public static Block peridot_ore;
+
 }

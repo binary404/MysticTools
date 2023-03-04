@@ -1,9 +1,7 @@
 package binary404.mystictools.common.core.config;
 
-import binary404.mystictools.common.core.util.WeightedList;
-import binary404.mystictools.common.loot.LootRarity;
+import binary404.mystictools.common.core.helper.util.WeightedList;
 import binary404.mystictools.common.loot.effects.LootEffect;
-import binary404.mystictools.common.loot.effects.effect.LootEffects;
 import com.google.gson.annotations.Expose;
 
 public class LootEffectConfig extends Config {

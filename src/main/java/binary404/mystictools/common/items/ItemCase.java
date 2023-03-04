@@ -29,7 +29,7 @@ import java.util.Random;
 public class ItemCase extends Item {
 
     public ItemCase() {
-        super(new Properties().tab(MysticTools.tab));
+        super(new Properties());
     }
 
     public List<LootRarity> getRarities(ItemStack stack) {

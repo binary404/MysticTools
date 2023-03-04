@@ -2,7 +2,7 @@ package binary404.mystictools;
 
 import binary404.mystictools.common.blocks.ModBlocks;
 import binary404.mystictools.common.core.ConfigHandler;
-import binary404.mystictools.common.core.GenerateLootCommand;
+import binary404.mystictools.common.core.ModRecipes;
 import binary404.mystictools.common.core.config.ModConfigs;
 import binary404.mystictools.common.effect.ModPotions;
 import binary404.mystictools.common.entity.ModEntities;
@@ -16,13 +16,10 @@ import binary404.mystictools.common.loot.modifiers.LootModifiers;
 import binary404.mystictools.common.loot.serializer.ModLootModifiers;
 import binary404.mystictools.common.network.NetworkHandler;
 import binary404.mystictools.common.ritual.Ritual;
-import binary404.mystictools.common.ritual.RitualType;
-import binary404.mystictools.common.ritual.RitualTypes;
+import binary404.mystictools.common.ritual.ModRituals;
 import binary404.mystictools.common.tile.ModTiles;
 import binary404.mystictools.proxy.ClientProxy;
 import binary404.mystictools.proxy.IProxy;
-import binary404.mystictools.proxy.ServerProxy;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -50,13 +47,6 @@ public class MysticTools {
 
     public static final String modid = "mystictools";
 
-    public static CreativeModeTab tab = new CreativeModeTab("mystictools") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(ModItems.loot_case.get());
-        }
-    };
-
     public MysticTools() {
         instance = this;
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -69,16 +59,15 @@ public class MysticTools {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::parallelDispatch);
         MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
         ModBlocks.BLOCKS.register(modEventBus);
-        ModBlocks.ITEM_BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         ModTiles.BLOCK_ENTITIES.register(modEventBus);
         ModLootModifiers.GLM.register(modEventBus);
         ModLootModifiers.CONDITION.register(modEventBus);
         ModPotions.EFFECTS.register(modEventBus);
-        RitualTypes.RITUAL_MODULE_DEFERRED_REGISTER.register(modEventBus);
-        RitualTypes.RITUAL_TYPE_DEFERRED_REGISTER.register(modEventBus);
-        Ritual.RITUAL_DEFERRED_REGISTER.register(modEventBus);
+        ModRituals.RITUAL_MODULE_DEFERRED_REGISTER.register(modEventBus);
+        ModRecipes.SERIALIZERS.register(modEventBus);
+        ModRecipes.TYPES.register(modEventBus);
     }
 
     private void parallelDispatch(ParallelDispatchEvent event) {

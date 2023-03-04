@@ -1,6 +1,6 @@
 package binary404.mystictools.common.core.config;
 
-import binary404.mystictools.common.core.util.WeightedList;
+import binary404.mystictools.common.core.helper.util.WeightedList;
 import binary404.mystictools.common.loot.LootRarity;
 import com.google.gson.annotations.Expose;
 

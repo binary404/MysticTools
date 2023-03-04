@@ -1,6 +1,6 @@
 {
   "parent": "mystictools:item/loot_boots",
   "textures": {
-    "layer0": "mystictools:items/boots/6"
+    "layer0": "mystictools:item/boots/6"
   }
 }
