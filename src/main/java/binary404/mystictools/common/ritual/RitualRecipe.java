@@ -1,11 +1,14 @@
 package binary404.mystictools.common.ritual;
 
 import binary404.mystictools.common.core.ModRecipes;
+import binary404.mystictools.common.core.helper.util.RecipeUtils;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -19,20 +22,26 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.RecipeMatcher;
 import net.minecraftforge.event.server.ServerLifecycleEvent;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RitualRecipe implements Recipe<RecipeWrapper> {
     private final ResourceLocation id;
     private final ResourceLocation ritual;
     private final NonNullList<Ingredient> ingredients;
+    private final boolean isSimple;
 
-    public RitualRecipe(ResourceLocation id, ResourceLocation ritual, NonNullList<Ingredient> ingredients) {
+    public RitualRecipe(ResourceLocation id, ResourceLocation ritual, Ingredient... inputs) {
         this.id = id;
         this.ritual = ritual;
-        this.ingredients = ingredients;
+        this.ingredients = NonNullList.of(Ingredient.EMPTY, inputs);
+        this.isSimple = ingredients.stream().allMatch(Ingredient::isSimple);
     }
 
     @Override
@@ -52,21 +61,12 @@ public class RitualRecipe implements Recipe<RecipeWrapper> {
 
     @Override
     public boolean matches(RecipeWrapper wrapper, Level pLevel) {
-        StackedContents contents = new StackedContents();
-        int i = 0;
-        for(int j = 0; j < wrapper.getContainerSize(); j++) {
-            ItemStack stack = wrapper.getItem(j);
-            if(!stack.isEmpty()) {
-                i++;
-                contents.accountStack(stack);
-            }
-        }
-        return i == this.ingredients.size() && contents.canCraft(this, null);
+        return RecipeUtils.matches(this.ingredients, wrapper, null, false);
     }
 
     @Override
     public ItemStack assemble(RecipeWrapper pContainer) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -92,46 +92,36 @@ public class RitualRecipe implements Recipe<RecipeWrapper> {
 
         @Override
         public RitualRecipe fromJson(ResourceLocation pRecipeId, JsonObject pJson) {
-            NonNullList<Ingredient> ingredients = itemsFromJson(GsonHelper.getAsJsonArray(pJson, "ingredients"));
-
+            JsonArray ingrs = GsonHelper.getAsJsonArray(pJson, "ingredients");
+            List<Ingredient> inputs = new ArrayList<>();
+            for(JsonElement e : ingrs) {
+                inputs.add(Ingredient.fromJson(e));
+            }
             ResourceLocation ritual = new ResourceLocation(GsonHelper.getAsString(pJson, "ritual"));
 
-            return new RitualRecipe(pRecipeId, ritual, ingredients);
+            return new RitualRecipe(pRecipeId, ritual, inputs.toArray(new Ingredient[0]));
         }
 
         @Override
         public @Nullable RitualRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             int i = pBuffer.readVarInt();
             NonNullList<Ingredient> ingredients = NonNullList.withSize(i, Ingredient.EMPTY);
-            for(int j = 0; j < ingredients.size(); j++) {
+            for (int j = 0; j < ingredients.size(); j++) {
                 ingredients.set(j, Ingredient.fromNetwork(pBuffer));
             }
 
             ResourceLocation ritual = new ResourceLocation(pBuffer.readUtf());
-            return new RitualRecipe(pRecipeId, ritual, ingredients);
+            return new RitualRecipe(pRecipeId, ritual, ingredients.toArray(new Ingredient[0]));
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf pBuffer, RitualRecipe pRecipe) {
             pBuffer.writeVarInt(pRecipe.ingredients.size());
-            for(Ingredient ingredient : pRecipe.ingredients) {
+            for (Ingredient ingredient : pRecipe.ingredients) {
                 ingredient.toNetwork(pBuffer);
             }
 
             pBuffer.writeUtf(pRecipe.ritual.toString());
-        }
-
-        private static NonNullList<Ingredient> itemsFromJson(JsonArray pIngredientArray) {
-            NonNullList<Ingredient> nonnulllist = NonNullList.create();
-
-            for(int i = 0; i < pIngredientArray.size(); ++i) {
-                Ingredient ingredient = Ingredient.fromJson(pIngredientArray.get(i));
-                if (true || !ingredient.isEmpty()) { // FORGE: Skip checking if an ingredient is empty during shapeless recipe deserialization to prevent complex ingredients from caching tags too early. Can not be done using a config value due to sync issues.
-                    nonnulllist.add(ingredient);
-                }
-            }
-
-            return nonnulllist;
         }
     }
 }

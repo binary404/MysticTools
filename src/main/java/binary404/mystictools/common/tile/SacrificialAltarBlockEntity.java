@@ -1,6 +1,7 @@
 package binary404.mystictools.common.tile;
 
 import binary404.mystictools.common.core.ModRecipes;
+import binary404.mystictools.common.core.helper.util.RecipeUtils;
 import binary404.mystictools.common.ritual.RitualContext;
 import binary404.mystictools.common.ritual.RitualRecipe;
 import net.minecraft.core.BlockPos;
@@ -31,16 +32,18 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
             Optional<RitualRecipe> recipe = findRitual(level, entity);
             if (recipe.isPresent()) {
                 entity.currentRitual = new RitualContext(recipe.get().getRitual(), pos, level);
+                RecipeUtils.consume(recipe.get().getIngredients(), new RecipeWrapper(entity.inventory), null);
             } else {
+                entity.currentRitual = RitualContext.EMPTY;
                 return;
             }
+        } else {
+
         }
-        System.out.println(entity.currentRitual.getRitual());
     }
 
     public static Optional<RitualRecipe> findRitual(Level level, SacrificialAltarBlockEntity entity) {
-        Optional<RitualRecipe> recipe = level.getRecipeManager().getRecipeFor(ModRecipes.RITUAL_TYPE.get(), new RecipeWrapper(entity.inventory), level);
-        return recipe;
+        return level.getRecipeManager().getRecipeFor(ModRecipes.RITUAL_TYPE.get(), new RecipeWrapper(entity.inventory), level);
     }
 
     public RitualContext getCurrentRitual() {
@@ -74,7 +77,7 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
     }
 
     private ItemStackHandler createHandler() {
-        return new ItemStackHandler(4) {
+        return new ItemStackHandler(16) {
             @Override
             protected void onContentsChanged(int slot) {
                 inventoryChanged();

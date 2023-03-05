@@ -30,6 +30,8 @@ public class RitualContext {
         this(Ritual.getRitual(location, level), pos, level);
     }
 
+
+
     public Ritual getRitual() {
         return ritual;
     }

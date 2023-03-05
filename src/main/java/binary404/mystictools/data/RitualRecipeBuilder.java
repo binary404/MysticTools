@@ -41,7 +41,7 @@ public class RitualRecipeBuilder {
     }
 
     public RitualRecipeBuilder requires(ItemLike pItem, int pQuantity) {
-        for (int i = 0; i < pQuantity; ++i) {
+        for (int i = 0; i < pQuantity; i++) {
             this.requires(Ingredient.of(pItem));
         }
 
@@ -53,7 +53,7 @@ public class RitualRecipeBuilder {
     }
 
     public RitualRecipeBuilder requires(Ingredient pIngredient, int pQuantity) {
-        for (int i = 0; i < pQuantity; ++i) {
+        for (int i = 0; i < pQuantity; i++) {
             this.ingredients.add(pIngredient);
         }
 

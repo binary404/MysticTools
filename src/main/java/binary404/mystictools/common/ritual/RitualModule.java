@@ -10,6 +10,7 @@ import java.util.Map;
 
 public abstract class RitualModule<MC extends RitualModuleConfiguration> {
     private final Codec<ConfiguredRitualModule<MC, RitualModule<MC>>> configuredCodec;
+
     public RitualModule(Codec<MC> codec) {
         this.configuredCodec = codec.fieldOf("config").xmap((r) -> {
             return new ConfiguredRitualModule<>(this, r);

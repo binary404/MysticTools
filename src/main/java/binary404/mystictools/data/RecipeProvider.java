@@ -38,7 +38,7 @@ public class RecipeProvider extends net.minecraft.data.recipes.RecipeProvider {
                 .unlockedBy("has_item", has(Blocks.CAULDRON))
                 .save(consumer);
         RitualRecipeBuilder.builder(new ResourceLocation(MysticTools.modid, "test"))
-                .requires(ModItems.shard.get(), 9)
+                .requires(ModItems.shard.get(), 8)
                 .requires(Items.DIAMOND, 2)
                 .unlockedBy("has_item", has(ModItems.shard.get()))
                 .save(consumer, new ResourceLocation(MysticTools.modid, "test"));
