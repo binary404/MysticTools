@@ -9,29 +9,59 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockRitualAltar extends BaseEntityBlock {
 
-    public BlockRitualAltar(Properties pProperties) {
-        super(pProperties);
+    public static final BooleanProperty ACTIVATED = BooleanProperty.create("activated");
+
+    public BlockRitualAltar() {
+        super(BlockBehaviour.Properties.of(Material.STONE).strength(3.5f).lightLevel((state) -> {
+            if (state.getValue(ACTIVATED)) return 10;
+            return 0;
+        }));
+        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVATED, false));
     }
+
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         ItemStack heldStack = pPlayer.getItemInHand(pHand);
-        if(!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if(blockEntity instanceof SacrificialAltarBlockEntity altar) {
-                pPlayer.setItemInHand(pHand, altar.tryAddItem(heldStack));
+            if (blockEntity instanceof SacrificialAltarBlockEntity altar) {
+                if (!pState.getValue(ACTIVATED)) {
+                    if (!heldStack.isEmpty()) {
+                        pPlayer.setItemInHand(pHand, altar.tryAddItem(heldStack));
+                        return InteractionResult.CONSUME;
+                    } else if (heldStack.isEmpty() && pPlayer.isShiftKeyDown()) {
+                        int openSlot = altar.getFirstNonEmptySlot();
+                        if (openSlot >= 0) {
+                            pPlayer.setItemInHand(pHand, altar.getStackInSlot(openSlot));
+                            altar.setStackInSlot(openSlot, ItemStack.EMPTY);
+                            return InteractionResult.CONSUME;
+                        }
+                        return InteractionResult.PASS;
+                    } else {
+                        boolean started = SacrificialAltarBlockEntity.attemptStartRitual(pLevel, pPos, pState, altar);
+                        return InteractionResult.CONSUME;
+                    }
+                }
             }
+            return InteractionResult.PASS;
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+        if (!pState.getValue(ACTIVATED)) return InteractionResult.SUCCESS;
+        return InteractionResult.PASS;
     }
 
     @Nullable
@@ -43,6 +73,13 @@ public class BlockRitualAltar extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, ModTiles.ALTAR.get(), SacrificialAltarBlockEntity::ritualTick);
+        if (pState.getValue(ACTIVATED))
+            return createTickerHelper(pBlockEntityType, ModTiles.ALTAR.get(), SacrificialAltarBlockEntity::ritualTick);
+        return super.getTicker(pLevel, pState, pBlockEntityType);
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        pBuilder.add(ACTIVATED);
     }
 }

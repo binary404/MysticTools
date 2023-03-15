@@ -58,7 +58,7 @@ public final class RecipeUtils {
 
             for (int k = 0; k < input.getCount(); k++) {
                 Iterator<Ingredient> iterator = ingredientsUsed.iterator();
-                while(iterator.hasNext()) {
+                while (iterator.hasNext()) {
                     Ingredient ingr = iterator.next();
                     if (ingr.test(input)) {
                         input.shrink(1);

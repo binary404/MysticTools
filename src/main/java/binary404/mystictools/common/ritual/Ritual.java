@@ -14,6 +14,8 @@ public record Ritual(HolderSet<ConfiguredRitualModule<?, ?>> modules) {
             ConfiguredRitualModule.LIST_CODEC.fieldOf("modules").forGetter(Ritual::modules)
     ).apply(instance, Ritual::new)));
 
+    public static final Ritual EMPTY = new Ritual(HolderSet.direct());
+
     public static ResourceLocation getRegistryId(Ritual ritual, Level level) {
         return level.registryAccess().registryOrThrow(ModRituals.RITUAL_REGISTRY_KEY).getKey(ritual);
     }

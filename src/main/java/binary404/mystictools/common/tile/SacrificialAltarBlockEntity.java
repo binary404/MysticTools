@@ -1,13 +1,16 @@
 package binary404.mystictools.common.tile;
 
+import binary404.mystictools.common.blocks.BlockRitualAltar;
 import binary404.mystictools.common.core.ModRecipes;
 import binary404.mystictools.common.core.helper.util.RecipeUtils;
+import binary404.mystictools.common.ritual.Ritual;
 import binary404.mystictools.common.ritual.RitualContext;
 import binary404.mystictools.common.ritual.RitualRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -27,19 +30,22 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
         this.inventory = createHandler();
     }
 
-    public static void ritualTick(Level level, BlockPos pos, BlockState state, SacrificialAltarBlockEntity entity) {
-        if (entity.currentRitual == RitualContext.EMPTY) {
+    public static boolean attemptStartRitual(Level level, BlockPos pos, BlockState state, SacrificialAltarBlockEntity entity) {
+        if (!state.getValue(BlockRitualAltar.ACTIVATED)) {
             Optional<RitualRecipe> recipe = findRitual(level, entity);
             if (recipe.isPresent()) {
                 entity.currentRitual = new RitualContext(recipe.get().getRitual(), pos, level);
                 RecipeUtils.consume(recipe.get().getIngredients(), new RecipeWrapper(entity.inventory), null);
-            } else {
-                entity.currentRitual = RitualContext.EMPTY;
-                return;
+                level.setBlockAndUpdate(pos, state.setValue(BlockRitualAltar.ACTIVATED, true));
+                return true;
             }
-        } else {
-
         }
+        state.setValue(BlockRitualAltar.ACTIVATED, false);
+        return false;
+    }
+
+    public static void ritualTick(Level level, BlockPos pos, BlockState state, SacrificialAltarBlockEntity entity) {
+
     }
 
     public static Optional<RitualRecipe> findRitual(Level level, SacrificialAltarBlockEntity entity) {
@@ -54,16 +60,40 @@ public class SacrificialAltarBlockEntity extends SyncedBlockEntity {
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.put("Inventory", inventory.serializeNBT());
+        if (currentRitual != RitualContext.EMPTY) {
+            pTag.put("ritualContext", currentRitual.serialize());
+        }
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         inventory.deserializeNBT(pTag.getCompound("Inventory"));
+        if (this.hasLevel()) {
+            currentRitual = RitualContext.deserialize(pTag, this.level);
+        }
+    }
+
+    public ItemStack getStackInSlot(int slot) {
+        return inventory.getStackInSlot(slot);
+    }
+
+    public void setStackInSlot(int slot, ItemStack stack) {
+        inventory.setStackInSlot(slot, stack);
     }
 
     public ItemStack tryAddItem(ItemStack stack) {
         return ItemHandlerHelper.insertItemStacked(this.inventory, stack, false);
+    }
+
+    public int getFirstNonEmptySlot() {
+        for (int i = 0; i < inventory.getSlots(); i++) {
+            ItemStack stack = inventory.getStackInSlot(i);
+            if (!stack.isEmpty()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public List<ItemStack> getItems() {

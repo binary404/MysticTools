@@ -23,7 +23,7 @@ public class ModBlocks {
     public static RegistryObject<Block> cauldron = BLOCKS.register("cauldron", () -> new BlockCauldron(BlockBehaviour.Properties.of(Material.STONE).strength(3.5f).sound(SoundType.ANVIL)));
     public static RegistryObject<Item> cauldronItem = ModItems.register("cauldron", () -> new BlockItem(cauldron.get(), props));
 
-    public static RegistryObject<Block> altar = BLOCKS.register("altar", () -> new BlockRitualAltar(BlockBehaviour.Properties.of(Material.STONE).strength(3.5f)));
+    public static RegistryObject<Block> altar = BLOCKS.register("altar", BlockRitualAltar::new);
     public static RegistryObject<Item> altarItem = ModItems.register("altar", () -> new BlockItem(altar.get(), props));
 
     public static Block mysterious_stone;
