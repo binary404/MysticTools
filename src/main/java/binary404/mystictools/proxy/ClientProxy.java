@@ -2,15 +2,6 @@ package binary404.mystictools.proxy;
 
 import binary404.fx_lib.util.ClientTickHandler;
 import binary404.mystictools.MysticTools;
-import binary404.mystictools.client.fx.FXHelper;
-import binary404.mystictools.client.render.RenderCauldron;
-import binary404.mystictools.client.fx.FXBlock;
-import binary404.mystictools.common.core.ClientHandler;
-import binary404.mystictools.common.items.ILootItem;
-import binary404.mystictools.common.items.ItemLootBow;
-import binary404.mystictools.common.items.ItemSelectRarityCase;
-import binary404.mystictools.common.items.ModItems;
-import binary404.mystictools.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -37,13 +28,9 @@ public class ClientProxy implements IProxy {
         event.enqueueWork(() -> {
             registerPropertyGetters();
         });
-        BlockEntityRenderers.register(ModTiles.CAULDRON.get(), RenderCauldron::new);
     }
 
     public void registerItemColors(RegisterColorHandlersEvent.Item event) {
-        event.getItemColors().register((item, tint) -> {
-            return tint > 0 ? -1 : ItemSelectRarityCase.getLootRarity(item).getColor().getColor();
-        }, ModItems.rarity_case.get());
     }
 
     private static void registerPropertyGetter(ItemLike item, ResourceLocation id, ItemPropertyFunction propGetter) {
@@ -51,7 +38,7 @@ public class ClientProxy implements IProxy {
     }
 
     private static void registerPropertyGetters() {
-        ItemPropertyFunction lootGetter = (stack, world, entity, index) -> {
+ /*       ItemPropertyFunction lootGetter = (stack, world, entity, index) -> {
             ILootItem item = ((ILootItem) stack.getItem());
             return item.getModel(stack);
         };
@@ -78,18 +65,12 @@ public class ClientProxy implements IProxy {
         };
 
         registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("ml_pull"), pull);
-        registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("ml_pulling"), pulling);
-    }
-
-    @Override
-    public void blockFX(BlockPos pos) {
-        FXBlock data = new FXBlock(Minecraft.getInstance().level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true, 600, getWorld().getBlockState(pos).getBlock());
-        Minecraft.getInstance().particleEngine.add(data);
+        registerPropertyGetter(ModItems.loot_bow.get(), new ResourceLocation("ml_pulling"), pulling);*/
     }
 
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
-        if(MysticTools.fxlibLoaded()) {
+        if (MysticTools.fxlibLoaded()) {
             ClientTickHandler.addRunnable(r, delay);
         }
     }
