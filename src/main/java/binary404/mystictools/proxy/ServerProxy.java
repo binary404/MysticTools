@@ -1,5 +1,6 @@
 package binary404.mystictools.proxy;
 
+import binary404.mystictools.common.core.CommonScheduler;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 public class ServerProxy implements IProxy {
