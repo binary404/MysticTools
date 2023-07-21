@@ -1,7 +1,5 @@
 package binary404.mystictools.proxy;
 
-import binary404.fx_lib.util.ClientTickHandler;
-import binary404.mystictools.MysticTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -70,9 +68,9 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void scheduleDelayed(Runnable r, int delay) {
-        if (MysticTools.fxlibLoaded()) {
+  /*      if (MysticTools.fxlibLoaded()) {
             ClientTickHandler.addRunnable(r, delay);
-        }
+        }*/
     }
 
     @Override
