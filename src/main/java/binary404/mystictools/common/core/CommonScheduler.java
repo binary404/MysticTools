@@ -11,7 +11,6 @@ import java.util.LinkedList;
 
 @Mod.EventBusSubscriber
 public class CommonScheduler {
-
     private static final Object lock = new Object();
     private static boolean inTick = false;
     private static final LinkedList<Tuple<Runnable, Counter>> queue = new LinkedList<>();
