@@ -1,7 +1,6 @@
 package binary404.mystictools.common.core.attribute;
 
 import binary404.mystictools.api.MysticToolsAPI;
-import com.mojang.math.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -9,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +16,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ItemNBTAttribute<T, I extends ItemNBTAttribute.Instance<T>> {
-
     private final ResourceLocation id;
     private final Supplier<I> instance;
     private final List<ItemNBTAttribute<T, I>> modifiers;
